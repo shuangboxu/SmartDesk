@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<DialogPane xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.smartdesk.ui.tasks.TaskEditorController"
+            prefWidth="420.0">
+    <content>
+        <GridPane hgap="12" vgap="12">
+            <columnConstraints>
+                <ColumnConstraints halignment="RIGHT" minWidth="80"/>
+                <ColumnConstraints hgrow="ALWAYS" minWidth="240"/>
+            </columnConstraints>
+            <rowConstraints>
+                <RowConstraints vgrow="NEVER"/>
+                <RowConstraints vgrow="NEVER"/>
+                <RowConstraints vgrow="NEVER"/>
+                <RowConstraints vgrow="NEVER"/>
+                <RowConstraints vgrow="NEVER"/>
+                <RowConstraints vgrow="NEVER"/>
+                <RowConstraints vgrow="ALWAYS"/>
+                <RowConstraints vgrow="NEVER"/>
+            </rowConstraints>
+            <padding>
+                <Insets top="16" right="24" bottom="8" left="24"/>
+            </padding>
+
+            <Label text="标题" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+            <TextField fx:id="titleField" promptText="任务标题" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
+
+            <Label text="类型" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+            <ComboBox fx:id="typeCombo" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+
+            <Label text="优先级" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
+            <ComboBox fx:id="priorityCombo" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+
+            <Label text="状态" GridPane.columnIndex="0" GridPane.rowIndex="3"/>
+            <ComboBox fx:id="statusCombo" GridPane.columnIndex="1" GridPane.rowIndex="3"/>
+
+            <Label text="开始时间" GridPane.columnIndex="0" GridPane.rowIndex="4"/>
+            <DatePicker fx:id="startDatePicker" GridPane.columnIndex="1" GridPane.rowIndex="4"/>
+
+            <Label text="截止时间" GridPane.columnIndex="0" GridPane.rowIndex="5"/>
+            <HBox spacing="8" GridPane.columnIndex="1" GridPane.rowIndex="5">
+                <children>
+                    <DatePicker fx:id="dueDatePicker"/>
+                    <Spinner fx:id="dueHourSpinner" editable="true" prefWidth="70"/>
+                    <Spinner fx:id="dueMinuteSpinner" editable="true" prefWidth="70"/>
+                </children>
+            </HBox>
+
+            <Label text="提醒" GridPane.columnIndex="0" GridPane.rowIndex="6"/>
+            <VBox spacing="8" GridPane.columnIndex="1" GridPane.rowIndex="6">
+                <children>
+                    <CheckBox fx:id="reminderToggle" text="到期前提醒"/>
+                    <HBox spacing="8">
+                        <children>
+                            <Label text="提前"/>
+                            <Spinner fx:id="leadMinutesSpinner" editable="true" prefWidth="100"/>
+                            <Label text="分钟"/>
+                        </children>
+                    </HBox>
+                </children>
+            </VBox>
+
+            <Label text="描述" GridPane.columnIndex="0" GridPane.rowIndex="7"/>
+            <TextArea fx:id="descriptionArea" promptText="任务详情、关键节点或准备事项"
+                      GridPane.columnIndex="1" GridPane.rowIndex="7" prefRowCount="4" wrapText="true"/>
+        </GridPane>
+    </content>
+    <buttonTypes>
+        <ButtonType fx:id="cancelButton" buttonData="CANCEL_CLOSE" text="取消"/>
+        <ButtonType fx:id="saveButton" buttonData="OK_DONE" text="保存"/>
+    </buttonTypes>
+</DialogPane>
