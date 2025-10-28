@@ -19,18 +19,6 @@
 - 完成笔记实体类字段定义（id、title、content、tag、date）。
 - 提供严格的空值校验、访问器与修改器方法，并覆盖 `toString` 便于调试。
 
-## 测试与验证
-1. 运行 `mvn -q -DskipTests package` 构建项目（需联网以下载依赖）。
-2. 在任意 JavaFX 入口（如 `MainApp`）中创建 `DatabaseManager` 与 `NoteService` 实例，调用 CRUD 方法验证：
-   - `createNote`：插入新笔记并确认返回对象包含自增 ID；
-   - `getNoteById` / `getAllNotes`：查询并确认返回结果；
-   - `updateNote`：更新标题或内容后再次查询验证；
-   - `deleteNote`：删除后确认查询结果为空。
-3. 若执行过程中出现数据库文件权限问题，可删除根目录下的 `smartdesk.db` 重新执行。
-
-## 遇到的问题
-- 首次构建可能出现依赖仓库连接失败（HTTP 403 或网络限制），可稍后重试或手动配置国内镜像。
-
 ---
 
 ## Task 模块拓展
