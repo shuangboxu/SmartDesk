@@ -43,6 +43,35 @@ public class DatabaseManager {
         )
         """;
 
+    /**
+     * DDL statement that creates the {@code tasks} table. The schema supports a
+     * rich set of scheduling attributes including reminders and status
+     * tracking.
+     */
+    public static final String CREATE_TASKS_TABLE_SQL = """
+        CREATE TABLE IF NOT EXISTS tasks (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            title TEXT NOT NULL,
+            description TEXT,
+            start_at TEXT,
+            due_at TEXT,
+            priority INTEGER NOT NULL,
+            type TEXT NOT NULL,
+            reminder_enabled INTEGER NOT NULL,
+            reminder_lead_minutes INTEGER NOT NULL,
+            status TEXT NOT NULL,
+            last_reminded_at TEXT,
+            created_at TEXT NOT NULL,
+            updated_at TEXT NOT NULL
+        )
+        """;
+
+    /** Creates an index that accelerates reminder lookups. */
+    public static final String CREATE_TASKS_REMINDER_INDEX_SQL = """
+        CREATE INDEX IF NOT EXISTS idx_tasks_reminder
+            ON tasks (reminder_enabled, status, due_at)
+        """;
+
     static {
         try {
             Class.forName("org.sqlite.JDBC");
@@ -99,6 +128,8 @@ public class DatabaseManager {
     public final void initializeDatabase() {
         try (Connection connection = getConnection(); Statement statement = connection.createStatement()) {
             statement.execute(CREATE_NOTES_TABLE_SQL);
+            statement.execute(CREATE_TASKS_TABLE_SQL);
+            statement.execute(CREATE_TASKS_REMINDER_INDEX_SQL);
             LOGGER.log(Level.INFO, "Database initialised using URL: {0}", databaseUrl);
         } catch (SQLException ex) {
             LOGGER.log(Level.SEVERE, "Failed to initialise SQLite database", ex);
