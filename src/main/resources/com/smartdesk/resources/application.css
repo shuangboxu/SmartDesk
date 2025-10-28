@@ -108,3 +108,124 @@
 .accent-button:pressed {
     -fx-background-color: linear-gradient(to right, #32429e, #4a5dc5);
 }
+
+/* Task dashboard styles */
+
+.task-dashboard-root {
+    -fx-background-color: transparent;
+}
+
+.task-dashboard-title {
+    -fx-font-size: 22px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #202a44;
+}
+
+.task-dashboard-summary {
+    -fx-text-fill: #5c6bc0;
+    -fx-font-size: 13px;
+}
+
+.task-dashboard-search {
+    -fx-background-radius: 12;
+    -fx-padding: 8 12;
+}
+
+.task-dashboard-side {
+    -fx-background-color: white;
+    -fx-background-radius: 18;
+    -fx-effect: dropshadow(gaussian, rgba(76, 102, 192, 0.16), 18, 0.3, 0, 10);
+}
+
+.task-side-title {
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #253057;
+}
+
+.task-side-hint {
+    -fx-text-fill: #8c9eff;
+    -fx-font-size: 12px;
+}
+
+.task-dashboard-scroll {
+    -fx-background-color: transparent;
+}
+
+.task-section {
+    -fx-background-color: white;
+    -fx-background-radius: 18;
+    -fx-padding: 16;
+    -fx-effect: dropshadow(gaussian, rgba(76, 102, 192, 0.1), 20, 0.25, 0, 12);
+}
+
+.task-section-header {
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #1d2748;
+}
+
+.task-section-tags {
+    -fx-padding: 6 10;
+    -fx-background-radius: 10;
+    -fx-border-radius: 10;
+    -fx-border-width: 1;
+    -fx-background-color: rgba(63, 81, 181, 0.04);
+}
+
+.task-section-tag-text {
+    -fx-text-fill: #3f51b5;
+    -fx-font-size: 12px;
+}
+
+.task-section .list-view {
+    -fx-background-color: transparent;
+    -fx-background-insets: 0;
+    -fx-border-width: 0;
+}
+
+.task-card-container {
+    -fx-background-color: rgba(248, 249, 255, 0.8);
+    -fx-background-radius: 14;
+    -fx-padding: 12 16;
+}
+
+.task-card-title {
+    -fx-font-size: 15px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #28334f;
+}
+
+.task-card-meta {
+    -fx-text-fill: #5f6f94;
+    -fx-font-size: 12px;
+}
+
+.task-card-description {
+    -fx-text-fill: #4a4f63;
+    -fx-font-size: 13px;
+}
+
+.task-card-actions {
+    -fx-alignment: CENTER_LEFT;
+}
+
+.task-card-button {
+    -fx-background-color: rgba(63, 81, 181, 0.12);
+    -fx-text-fill: #3f51b5;
+    -fx-background-radius: 12;
+    -fx-padding: 6 14;
+}
+
+.task-card-button:hover {
+    -fx-background-color: rgba(63, 81, 181, 0.24);
+}
+
+.task-upcoming-cell {
+    -fx-padding: 8 12;
+    -fx-text-fill: #394065;
+}
+
+.task-upcoming-cell:filled:hover {
+    -fx-background-color: rgba(63, 81, 181, 0.12);
+}
