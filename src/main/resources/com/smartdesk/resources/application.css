@@ -1,1 +1,110 @@
-/* Placeholder stylesheet for SmartDesk. */
+/* SmartDesk 全局样式 */
+
+.root {
+    -fx-font-family: "Microsoft YaHei";
+    -fx-background-color: #eef1f8;
+}
+
+.notes-root {
+    -fx-background-color: linear-gradient(to bottom, #f6f8fc, #eef1f8);
+}
+
+.notes-list-container {
+    -fx-background-color: white;
+    -fx-background-radius: 12;
+    -fx-padding: 16;
+    -fx-spacing: 12;
+    -fx-effect: dropshadow(gaussian, rgba(76, 102, 192, 0.12), 16, 0.2, 0, 6);
+}
+
+.notes-list-container > .label {
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #253057;
+}
+
+.notes-list-view {
+    -fx-background-insets: 0;
+    -fx-background-color: transparent;
+    -fx-border-width: 0;
+}
+
+.notes-list-view .list-cell {
+    -fx-padding: 12;
+    -fx-background-color: transparent;
+    -fx-border-width: 0 0 1 0;
+    -fx-border-color: transparent;
+    -fx-text-fill: #3a4260;
+}
+
+.notes-list-view .list-cell:filled:hover {
+    -fx-background-color: rgba(63, 81, 181, 0.08);
+}
+
+.notes-list-view .list-cell:filled:selected,
+.notes-list-view .list-cell:filled:selected:hover {
+    -fx-background-color: #3f51b5;
+    -fx-text-fill: white;
+}
+
+.notes-button-bar {
+    -fx-padding: 8 0 0 0;
+}
+
+.notes-detail-container {
+    -fx-background-color: white;
+    -fx-background-radius: 18;
+    -fx-padding: 24;
+    -fx-spacing: 16;
+    -fx-effect: dropshadow(gaussian, rgba(76, 102, 192, 0.12), 24, 0.2, 0, 12);
+}
+
+.notes-detail-header {
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #202a44;
+}
+
+.notes-title-field {
+    -fx-font-size: 16px;
+    -fx-background-radius: 10;
+    -fx-padding: 10 12;
+}
+
+.notes-content-area {
+    -fx-font-size: 14px;
+    -fx-background-radius: 12;
+    -fx-padding: 12;
+    -fx-border-color: rgba(63, 81, 181, 0.2);
+    -fx-border-radius: 12;
+}
+
+.notes-timestamp {
+    -fx-text-fill: #7986cb;
+    -fx-font-size: 12px;
+}
+
+.notes-action-bar {
+    -fx-alignment: center-left;
+}
+
+.notes-status-label {
+    -fx-text-fill: #3f51b5;
+    -fx-font-size: 13px;
+}
+
+.accent-button {
+    -fx-background-color: linear-gradient(to right, #3f51b5, #5a6fe0);
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-background-radius: 14;
+    -fx-padding: 10 20;
+}
+
+.accent-button:hover {
+    -fx-background-color: linear-gradient(to right, #4d5ed1, #6d7eee);
+}
+
+.accent-button:pressed {
+    -fx-background-color: linear-gradient(to right, #32429e, #4a5dc5);
+}
