@@ -1,6 +1,7 @@
 package com.smartdesk.core.task;
 
 import com.smartdesk.core.task.model.Task;
+import com.smartdesk.core.task.model.TaskBoardColumn;
 import com.smartdesk.core.task.model.TaskDashboardSnapshot;
 import com.smartdesk.core.task.model.TaskLane;
 import com.smartdesk.core.task.model.TaskPriority;
@@ -283,6 +284,24 @@ public class TaskService implements TaskQuerySupport {
             .toList());
 
         return new TaskDashboardSnapshot(referenceDate, lanes);
+    }
+
+    /**
+     * Convenience wrapper that augments the dashboard data with board specific
+     * metadata (标题、描述、配色) so the任务面板可以直接消费。
+     */
+    public List<TaskBoardColumn> buildBoard(final LocalDate referenceDate, final int upcomingDays) {
+        return buildDashboard(referenceDate, upcomingDays).toBoardColumns();
+    }
+
+    /**
+     * Builds a single board column for the specified lane which is handy when
+     * the UI only needs to刷新某一列.
+     */
+    public TaskBoardColumn buildBoardLane(final TaskLane lane, final LocalDate referenceDate,
+                                          final int upcomingDays) {
+        Objects.requireNonNull(lane, "lane");
+        return buildDashboard(referenceDate, upcomingDays).toBoardColumn(lane);
     }
 
     /**
