@@ -42,6 +42,16 @@
 - `src/main/java/com/smartdesk/storage/DatabaseManager.java`
   - 扩展数据库初始化逻辑，新增 `tasks` 表及提醒查询索引。
 
+## 任务面板适配
+- `src/main/java/com/smartdesk/core/task/model/TaskLane.java`
+  - 为各看板列补充中文标题、描述、配色与图标键值，方便前端直接消费展示元数据。
+- `src/main/java/com/smartdesk/core/task/model/TaskBoardColumn.java`
+  - 新增任务面板列视图模型，封装列元数据、任务列表以及完成率等统计指标。
+- `src/main/java/com/smartdesk/core/task/model/TaskDashboardSnapshot.java`
+  - 增加 `toBoardColumns`/`toBoardColumn` 转换方法，便于 UI 快速获取看板列数据。
+- `src/main/java/com/smartdesk/core/task/TaskService.java`
+  - 提供 `buildBoard` 与 `buildBoardLane` 便捷方法，直接输出面板列结构以供任务页面调用。
+
 ## 验证步骤
 1. 执行 `mvn -DskipTests package` 编译项目，确保新增模块通过构建。
 2. 在任意入口创建 `TaskService` 与 `ReminderScheduler`，调用 `createTask` 创建带提醒的任务，观察调度器回调是否触发。

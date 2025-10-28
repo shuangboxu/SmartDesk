@@ -1,6 +1,7 @@
 package com.smartdesk.core.task.model;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.EnumMap;
 import java.util.List;
@@ -38,5 +39,25 @@ public final class TaskDashboardSnapshot {
 
     public List<Task> getTasksInLane(final TaskLane lane) {
         return lanes.getOrDefault(lane, List.of());
+    }
+
+    /**
+     * Converts the snapshot into a sequence of board columns carrying
+     * presentation metadata for the UI 层.
+     */
+    public List<TaskBoardColumn> toBoardColumns() {
+        final List<TaskBoardColumn> columns = new ArrayList<>();
+        for (TaskLane lane : TaskLane.values()) {
+            columns.add(TaskBoardColumn.fromLane(lane, getTasksInLane(lane)));
+        }
+        return List.copyOf(columns);
+    }
+
+    /**
+     * Returns a single board column for the requested lane.
+     */
+    public TaskBoardColumn toBoardColumn(final TaskLane lane) {
+        Objects.requireNonNull(lane, "lane");
+        return TaskBoardColumn.fromLane(lane, getTasksInLane(lane));
     }
 }
