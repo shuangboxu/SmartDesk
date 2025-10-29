@@ -1,14 +1,11 @@
 package com.smartdesk.ui.tasks;
 
+import javafx.fxml.FXMLLoader;
+import javafx.scene.control.*;
+import javafx.stage.Modality;
+
 import java.io.IOException;
 import java.util.Optional;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.control.Button;
-import javafx.scene.control.ButtonBar;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.Dialog;
-import javafx.scene.control.DialogPane;
-import javafx.stage.Modality;
 
 /**
  * Dialog used to create or edit a task.
@@ -42,7 +39,7 @@ public class TaskEditorDialog extends Dialog<TaskViewModel> {
         }
 
         setResultConverter(buttonType -> {
-            if (buttonType == ButtonType.OK) {
+            if (buttonType != null && buttonType.getButtonData() == ButtonBar.ButtonData.OK_DONE) {
                 return controller.buildUpdatedTask();
             }
             return null;
