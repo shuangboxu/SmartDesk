@@ -15,6 +15,13 @@ public final class ChatHistory {
         messages.add(message);
     }
 
+    public void replaceWith(final List<ChatMessage> snapshot) {
+        messages.clear();
+        if (snapshot != null) {
+            messages.addAll(snapshot);
+        }
+    }
+
     public List<ChatMessage> getMessages() {
         return Collections.unmodifiableList(messages);
     }
