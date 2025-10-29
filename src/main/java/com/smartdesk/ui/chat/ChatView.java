@@ -30,6 +30,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Text;
 import javafx.scene.web.WebView;
 
 import java.time.format.DateTimeFormatter;
@@ -48,6 +49,8 @@ public final class ChatView extends BorderPane {
     private static final DateTimeFormatter MESSAGE_TIME_FORMAT = DateTimeFormatter.ofPattern("HH:mm:ss");
     private static final double MAX_MESSAGE_WIDTH = 560;
     private static final double MIN_MESSAGE_WIDTH = 160;
+    private static final double MIN_COMPOSER_HEIGHT = 96;
+    private static final double MAX_COMPOSER_HEIGHT = 260;
 
     private final ConfigManager configManager;
     private final ObservableList<MainApp.Note> notes;
@@ -74,6 +77,7 @@ public final class ChatView extends BorderPane {
 
     private VBox sidebar;
     private boolean historyCollapsed;
+    private final Text composerSizer = new Text();
 
     public ChatView(final ConfigManager configManager,
                     final ObservableList<MainApp.Note> notes,
@@ -173,6 +177,9 @@ public final class ChatView extends BorderPane {
         composer.setPromptText("输入问题，按 Ctrl+Enter 发送");
         composer.setWrapText(true);
         composer.getStyleClass().add("chat-view-composer");
+        composer.setPrefHeight(MIN_COMPOSER_HEIGHT);
+        composer.setMinHeight(MIN_COMPOSER_HEIGHT);
+        composer.setMaxHeight(MAX_COMPOSER_HEIGHT);
 
         shareButton.getStyleClass().add("chat-share-button");
         shareButton.setOnAction(evt -> handleShareContext());
@@ -221,6 +228,9 @@ public final class ChatView extends BorderPane {
                 event.consume();
             }
         });
+        composer.textProperty().addListener((obs, oldValue, newValue) -> scheduleComposerResize());
+        composer.widthProperty().addListener((obs, oldValue, newValue) -> scheduleComposerResize());
+        Platform.runLater(this::resizeComposerToContent);
     }
 
     private void applyConfig(final AppConfig config) {
@@ -238,6 +248,35 @@ public final class ChatView extends BorderPane {
         }
         updateModeLabel();
         updateStatus("配置已同步");
+    }
+
+    private void scheduleComposerResize() {
+        Platform.runLater(this::resizeComposerToContent);
+    }
+
+    private void resizeComposerToContent() {
+        double availableWidth = composer.getWidth();
+        if (availableWidth <= 0) {
+            return;
+        }
+        composerSizer.setFont(composer.getFont());
+        String content = composer.getText();
+        if (content == null || content.isBlank()) {
+            composer.setPrefHeight(MIN_COMPOSER_HEIGHT);
+            composer.setMinHeight(MIN_COMPOSER_HEIGHT);
+            return;
+        }
+        Insets padding = composer.getPadding();
+        double horizontalPadding = padding == null ? 0 : padding.getLeft() + padding.getRight();
+        double verticalPadding = padding == null ? 0 : padding.getTop() + padding.getBottom();
+        composerSizer.setWrappingWidth(Math.max(0, availableWidth - horizontalPadding - 18));
+        composerSizer.setText(content + "\n");
+        double height = composerSizer.getLayoutBounds().getHeight()
+            + verticalPadding
+            + 20;
+        double clamped = Math.max(MIN_COMPOSER_HEIGHT, Math.min(MAX_COMPOSER_HEIGHT, height));
+        composer.setPrefHeight(clamped);
+        composer.setMinHeight(clamped);
     }
 
     private void refreshModelSelector() {
