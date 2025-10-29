@@ -1,54 +1,34 @@
 package com.smartdesk.ui.chat;
 
-import com.smartdesk.core.chat.ChatAssistant;
-import com.smartdesk.core.chat.ChatAssistantFactory;
-import com.smartdesk.core.chat.ChatHistory;
-import com.smartdesk.core.chat.ChatMessage;
-import com.smartdesk.core.chat.ChatSession;
+import com.smartdesk.core.chat.*;
 import com.smartdesk.core.config.AppConfig;
 import com.smartdesk.core.config.ConfigManager;
 import com.smartdesk.core.config.ModelCatalog;
 import com.smartdesk.ui.MainApp;
 import com.smartdesk.ui.tasks.TaskViewModel;
-import com.smartdesk.utils.MarkdownRenderer;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.concurrent.Worker;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
-import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.ListCell;
-import javafx.scene.control.ListView;
-import javafx.scene.control.TextArea;
+import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Priority;
-import javafx.scene.layout.Region;
-import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
+import javafx.scene.layout.*;
 import javafx.scene.text.Text;
-import javafx.scene.web.WebView;
+import javafx.scene.text.TextAlignment;
 
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 
 /**
- * JavaFX view encapsulating the chat assistant user interface.
+ * 精简版 ChatView：去除所有装饰，用简单 Label 显示消息，
+ * 消息宽度绑定到消息列表宽度，保证随窗口放大。
  */
 public final class ChatView extends BorderPane {
 
     private static final DateTimeFormatter SESSION_TIME_FORMAT = DateTimeFormatter.ofPattern("MM-dd HH:mm");
     private static final DateTimeFormatter MESSAGE_TIME_FORMAT = DateTimeFormatter.ofPattern("HH:mm:ss");
-    private static final double MAX_MESSAGE_WIDTH = 560;
     private static final double MIN_MESSAGE_WIDTH = 160;
     private static final double MIN_COMPOSER_HEIGHT = 96;
     private static final double MAX_COMPOSER_HEIGHT = 260;
@@ -86,8 +66,9 @@ public final class ChatView extends BorderPane {
         this.configManager = Objects.requireNonNull(configManager, "configManager");
         this.notes = Objects.requireNonNull(notes, "notes");
         this.tasks = Objects.requireNonNull(tasks, "tasks");
-        getStyleClass().add("chat-view-root");
-        setPadding(new Insets(16));
+
+        // 简化外层边距
+        setPadding(new Insets(4));
 
         setLeft(buildSidebar());
         BorderPane conversationPane = new BorderPane();
@@ -95,105 +76,102 @@ public final class ChatView extends BorderPane {
         conversationPane.setCenter(buildMessagePane());
         conversationPane.setBottom(buildComposer());
         setCenter(conversationPane);
+        VBox.setVgrow(conversationPane, Priority.ALWAYS);
 
         configureSessionList();
         configureListView();
         configureComposer();
 
+// 关键：监听窗口变化，强制重新布局（修复放大后留白问题）
+        widthProperty().addListener((obs, oldVal, newVal) -> Platform.runLater(this::requestLayout));
+        heightProperty().addListener((obs, oldVal, newVal) -> Platform.runLater(this::requestLayout));
+
         applyConfig(configManager.getConfig());
         configManager.registerListener(config -> Platform.runLater(() -> applyConfig(config)));
+
     }
 
     private Node buildSidebar() {
         Label title = new Label("对话历史");
-        title.getStyleClass().add("chat-session-header");
 
         Button newButton = new Button("新建对话");
-        newButton.getStyleClass().add("accent-button");
         newButton.setMaxWidth(Double.MAX_VALUE);
         newButton.setOnAction(evt -> startNewSession());
 
-        sessionList.setPlaceholder(new Label("暂无对话，点击上方新建"));
+        sessionList.setPlaceholder(new Label("暂无对话"));
 
-        sidebar = new VBox(12, title, newButton, sessionList);
-        sidebar.getStyleClass().add("chat-sidebar");
+        sidebar = new VBox(8, title, newButton, sessionList);
         VBox.setVgrow(sessionList, Priority.ALWAYS);
+        sidebar.setPadding(new Insets(6));
+        sidebar.setMinWidth(160);
+        sidebar.setPrefWidth(200);
         return sidebar;
     }
 
     private Node buildHeader() {
         Label title = new Label("聊天助理");
-        title.getStyleClass().add("chat-view-title");
-        modeLabel.getStyleClass().add("chat-view-mode");
-
         HBox titleRow = new HBox(8, title, modeLabel);
         titleRow.setAlignment(Pos.CENTER_LEFT);
 
         Label modelLabel = new Label("模型");
-        modelLabel.getStyleClass().add("chat-model-label");
-        modelSelector.getStyleClass().add("chat-model-selector");
         modelSelector.setVisibleRowCount(10);
         modelSelector.setPromptText("请选择模型");
         modelSelector.valueProperty().addListener((obs, oldValue, newValue) -> {
-            if (updatingModel) {
-                return;
-            }
-            if (newValue == null || newValue.isBlank()) {
-                return;
-            }
+            if (updatingModel) return;
+            if (newValue == null || newValue.isBlank()) return;
             activeModel = newValue;
-            if (activeSession != null) {
-                activeSession.setModelName(activeModel);
-            }
+            if (activeSession != null) activeSession.setModelName(activeModel);
             configureAssistant();
             updateModeLabel();
             updateStatus("已切换到模型：" + activeModel);
         });
 
         Region spacer = new Region();
-        toggleHistoryButton.getStyleClass().add("chat-history-toggle");
         toggleHistoryButton.setOnAction(evt -> toggleHistory());
 
-        HBox controls = new HBox(12, modelLabel, modelSelector, spacer, toggleHistoryButton);
-        controls.setAlignment(Pos.CENTER_LEFT);
+        HBox controls = new HBox(8, modelLabel, modelSelector, spacer, toggleHistoryButton);
         HBox.setHgrow(spacer, Priority.ALWAYS);
 
-        statusLabel.getStyleClass().add("chat-view-status");
-
         VBox header = new VBox(6, titleRow, controls, statusLabel);
-        header.setPadding(new Insets(0, 0, 12, 0));
+        header.setPadding(new Insets(6, 6, 12, 6));
         return header;
     }
 
     private Node buildMessagePane() {
-        messageList.setPadding(new Insets(12));
-        messageList.setStyle("-fx-background-color: transparent;");
-        return messageList;
+        messageList.setPadding(new Insets(8));
+        messageList.setStyle("-fx-background-color: white;");
+
+        ScrollPane scroll = new ScrollPane(messageList);
+        scroll.setFitToWidth(true);
+        scroll.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+        scroll.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
+        scroll.setStyle("-fx-background-color: transparent; -fx-padding:0;");
+
+        // 关键：让聊天区自动拉伸，占满剩余空间
+        VBox.setVgrow(scroll, Priority.ALWAYS);
+
+        return scroll;
     }
 
+
     private Node buildComposer() {
-        VBox container = new VBox(8);
-        container.setPadding(new Insets(12, 0, 0, 0));
+        VBox container = new VBox(6);
+        container.setPadding(new Insets(8, 6, 8, 6));
 
         composer.setPromptText("输入问题，按 Ctrl+Enter 发送");
         composer.setWrapText(true);
-        composer.getStyleClass().add("chat-view-composer");
         composer.setPrefHeight(MIN_COMPOSER_HEIGHT);
         composer.setMinHeight(MIN_COMPOSER_HEIGHT);
         composer.setMaxHeight(MAX_COMPOSER_HEIGHT);
 
-        shareButton.getStyleClass().add("chat-share-button");
         shareButton.setOnAction(evt -> handleShareContext());
 
-        sendButton.getStyleClass().add("accent-button");
         sendButton.setDefaultButton(true);
         sendButton.setOnAction(evt -> dispatchMessage());
 
-        Region spacer = new Region();
-        HBox actionBar = new HBox(12, shareButton, spacer, sendButton);
-        actionBar.getStyleClass().add("chat-composer-actions");
+        HBox actionBar = new HBox(8, shareButton, new Region(), sendButton);
+        HBox.setHgrow(actionBar.getChildren().get(1), Priority.ALWAYS);
         actionBar.setAlignment(Pos.CENTER_RIGHT);
-        HBox.setHgrow(spacer, Priority.ALWAYS);
 
         container.getChildren().addAll(composer, actionBar);
         VBox.setVgrow(composer, Priority.ALWAYS);
@@ -202,11 +180,8 @@ public final class ChatView extends BorderPane {
 
     private void configureSessionList() {
         sessionList.setCellFactory(list -> new ChatSessionCell());
-        sessionList.getStyleClass().add("chat-session-list");
         sessionList.getSelectionModel().selectedItemProperty().addListener((obs, old, value) -> {
-            if (value == null) {
-                return;
-            }
+            if (value == null) return;
             if (value == activeSession) {
                 messageList.scrollTo(Math.max(value.getMessages().size() - 1, 0));
             } else {
@@ -217,9 +192,9 @@ public final class ChatView extends BorderPane {
 
     private void configureListView() {
         messageList.setCellFactory(list -> new ChatMessageCell());
-        messageList.getStyleClass().add("chat-view-list");
         messageList.setFocusTraversable(false);
         messageList.setPlaceholder(new Label("向 AI 发送你的第一个问题吧！"));
+        messageList.setPrefWidth(Double.MAX_VALUE);
     }
 
     private void configureComposer() {
@@ -257,9 +232,7 @@ public final class ChatView extends BorderPane {
 
     private void resizeComposerToContent() {
         double availableWidth = composer.getWidth();
-        if (availableWidth <= 0) {
-            return;
-        }
+        if (availableWidth <= 0) return;
         composerSizer.setFont(composer.getFont());
         String content = composer.getText();
         if (content == null || content.isBlank()) {
@@ -272,41 +245,31 @@ public final class ChatView extends BorderPane {
         double verticalPadding = padding == null ? 0 : padding.getTop() + padding.getBottom();
         composerSizer.setWrappingWidth(Math.max(0, availableWidth - horizontalPadding - 18));
         composerSizer.setText(content + "\n");
-        double height = composerSizer.getLayoutBounds().getHeight()
-            + verticalPadding
-            + 20;
+        double height = composerSizer.getLayoutBounds().getHeight() + verticalPadding + 20;
         double clamped = Math.max(MIN_COMPOSER_HEIGHT, Math.min(MAX_COMPOSER_HEIGHT, height));
         composer.setPrefHeight(clamped);
         composer.setMinHeight(clamped);
     }
 
     private void refreshModelSelector() {
-        if (baseConfig == null) {
-            return;
-        }
+        if (baseConfig == null) return;
         LinkedHashSet<String> options = new LinkedHashSet<>();
         options.addAll(ModelCatalog.getModelPresets(baseConfig.getProvider()));
         if (baseConfig.getCustomModels() != null) {
             for (String model : baseConfig.getCustomModels()) {
-                if (model != null && !model.isBlank()) {
-                    options.add(model.trim());
-                }
+                if (model != null && !model.isBlank()) options.add(model.trim());
             }
         }
-        if (baseConfig.getModel() != null && !baseConfig.getModel().isBlank()) {
-            options.add(baseConfig.getModel());
-        }
-        if (activeSession != null && activeSession.getModelName() != null
-            && !activeSession.getModelName().isBlank()) {
+        if (baseConfig.getModel() != null && !baseConfig.getModel().isBlank()) options.add(baseConfig.getModel());
+        if (activeSession != null && activeSession.getModelName() != null && !activeSession.getModelName().isBlank()) {
             options.add(activeSession.getModelName());
         }
         ObservableList<String> items = FXCollections.observableArrayList(options);
         updatingModel = true;
         modelSelector.setItems(items);
-        String target = activeSession != null && activeSession.getModelName() != null
-            && !activeSession.getModelName().isBlank()
-            ? activeSession.getModelName()
-            : baseConfig.getModel();
+        String target = activeSession != null && activeSession.getModelName() != null && !activeSession.getModelName().isBlank()
+                ? activeSession.getModelName()
+                : baseConfig.getModel();
         if (target != null && !target.isBlank()) {
             if (!items.contains(target)) {
                 items.add(0, target);
@@ -323,16 +286,10 @@ public final class ChatView extends BorderPane {
     }
 
     private void configureAssistant() {
-        if (baseConfig == null) {
-            return;
-        }
-        if (assistant != null) {
-            assistant.shutdown();
-        }
+        if (baseConfig == null) return;
+        if (assistant != null) assistant.shutdown();
         AppConfig working = baseConfig.copy();
-        if (activeModel != null && !activeModel.isBlank()) {
-            working.setModel(activeModel);
-        }
+        if (activeModel != null && !activeModel.isBlank()) working.setModel(activeModel);
         assistant = ChatAssistantFactory.createAssistant(history, working);
     }
 
@@ -345,22 +302,16 @@ public final class ChatView extends BorderPane {
         if (mode == AppConfig.AiMode.OFFLINE) {
             modeLabel.setText("(离线模式)");
         } else {
-            AppConfig.Provider provider = baseConfig.getProvider() == null
-                ? AppConfig.Provider.CHATGPT
-                : baseConfig.getProvider();
+            AppConfig.Provider provider = baseConfig.getProvider() == null ? AppConfig.Provider.CHATGPT : baseConfig.getProvider();
             String providerName = describeProvider(provider);
-            String modelName = activeModel != null && !activeModel.isBlank()
-                ? activeModel
-                : (baseConfig.getModel() == null ? "未选择模型" : baseConfig.getModel());
+            String modelName = activeModel != null && !activeModel.isBlank() ? activeModel : (baseConfig.getModel() == null ? "未选择模型" : baseConfig.getModel());
             modeLabel.setText("(在线 · " + providerName + " · " + modelName + ")");
         }
     }
 
     private void startNewSession() {
         ChatSession session = new ChatSession("对话 " + sessionCounter++);
-        session.setModelName(activeModel != null && !activeModel.isBlank()
-            ? activeModel
-            : baseConfig.getModel());
+        session.setModelName(activeModel != null && !activeModel.isBlank() ? activeModel : baseConfig.getModel());
         sessions.add(0, session);
         sessionList.getSelectionModel().select(session);
         openSession(session);
@@ -368,13 +319,9 @@ public final class ChatView extends BorderPane {
     }
 
     private void openSession(final ChatSession session) {
-        if (session == null) {
-            return;
-        }
+        if (session == null) return;
         activeSession = session;
-        if (messageList.getItems() != session.getMessages()) {
-            messageList.setItems(session.getMessages());
-        }
+        if (messageList.getItems() != session.getMessages()) messageList.setItems(session.getMessages());
         ensureSessionGreeting(session);
         refreshModelSelector();
         session.setModelName(activeModel);
@@ -386,8 +333,7 @@ public final class ChatView extends BorderPane {
 
     private void ensureSessionGreeting(final ChatSession session) {
         if (session.getMessages().isEmpty()) {
-            ChatMessage greeting = ChatMessage.of(ChatMessage.Sender.SYSTEM,
-                "欢迎使用智能聊天助理，有任何问题都可以告诉我！");
+            ChatMessage greeting = ChatMessage.of(ChatMessage.Sender.SYSTEM, "欢迎使用智能聊天助理，有任何问题都可以告诉我！");
             session.addMessage(greeting);
         }
     }
@@ -403,9 +349,7 @@ public final class ChatView extends BorderPane {
             return;
         }
         String text = composer.getText();
-        if (text == null || text.isBlank()) {
-            return;
-        }
+        if (text == null || text.isBlank()) return;
         String content = text.trim();
         composer.clear();
         ChatMessage userMessage = ChatMessage.of(ChatMessage.Sender.USER, content);
@@ -440,9 +384,7 @@ public final class ChatView extends BorderPane {
     }
 
     private void refreshSessionOrder(final ChatSession session) {
-        if (session == null) {
-            return;
-        }
+        if (session == null) return;
         sessions.remove(session);
         sessions.add(0, session);
         sessionList.getSelectionModel().select(session);
@@ -464,9 +406,7 @@ public final class ChatView extends BorderPane {
     }
 
     public void shutdown() {
-        if (assistant != null) {
-            assistant.shutdown();
-        }
+        if (assistant != null) assistant.shutdown();
     }
 
     private static String describeProvider(final AppConfig.Provider provider) {
@@ -482,9 +422,7 @@ public final class ChatView extends BorderPane {
         private final VBox container = new VBox(4, titleLabel, metaLabel);
 
         private ChatSessionCell() {
-            container.getStyleClass().add("chat-session-cell");
-            titleLabel.getStyleClass().add("chat-session-title");
-            metaLabel.getStyleClass().add("chat-session-meta");
+            container.setPadding(new Insets(6));
         }
 
         @Override
@@ -496,9 +434,7 @@ public final class ChatView extends BorderPane {
             }
             titleLabel.setText(item.getTitle());
             String timeText = item.getUpdatedAt() == null ? "刚刚" : item.getUpdatedAt().format(SESSION_TIME_FORMAT);
-            String modelText = (item.getModelName() == null || item.getModelName().isBlank())
-                ? "默认模型"
-                : item.getModelName();
+            String modelText = (item.getModelName() == null || item.getModelName().isBlank()) ? "默认模型" : item.getModelName();
             metaLabel.setText(timeText + " · " + modelText + " · 消息数 " + item.getMessages().size());
             setGraphic(container);
         }
@@ -506,48 +442,26 @@ public final class ChatView extends BorderPane {
 
     private final class ChatMessageCell extends ListCell<ChatMessage> {
         private final Label senderLabel = new Label();
-        private final WebView markdownView = new WebView();
+        private final Label contentLabel = new Label();
         private final Label timeLabel = new Label();
-        private final VBox bubble = new VBox(6, senderLabel, markdownView, timeLabel);
+        private final VBox bubble = new VBox(6, senderLabel, contentLabel, timeLabel);
         private final HBox wrapper = new HBox(bubble);
 
         private ChatMessageCell() {
-            bubble.getStyleClass().add("chat-bubble");
-            senderLabel.getStyleClass().add("chat-bubble-sender");
-            timeLabel.getStyleClass().add("chat-bubble-time");
-            timeLabel.setMaxWidth(Double.MAX_VALUE);
-            timeLabel.setAlignment(Pos.CENTER_RIGHT);
-
-            bubble.setMaxWidth(MAX_MESSAGE_WIDTH + 40);
-            bubble.setFillWidth(false);
-            bubble.setPadding(new Insets(12));
+            // 简单内联样式（无外部 CSS）
+            bubble.setPadding(new Insets(8));
+            bubble.setSpacing(6);
+            bubble.setStyle("-fx-background-color: #ffffff; -fx-border-color: #e0e0e0; -fx-background-radius: 6; -fx-border-radius: 6;");
+            contentLabel.setWrapText(true);
+            contentLabel.setTextAlignment(TextAlignment.LEFT);
+            // 关键：让气泡宽度随 messageList 宽度变化
+            bubble.maxWidthProperty().bind(messageList.widthProperty().subtract(80));
+            contentLabel.maxWidthProperty().bind(bubble.maxWidthProperty().subtract(16));
+            senderLabel.setStyle("-fx-font-weight: bold;");
+            timeLabel.setStyle("-fx-font-size: 11px; -fx-text-fill: #666;");
 
             wrapper.setPadding(new Insets(4, 8, 4, 8));
             wrapper.setFillHeight(true);
-
-            markdownView.setContextMenuEnabled(false);
-            markdownView.setZoom(1.0);
-            markdownView.setMaxWidth(MAX_MESSAGE_WIDTH);
-            markdownView.setPrefWidth(Region.USE_COMPUTED_SIZE);
-            markdownView.setMinHeight(0);
-            markdownView.setMinWidth(0);
-            markdownView.setStyle("-fx-background-color: transparent;");
-            markdownView.getEngine().getLoadWorker().stateProperty().addListener((obs, old, state) -> {
-                if (state == Worker.State.SUCCEEDED) {
-                    Platform.runLater(() -> {
-                        Object heightResult = markdownView.getEngine().executeScript("document.body.scrollHeight + 16");
-                        if (heightResult instanceof Number height) {
-                            markdownView.setPrefHeight(height.doubleValue());
-                        }
-                        Object widthResult = markdownView.getEngine().executeScript("document.body.scrollWidth + 24");
-                        if (widthResult instanceof Number widthNumber) {
-                            double width = Math.max(MIN_MESSAGE_WIDTH, Math.min(MAX_MESSAGE_WIDTH, widthNumber.doubleValue()));
-                            markdownView.setPrefWidth(width);
-                            markdownView.setMinWidth(width);
-                        }
-                    });
-                }
-            });
         }
 
         @Override
@@ -557,6 +471,7 @@ public final class ChatView extends BorderPane {
                 setGraphic(null);
                 return;
             }
+
             ChatMessage.Sender sender = item.getSender();
             String senderName = switch (sender) {
                 case USER -> "我";
@@ -566,40 +481,21 @@ public final class ChatView extends BorderPane {
             senderLabel.setText(senderName);
             timeLabel.setText(item.getTimestamp().toLocalTime().format(MESSAGE_TIME_FORMAT));
 
-            String textColor;
-            String linkColor;
-            String bubbleStyle;
-            Pos alignment;
-            Color senderColor;
+            // 简单颜色区分，用户右对齐，AI/系统左对齐
             if (sender == ChatMessage.Sender.USER) {
-                textColor = "#1a1a1a";
-                linkColor = "#0f4c81";
-                bubbleStyle = "chat-bubble-user";
-                alignment = Pos.CENTER_RIGHT;
-                senderColor = Color.web("#1a1a1a");
+                bubble.setStyle("-fx-background-color: #d7ecff; -fx-border-color: #a7c5e3; -fx-background-radius: 6; -fx-border-radius: 6;");
+                wrapper.setAlignment(Pos.CENTER_RIGHT);
             } else if (sender == ChatMessage.Sender.ASSISTANT) {
-                textColor = "#1a1a1a";
-                linkColor = "#1f4dc5";
-                bubbleStyle = "chat-bubble-assistant";
-                alignment = Pos.CENTER_LEFT;
-                senderColor = Color.web("#1a1a1a");
+                bubble.setStyle("-fx-background-color: #ffffff; -fx-border-color: #e0e0e0; -fx-background-radius: 6; -fx-border-radius: 6;");
+                wrapper.setAlignment(Pos.CENTER_LEFT);
             } else {
-                textColor = "#253057";
-                linkColor = "#3f51b5";
-                bubbleStyle = "chat-bubble-system";
-                alignment = Pos.CENTER_LEFT;
-                senderColor = Color.web("#253057");
+                bubble.setStyle("-fx-background-color: #f1f4ff; -fx-border-color: #d6dbe8; -fx-background-radius: 6; -fx-border-radius: 6;");
+                wrapper.setAlignment(Pos.CENTER_LEFT);
             }
-            markdownView.setPrefHeight(Region.USE_COMPUTED_SIZE);
-            markdownView.setMinHeight(0);
-            markdownView.setPrefWidth(Region.USE_COMPUTED_SIZE);
-            markdownView.setMinWidth(0);
-            String html = MarkdownRenderer.toHtml(item.getContent(), textColor, linkColor);
-            markdownView.getEngine().loadContent(html);
 
-            senderLabel.setTextFill(senderColor);
-            bubble.getStyleClass().setAll("chat-bubble", bubbleStyle);
-            wrapper.setAlignment(alignment);
+            // 直接显示原始文本（不渲染 Markdown）
+            contentLabel.setText(item.getContent());
+
             setGraphic(wrapper);
         }
     }
