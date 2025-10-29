@@ -30,6 +30,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.scene.web.WebView;
 
@@ -569,21 +570,25 @@ public final class ChatView extends BorderPane {
             String linkColor;
             String bubbleStyle;
             Pos alignment;
+            Color senderColor;
             if (sender == ChatMessage.Sender.USER) {
-                textColor = "#ffffff";
-                linkColor = "#d0d8ff";
+                textColor = "#1a1a1a";
+                linkColor = "#0f4c81";
                 bubbleStyle = "chat-bubble-user";
                 alignment = Pos.CENTER_RIGHT;
+                senderColor = Color.web("#1a1a1a");
             } else if (sender == ChatMessage.Sender.ASSISTANT) {
-                textColor = "#1f2a4a";
-                linkColor = "#3f51b5";
+                textColor = "#1a1a1a";
+                linkColor = "#1f4dc5";
                 bubbleStyle = "chat-bubble-assistant";
                 alignment = Pos.CENTER_LEFT;
+                senderColor = Color.web("#1a1a1a");
             } else {
                 textColor = "#253057";
                 linkColor = "#3f51b5";
                 bubbleStyle = "chat-bubble-system";
                 alignment = Pos.CENTER_LEFT;
+                senderColor = Color.web("#253057");
             }
             markdownView.setPrefHeight(Region.USE_COMPUTED_SIZE);
             markdownView.setMinHeight(0);
@@ -592,6 +597,7 @@ public final class ChatView extends BorderPane {
             String html = MarkdownRenderer.toHtml(item.getContent(), textColor, linkColor);
             markdownView.getEngine().loadContent(html);
 
+            senderLabel.setTextFill(senderColor);
             bubble.getStyleClass().setAll("chat-bubble", bubbleStyle);
             wrapper.setAlignment(alignment);
             setGraphic(wrapper);
