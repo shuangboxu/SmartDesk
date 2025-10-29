@@ -1,7 +1,6 @@
 package com.smartdesk.ui;
 
 import javafx.application.Application;
-import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -27,7 +26,6 @@ import java.time.format.DateTimeFormatter;
 
 import javafx.geometry.Insets;
 
-import com.smartdesk.core.config.AppConfig;
 import com.smartdesk.core.config.ConfigManager;
 import com.smartdesk.core.task.model.TaskPriority;
 import com.smartdesk.core.task.model.TaskStatus;
@@ -72,8 +70,6 @@ public class MainApp extends Application {
         scene.getStylesheets().add(
                 getClass().getResource("/com/smartdesk/resources/application.css").toExternalForm()
         );
-        applyTheme(configManager.getConfig().getTheme());
-        configManager.registerListener(config -> Platform.runLater(() -> applyTheme(config.getTheme())));
 
         primaryStage.setScene(scene);
         primaryStage.show();
@@ -265,18 +261,6 @@ public class MainApp extends Application {
         tab.setContent(new Label(placeholderText));
         tab.setClosable(false);
         return tab;
-    }
-
-    private void applyTheme(AppConfig.Theme theme) {
-        if (scene == null) {
-            return;
-        }
-        var root = scene.getRoot();
-        root.getStyleClass().removeAll("theme-light", "theme-dark");
-        String styleClass = theme == AppConfig.Theme.DARK ? "theme-dark" : "theme-light";
-        if (!root.getStyleClass().contains(styleClass)) {
-            root.getStyleClass().add(styleClass);
-        }
     }
 
     private ObservableList<TaskViewModel> createSampleTasks() {
