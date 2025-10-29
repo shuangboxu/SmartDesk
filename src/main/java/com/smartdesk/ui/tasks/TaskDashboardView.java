@@ -9,11 +9,14 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.EnumMap;
+import java.util.IdentityHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
+import javafx.beans.InvalidationListener;
+import javafx.beans.Observable;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -54,6 +57,8 @@ public final class TaskDashboardView extends BorderPane {
     private final Label reminderLabel = new Label();
     private final Map<TaskLane, TaskSectionPane> laneSections = new EnumMap<>(TaskLane.class);
     private final TaskReminderManager reminderManager;
+    private final Map<TaskViewModel, List<Observable>> observedTaskProperties = new IdentityHashMap<>();
+    private final InvalidationListener taskPropertyListener = obs -> refresh();
 
     public TaskDashboardView(final ObservableList<TaskViewModel> tasks) {
         this.tasks = Objects.requireNonNull(tasks, "tasks");
@@ -64,7 +69,18 @@ public final class TaskDashboardView extends BorderPane {
         setLeft(buildCalendarPane());
         setCenter(buildSections());
 
-        tasks.addListener((ListChangeListener<TaskViewModel>) change -> refresh());
+        tasks.forEach(this::registerTaskObservers);
+        tasks.addListener((ListChangeListener<TaskViewModel>) change -> {
+            while (change.next()) {
+                if (change.wasRemoved()) {
+                    change.getRemoved().forEach(this::unregisterTaskObservers);
+                }
+                if (change.wasAdded()) {
+                    change.getAddedSubList().forEach(this::registerTaskObservers);
+                }
+            }
+            refresh();
+        });
         calendarView.valueProperty().addListener((obs, oldValue, newValue) -> refresh());
         typeFilter.addListener((obs, oldValue, newValue) -> refresh());
         statusFilter.addListener((obs, oldValue, newValue) -> refresh());
@@ -78,6 +94,35 @@ public final class TaskDashboardView extends BorderPane {
 
     public TaskReminderManager getReminderManager() {
         return reminderManager;
+    }
+
+    private void registerTaskObservers(final TaskViewModel task) {
+        if (task == null || observedTaskProperties.containsKey(task)) {
+            return;
+        }
+        List<Observable> observables = List.of(
+            task.titleProperty(),
+            task.descriptionProperty(),
+            task.typeProperty(),
+            task.statusProperty(),
+            task.priorityProperty(),
+            task.startDateTimeProperty(),
+            task.dueDateTimeProperty(),
+            task.reminderEnabledProperty(),
+            task.reminderLeadMinutesProperty(),
+            task.lastRemindedAtProperty(),
+            task.reminderTriggeredProperty()
+        );
+        observables.forEach(observable -> observable.addListener(taskPropertyListener));
+        observedTaskProperties.put(task, observables);
+    }
+
+    private void unregisterTaskObservers(final TaskViewModel task) {
+        List<Observable> observables = observedTaskProperties.remove(task);
+        if (observables == null) {
+            return;
+        }
+        observables.forEach(observable -> observable.removeListener(taskPropertyListener));
     }
 
     private Node buildHeaderBar() {

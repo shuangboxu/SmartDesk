@@ -210,9 +210,6 @@ public final class ShareContextDialog extends Dialog<String> {
             if (updatingChecks) {
                 return;
             }
-            if (master.isIndeterminate()) {
-                return;
-            }
             updatingChecks = true;
             Arrays.stream(children).forEach(child -> child.setSelected(selected));
             updatingChecks = false;

@@ -26,6 +26,7 @@ public final class MarkdownRenderer {
               <head>
                 <meta charset="utf-8" />
                 <style>
+                  html { background-color: transparent; }
                   body { font-family: 'Microsoft YaHei', 'PingFang SC', sans-serif; font-size: 14px; margin: 0; color: %s; background-color: transparent; }
                   p { margin: 0 0 8px 0; line-height: 1.6; }
                   ul, ol { padding-left: 20px; margin-top: 0; margin-bottom: 8px; }

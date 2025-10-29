@@ -46,6 +46,8 @@ public final class ChatView extends BorderPane {
 
     private static final DateTimeFormatter SESSION_TIME_FORMAT = DateTimeFormatter.ofPattern("MM-dd HH:mm");
     private static final DateTimeFormatter MESSAGE_TIME_FORMAT = DateTimeFormatter.ofPattern("HH:mm:ss");
+    private static final double MAX_MESSAGE_WIDTH = 560;
+    private static final double MIN_MESSAGE_WIDTH = 160;
 
     private final ConfigManager configManager;
     private final ObservableList<MainApp.Note> notes;
@@ -476,8 +478,8 @@ public final class ChatView extends BorderPane {
             timeLabel.setMaxWidth(Double.MAX_VALUE);
             timeLabel.setAlignment(Pos.CENTER_RIGHT);
 
-            bubble.setMaxWidth(560);
-            bubble.setFillWidth(true);
+            bubble.setMaxWidth(MAX_MESSAGE_WIDTH + 40);
+            bubble.setFillWidth(false);
             bubble.setPadding(new Insets(12));
 
             wrapper.setPadding(new Insets(4, 8, 4, 8));
@@ -485,16 +487,23 @@ public final class ChatView extends BorderPane {
 
             markdownView.setContextMenuEnabled(false);
             markdownView.setZoom(1.0);
-            markdownView.setMaxWidth(520);
-            markdownView.setPrefWidth(520);
+            markdownView.setMaxWidth(MAX_MESSAGE_WIDTH);
+            markdownView.setPrefWidth(Region.USE_COMPUTED_SIZE);
             markdownView.setMinHeight(0);
+            markdownView.setMinWidth(0);
             markdownView.setStyle("-fx-background-color: transparent;");
             markdownView.getEngine().getLoadWorker().stateProperty().addListener((obs, old, state) -> {
                 if (state == Worker.State.SUCCEEDED) {
                     Platform.runLater(() -> {
-                        Object result = markdownView.getEngine().executeScript("document.body.scrollHeight + 16");
-                        if (result instanceof Number number) {
-                            markdownView.setPrefHeight(number.doubleValue());
+                        Object heightResult = markdownView.getEngine().executeScript("document.body.scrollHeight + 16");
+                        if (heightResult instanceof Number height) {
+                            markdownView.setPrefHeight(height.doubleValue());
+                        }
+                        Object widthResult = markdownView.getEngine().executeScript("document.body.scrollWidth + 24");
+                        if (widthResult instanceof Number widthNumber) {
+                            double width = Math.max(MIN_MESSAGE_WIDTH, Math.min(MAX_MESSAGE_WIDTH, widthNumber.doubleValue()));
+                            markdownView.setPrefWidth(width);
+                            markdownView.setMinWidth(width);
                         }
                     });
                 }
@@ -537,6 +546,10 @@ public final class ChatView extends BorderPane {
                 bubbleStyle = "chat-bubble-system";
                 alignment = Pos.CENTER_LEFT;
             }
+            markdownView.setPrefHeight(Region.USE_COMPUTED_SIZE);
+            markdownView.setMinHeight(0);
+            markdownView.setPrefWidth(Region.USE_COMPUTED_SIZE);
+            markdownView.setMinWidth(0);
             String html = MarkdownRenderer.toHtml(item.getContent(), textColor, linkColor);
             markdownView.getEngine().loadContent(html);
 
