@@ -3,6 +3,8 @@ package com.smartdesk.ui.tasks;
 import java.io.IOException;
 import java.util.Optional;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.control.Button;
+import javafx.scene.control.ButtonBar;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.DialogPane;
@@ -30,7 +32,14 @@ public class TaskEditorDialog extends Dialog<TaskViewModel> {
             throw new IllegalStateException("Unable to load task editor dialog", e);
         }
 
-        getDialogPane().lookupButton(ButtonType.OK).getStyleClass().add("accent-button");
+        ButtonType okType = getDialogPane().getButtonTypes().stream()
+            .filter(buttonType -> buttonType.getButtonData() == ButtonBar.ButtonData.OK_DONE)
+            .findFirst()
+            .orElse(ButtonType.OK);
+        Button okButton = (Button) getDialogPane().lookupButton(okType);
+        if (okButton != null) {
+            okButton.getStyleClass().add("accent-button");
+        }
 
         setResultConverter(buttonType -> {
             if (buttonType == ButtonType.OK) {

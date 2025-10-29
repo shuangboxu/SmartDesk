@@ -23,7 +23,6 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
-import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextArea;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.BorderPane;
@@ -59,6 +58,7 @@ public final class ChatView extends BorderPane {
     private final TextArea composer = new TextArea();
     private final Button sendButton = new Button("发送");
     private final Button shareButton = new Button("插入资料");
+    private final Button toggleHistoryButton = new Button("折叠历史");
     private final ComboBox<String> modelSelector = new ComboBox<>();
     private final Label modeLabel = new Label();
     private final Label statusLabel = new Label();
@@ -69,6 +69,9 @@ public final class ChatView extends BorderPane {
     private String activeModel;
     private boolean updatingModel;
     private int sessionCounter = 1;
+
+    private VBox sidebar;
+    private boolean historyCollapsed;
 
     public ChatView(final ConfigManager configManager,
                     final ObservableList<MainApp.Note> notes,
@@ -105,7 +108,7 @@ public final class ChatView extends BorderPane {
 
         sessionList.setPlaceholder(new Label("暂无对话，点击上方新建"));
 
-        VBox sidebar = new VBox(12, title, newButton, sessionList);
+        sidebar = new VBox(12, title, newButton, sessionList);
         sidebar.getStyleClass().add("chat-sidebar");
         VBox.setVgrow(sessionList, Priority.ALWAYS);
         return sidebar;
@@ -141,7 +144,10 @@ public final class ChatView extends BorderPane {
         });
 
         Region spacer = new Region();
-        HBox controls = new HBox(12, modelLabel, modelSelector, spacer);
+        toggleHistoryButton.getStyleClass().add("chat-history-toggle");
+        toggleHistoryButton.setOnAction(evt -> toggleHistory());
+
+        HBox controls = new HBox(12, modelLabel, modelSelector, spacer, toggleHistoryButton);
         controls.setAlignment(Pos.CENTER_LEFT);
         HBox.setHgrow(spacer, Priority.ALWAYS);
 
@@ -153,11 +159,9 @@ public final class ChatView extends BorderPane {
     }
 
     private Node buildMessagePane() {
-        ScrollPane scrollPane = new ScrollPane(messageList);
-        scrollPane.setFitToWidth(true);
-        scrollPane.setFitToHeight(true);
-        scrollPane.getStyleClass().add("chat-view-scroll");
-        return scrollPane;
+        messageList.setPadding(new Insets(12));
+        messageList.setStyle("-fx-background-color: transparent;");
+        return messageList;
     }
 
     private Node buildComposer() {
@@ -406,6 +410,17 @@ public final class ChatView extends BorderPane {
         statusLabel.setText(text);
     }
 
+    private void toggleHistory() {
+        if (historyCollapsed) {
+            setLeft(sidebar);
+            toggleHistoryButton.setText("折叠历史");
+        } else {
+            setLeft(null);
+            toggleHistoryButton.setText("展开历史");
+        }
+        historyCollapsed = !historyCollapsed;
+    }
+
     public void shutdown() {
         if (assistant != null) {
             assistant.shutdown();
@@ -460,6 +475,13 @@ public final class ChatView extends BorderPane {
             timeLabel.getStyleClass().add("chat-bubble-time");
             timeLabel.setMaxWidth(Double.MAX_VALUE);
             timeLabel.setAlignment(Pos.CENTER_RIGHT);
+
+            bubble.setMaxWidth(560);
+            bubble.setFillWidth(true);
+            bubble.setPadding(new Insets(12));
+
+            wrapper.setPadding(new Insets(4, 8, 4, 8));
+            wrapper.setFillHeight(true);
 
             markdownView.setContextMenuEnabled(false);
             markdownView.setZoom(1.0);

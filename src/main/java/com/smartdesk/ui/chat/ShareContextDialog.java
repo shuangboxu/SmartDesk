@@ -19,6 +19,7 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 
 import java.time.format.DateTimeFormatter;
+import java.util.Arrays;
 import java.util.Objects;
 
 /**
@@ -29,14 +30,18 @@ public final class ShareContextDialog extends Dialog<String> {
     private static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
 
     private final ListView<MainApp.Note> noteListView = new ListView<>();
+    private final CheckBox noteSelectAllCheck = new CheckBox("全选");
     private final CheckBox noteTitleCheck = new CheckBox("笔记标题");
     private final CheckBox noteContentCheck = new CheckBox("笔记正文");
 
     private final ListView<TaskViewModel> taskListView = new ListView<>();
+    private final CheckBox taskSelectAllCheck = new CheckBox("全选");
     private final CheckBox taskTitleCheck = new CheckBox("任务标题");
     private final CheckBox taskDescriptionCheck = new CheckBox("任务描述");
     private final CheckBox taskScheduleCheck = new CheckBox("时间信息");
     private final CheckBox taskStatusCheck = new CheckBox("状态/优先级");
+
+    private boolean updatingChecks;
 
     public ShareContextDialog(final ObservableList<MainApp.Note> notes,
                               final ObservableList<TaskViewModel> tasks) {
@@ -68,6 +73,9 @@ public final class ShareContextDialog extends Dialog<String> {
         tabPane.setTabClosingPolicy(TabPane.TabClosingPolicy.UNAVAILABLE);
         getDialogPane().setContent(tabPane);
 
+        setupSelectAll(noteSelectAllCheck, noteTitleCheck, noteContentCheck);
+        setupSelectAll(taskSelectAllCheck, taskTitleCheck, taskDescriptionCheck, taskScheduleCheck, taskStatusCheck);
+
         setResultConverter(button -> {
             if (button == null || button.getButtonData() != ButtonBar.ButtonData.OK_DONE) {
                 return null;
@@ -87,10 +95,11 @@ public final class ShareContextDialog extends Dialog<String> {
     }
 
     private Tab buildNotesTab() {
+        noteSelectAllCheck.setAllowIndeterminate(true);
         noteTitleCheck.setSelected(true);
         noteContentCheck.setSelected(true);
 
-        VBox options = new VBox(8, noteTitleCheck, noteContentCheck);
+        VBox options = new VBox(8, noteSelectAllCheck, noteTitleCheck, noteContentCheck);
         options.setPadding(new Insets(12, 0, 0, 0));
 
         BorderPane pane = new BorderPane();
@@ -104,6 +113,7 @@ public final class ShareContextDialog extends Dialog<String> {
     }
 
     private Tab buildTasksTab() {
+        taskSelectAllCheck.setAllowIndeterminate(true);
         taskTitleCheck.setSelected(true);
         taskDescriptionCheck.setSelected(true);
 
@@ -116,10 +126,13 @@ public final class ShareContextDialog extends Dialog<String> {
         options.add(taskStatusCheck, 1, 1);
         GridPane.setHgrow(taskDescriptionCheck, Priority.ALWAYS);
 
+        VBox optionBox = new VBox(8, taskSelectAllCheck, options);
+        optionBox.setPadding(new Insets(12, 0, 0, 0));
+
         BorderPane pane = new BorderPane();
         pane.setCenter(taskListView);
-        pane.setBottom(options);
-        BorderPane.setMargin(options, new Insets(12, 0, 0, 0));
+        pane.setBottom(optionBox);
+        BorderPane.setMargin(optionBox, new Insets(12, 0, 0, 0));
 
         Tab tab = new Tab("任务", pane);
         tab.setId("tasks");
@@ -190,5 +203,41 @@ public final class ShareContextDialog extends Dialog<String> {
         }
         String payload = builder.toString().trim();
         return payload.isEmpty() ? null : payload;
+    }
+
+    private void setupSelectAll(final CheckBox master, final CheckBox... children) {
+        master.selectedProperty().addListener((obs, old, selected) -> {
+            if (updatingChecks) {
+                return;
+            }
+            if (master.isIndeterminate()) {
+                return;
+            }
+            updatingChecks = true;
+            Arrays.stream(children).forEach(child -> child.setSelected(selected));
+            updatingChecks = false;
+        });
+
+        Arrays.stream(children).forEach(child -> child.selectedProperty().addListener((obs, old, selected) -> updateSelectAllState(master, children)));
+        updateSelectAllState(master, children);
+    }
+
+    private void updateSelectAllState(final CheckBox master, final CheckBox... children) {
+        if (updatingChecks) {
+            return;
+        }
+        updatingChecks = true;
+        long selectedCount = Arrays.stream(children).filter(CheckBox::isSelected).count();
+        if (selectedCount == 0) {
+            master.setIndeterminate(false);
+            master.setSelected(false);
+        } else if (selectedCount == children.length) {
+            master.setIndeterminate(false);
+            master.setSelected(true);
+        } else {
+            master.setIndeterminate(true);
+            master.setSelected(false);
+        }
+        updatingChecks = false;
     }
 }
