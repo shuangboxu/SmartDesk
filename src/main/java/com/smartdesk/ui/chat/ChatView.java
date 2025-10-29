@@ -23,15 +23,13 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
-import javafx.scene.control.TextArea;
-import javafx.scene.input.KeyCode;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
-import javafx.scene.text.Text;
 import javafx.scene.web.WebView;
 
 import java.time.format.DateTimeFormatter;
@@ -48,8 +46,6 @@ public final class ChatView extends BorderPane {
 
     private static final DateTimeFormatter SESSION_TIME_FORMAT = DateTimeFormatter.ofPattern("MM-dd HH:mm");
     private static final DateTimeFormatter MESSAGE_TIME_FORMAT = DateTimeFormatter.ofPattern("HH:mm:ss");
-    private static final double MIN_COMPOSER_HEIGHT = 96;
-    private static final double MAX_COMPOSER_HEIGHT = 260;
 
     private final ConfigManager configManager;
     private final ObservableList<MainApp.Note> notes;
@@ -59,9 +55,8 @@ public final class ChatView extends BorderPane {
     private final ObservableList<ChatSession> sessions = FXCollections.observableArrayList();
     private final ListView<ChatSession> sessionList = new ListView<>(sessions);
     private final ListView<ChatMessage> messageList = new ListView<>();
-    private final TextArea composer = new TextArea();
-    private final Button sendButton = new Button("发送");
-    private final Button shareButton = new Button("插入资料");
+    private final Button shareButton = new Button("整理资料");
+    private final Button sendButton = new Button("立即提问");
     private final Button toggleHistoryButton = new Button("折叠历史");
     private final ComboBox<String> modelSelector = new ComboBox<>();
     private final Label modeLabel = new Label();
@@ -76,7 +71,7 @@ public final class ChatView extends BorderPane {
 
     private VBox sidebar;
     private boolean historyCollapsed;
-    private final Text composerSizer = new Text();
+    private final FlowPane suggestionBar = new FlowPane(10, 10);
 
     public ChatView(final ConfigManager configManager,
                     final ObservableList<MainApp.Note> notes,
@@ -96,7 +91,7 @@ public final class ChatView extends BorderPane {
 
         configureSessionList();
         configureListView();
-        configureComposer();
+        configureSuggestions();
 
         applyConfig(configManager.getConfig());
         configManager.registerListener(config -> Platform.runLater(() -> applyConfig(config)));
@@ -170,31 +165,33 @@ public final class ChatView extends BorderPane {
     }
 
     private Node buildComposer() {
-        VBox container = new VBox(8);
-        container.setPadding(new Insets(12, 0, 0, 0));
+        VBox container = new VBox(14);
+        container.setPadding(new Insets(20, 0, 0, 0));
+        container.getStyleClass().add("chat-composer-panel");
 
-        composer.setPromptText("输入问题，按 Ctrl+Enter 发送");
-        composer.setWrapText(true);
-        composer.getStyleClass().add("chat-view-composer");
-        composer.setPrefHeight(MIN_COMPOSER_HEIGHT);
-        composer.setMinHeight(MIN_COMPOSER_HEIGHT);
-        composer.setMaxHeight(MAX_COMPOSER_HEIGHT);
+        Label sectionTitle = new Label("快速提问");
+        sectionTitle.getStyleClass().add("chat-composer-title");
 
-        shareButton.getStyleClass().add("chat-share-button");
+        Label sectionSubtitle = new Label("选择一个提示或点击按钮开始与助理对话");
+        sectionSubtitle.getStyleClass().add("chat-composer-subtitle");
+
+        suggestionBar.getStyleClass().add("chat-suggestion-bar");
+        suggestionBar.setPrefWrapLength(420);
+
+        shareButton.getStyleClass().add("chat-ghost-button");
         shareButton.setOnAction(evt -> handleShareContext());
 
-        sendButton.getStyleClass().add("accent-button");
+        sendButton.getStyleClass().add("chat-primary-button");
         sendButton.setDefaultButton(true);
-        sendButton.setOnAction(evt -> dispatchMessage());
+        sendButton.setOnAction(evt -> openComposerDialog(null));
 
         Region spacer = new Region();
-        HBox actionBar = new HBox(12, shareButton, spacer, sendButton);
-        actionBar.getStyleClass().add("chat-composer-actions");
-        actionBar.setAlignment(Pos.CENTER_RIGHT);
+        HBox actions = new HBox(12, shareButton, spacer, sendButton);
+        actions.getStyleClass().add("chat-composer-actions");
+        actions.setAlignment(Pos.CENTER_LEFT);
         HBox.setHgrow(spacer, Priority.ALWAYS);
 
-        container.getChildren().addAll(composer, actionBar);
-        VBox.setVgrow(composer, Priority.ALWAYS);
+        container.getChildren().addAll(sectionTitle, sectionSubtitle, suggestionBar, actions);
         return container;
     }
 
@@ -220,16 +217,19 @@ public final class ChatView extends BorderPane {
         messageList.setPlaceholder(new Label("向 AI 发送你的第一个问题吧！"));
     }
 
-    private void configureComposer() {
-        composer.setOnKeyPressed(event -> {
-            if (event.getCode() == KeyCode.ENTER && event.isControlDown()) {
-                dispatchMessage();
-                event.consume();
-            }
-        });
-        composer.textProperty().addListener((obs, oldValue, newValue) -> scheduleComposerResize());
-        composer.widthProperty().addListener((obs, oldValue, newValue) -> scheduleComposerResize());
-        Platform.runLater(this::resizeComposerToContent);
+    private void configureSuggestions() {
+        suggestionBar.getChildren().setAll(
+            createSuggestionChip("生成总结", "请帮我总结以下会议纪要的重点:"),
+            createSuggestionChip("灵感发散", "请围绕这个想法提供 3 个不同的实现思路:"),
+            createSuggestionChip("润色文案", "请帮我润色下面的文案，让语气更专业:"),
+            createSuggestionChip("拆解任务", "请帮我把这个目标拆解成可执行的步骤:"));
+    }
+
+    private Button createSuggestionChip(final String label, final String preset) {
+        Button chip = new Button(label);
+        chip.getStyleClass().add("chat-suggestion-chip");
+        chip.setOnAction(evt -> openComposerDialog(preset + System.lineSeparator() + System.lineSeparator()));
+        return chip;
     }
 
     private void applyConfig(final AppConfig config) {
@@ -247,35 +247,6 @@ public final class ChatView extends BorderPane {
         }
         updateModeLabel();
         updateStatus("配置已同步");
-    }
-
-    private void scheduleComposerResize() {
-        Platform.runLater(this::resizeComposerToContent);
-    }
-
-    private void resizeComposerToContent() {
-        double availableWidth = composer.getWidth();
-        if (availableWidth <= 0) {
-            return;
-        }
-        composerSizer.setFont(composer.getFont());
-        String content = composer.getText();
-        if (content == null || content.isBlank()) {
-            composer.setPrefHeight(MIN_COMPOSER_HEIGHT);
-            composer.setMinHeight(MIN_COMPOSER_HEIGHT);
-            return;
-        }
-        Insets padding = composer.getPadding();
-        double horizontalPadding = padding == null ? 0 : padding.getLeft() + padding.getRight();
-        double verticalPadding = padding == null ? 0 : padding.getTop() + padding.getBottom();
-        composerSizer.setWrappingWidth(Math.max(0, availableWidth - horizontalPadding - 18));
-        composerSizer.setText(content + "\n");
-        double height = composerSizer.getLayoutBounds().getHeight()
-            + verticalPadding
-            + 20;
-        double clamped = Math.max(MIN_COMPOSER_HEIGHT, Math.min(MAX_COMPOSER_HEIGHT, height));
-        composer.setPrefHeight(clamped);
-        composer.setMinHeight(clamped);
     }
 
     private void refreshModelSelector() {
@@ -395,32 +366,29 @@ public final class ChatView extends BorderPane {
         history.replaceWith(snapshot);
     }
 
-    private void dispatchMessage() {
+    private void dispatchMessage(final String content) {
         if (assistant == null) {
             updateStatus("助手尚未初始化，请检查设置");
             return;
         }
-        String text = composer.getText();
-        if (text == null || text.isBlank()) {
+        if (content == null || content.isBlank()) {
             return;
         }
-        String content = text.trim();
-        composer.clear();
         ChatMessage userMessage = ChatMessage.of(ChatMessage.Sender.USER, content);
         activeSession.addMessage(userMessage);
         refreshSessionOrder(activeSession);
         messageList.scrollTo(Math.max(activeSession.getMessages().size() - 1, 0));
-        sendButton.setDisable(true);
+        setComposerBusy(true);
         updateStatus("发送中...");
         assistant.sendMessage(userMessage, response -> Platform.runLater(() -> {
             activeSession.addMessage(response);
             refreshSessionOrder(activeSession);
             messageList.scrollTo(Math.max(activeSession.getMessages().size() - 1, 0));
             updateStatus("响应时间: " + response.getTimestamp().toLocalTime().format(MESSAGE_TIME_FORMAT));
-            sendButton.setDisable(false);
+            setComposerBusy(false);
         }), error -> Platform.runLater(() -> {
             updateStatus("发生错误: " + error.getMessage());
-            sendButton.setDisable(false);
+            setComposerBusy(false);
         }));
     }
 
@@ -429,12 +397,21 @@ public final class ChatView extends BorderPane {
         Optional<String> result = dialog.showAndWait();
         result.ifPresent(snippet -> {
             if (!snippet.isBlank()) {
-                int position = composer.getCaretPosition();
-                composer.insertText(position, snippet + System.lineSeparator());
-                composer.requestFocus();
-                composer.positionCaret(position + snippet.length() + 1);
+                openComposerDialog(snippet + System.lineSeparator());
             }
         });
+    }
+
+    private void openComposerDialog(final String initialText) {
+        MessageComposerDialog dialog = new MessageComposerDialog(initialText);
+        Optional<String> result = dialog.showAndWait();
+        result.ifPresent(this::dispatchMessage);
+    }
+
+    private void setComposerBusy(final boolean busy) {
+        sendButton.setDisable(busy);
+        shareButton.setDisable(busy);
+        suggestionBar.setDisable(busy);
     }
 
     private void refreshSessionOrder(final ChatSession session) {

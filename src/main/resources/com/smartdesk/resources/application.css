@@ -336,41 +336,120 @@
     -fx-text-fill: #9aa5d0;
 }
 
-.chat-view-composer {
-    -fx-background-color: transparent;
-    -fx-control-inner-background: rgba(255, 255, 255, 0.98);
-    -fx-border-color: rgba(63, 81, 181, 0.24);
-    -fx-border-radius: 14;
-    -fx-background-radius: 14;
-    -fx-padding: 12;
-    -fx-font-size: 14px;
-    -fx-text-fill: #1f2a4a;
-    -fx-prompt-text-fill: rgba(63, 81, 181, 0.55);
-}
-
-.chat-view-composer:focused {
-    -fx-border-color: rgba(63, 81, 181, 0.6);
-    -fx-effect: dropshadow(gaussian, rgba(63, 81, 181, 0.18), 16, 0.3, 0, 4);
-}
-
 .chat-composer-actions {
-    -fx-alignment: center-right;
+    -fx-alignment: center-left;
 }
 
-.chat-share-button {
-    -fx-background-color: rgba(63, 81, 181, 0.1);
-    -fx-text-fill: #3f51b5;
-    -fx-background-radius: 14;
-    -fx-padding: 8 18;
+
+.chat-composer-panel {
+    -fx-background-color: transparent;
+    -fx-spacing: 12;
+}
+
+.chat-composer-title {
+    -fx-font-size: 16px;
     -fx-font-weight: bold;
+    -fx-text-fill: #202a44;
 }
 
-.chat-share-button:hover {
+.chat-composer-subtitle {
+    -fx-text-fill: #6b75a5;
+    -fx-font-size: 13px;
+}
+
+.chat-suggestion-bar {
+    -fx-padding: 4 0 8 0;
+}
+
+.chat-suggestion-chip {
+    -fx-background-color: rgba(63, 81, 181, 0.12);
+    -fx-text-fill: #2f3d8a;
+    -fx-background-radius: 18;
+    -fx-padding: 8 18;
+    -fx-font-size: 13px;
+    -fx-border-color: transparent;
+}
+
+.chat-suggestion-chip:hover {
     -fx-background-color: rgba(63, 81, 181, 0.2);
 }
 
-.chat-share-button:pressed {
+.chat-suggestion-chip:pressed {
     -fx-background-color: rgba(63, 81, 181, 0.32);
+}
+
+.chat-primary-button {
+    -fx-background-color: linear-gradient(to right, #4a5fde, #7384ff);
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-background-radius: 16;
+    -fx-padding: 10 24;
+    -fx-effect: dropshadow(gaussian, rgba(76, 102, 192, 0.35), 16, 0.4, 0, 6);
+}
+
+.chat-primary-button:hover {
+    -fx-background-color: linear-gradient(to right, #5669e4, #8794ff);
+}
+
+.chat-primary-button:pressed {
+    -fx-background-color: linear-gradient(to right, #3b4cc7, #5a6deb);
+}
+
+.chat-ghost-button {
+    -fx-background-color: rgba(63, 81, 181, 0.08);
+    -fx-text-fill: #3f51b5;
+    -fx-background-radius: 16;
+    -fx-padding: 10 18;
+    -fx-font-weight: bold;
+    -fx-border-color: transparent;
+}
+
+.chat-ghost-button:hover {
+    -fx-background-color: rgba(63, 81, 181, 0.16);
+}
+
+.chat-ghost-button:pressed {
+    -fx-background-color: rgba(63, 81, 181, 0.28);
+}
+
+.chat-composer-dialog {
+    -fx-background-color: rgba(255, 255, 255, 0.98);
+    -fx-background-radius: 18;
+    -fx-padding: 18;
+}
+
+.chat-dialog-container {
+    -fx-background-color: linear-gradient(to bottom right, rgba(242, 246, 255, 0.95), rgba(232, 236, 250, 0.95));
+    -fx-background-radius: 18;
+    -fx-padding: 20;
+    -fx-spacing: 12;
+}
+
+.chat-dialog-title {
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #1f2a4a;
+}
+
+.chat-dialog-subtitle {
+    -fx-text-fill: #5967a9;
+    -fx-font-size: 13px;
+}
+
+.chat-dialog-editor {
+    -fx-background-color: rgba(255, 255, 255, 0.92);
+    -fx-background-radius: 14;
+    -fx-border-color: rgba(63, 81, 181, 0.2);
+    -fx-border-radius: 14;
+    -fx-padding: 12;
+    -fx-font-size: 14px;
+    -fx-text-fill: #1f2a4a;
+    -fx-prompt-text-fill: rgba(63, 81, 181, 0.52);
+}
+
+.chat-dialog-editor:focused {
+    -fx-border-color: rgba(63, 81, 181, 0.55);
+    -fx-effect: dropshadow(gaussian, rgba(63, 81, 181, 0.25), 18, 0.3, 0, 6);
 }
 
 /* Settings view styles */
