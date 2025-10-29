@@ -605,7 +605,7 @@ public final class ChatView extends BorderPane {
             markdownView.setPrefWidth(Double.MAX_VALUE);
             markdownView.setMinWidth(0);
             String html = MarkdownRenderer.toHtml(item.getContent(), textColor, linkColor);
-            markdownView.getEngine().loadContent(html);
+            markdownView.getEngine().loadContent(html, "text/html; charset=UTF-8");
 
             senderLabel.setTextFill(senderColor);
             bubble.getStyleClass().setAll("chat-bubble", bubbleStyle);
