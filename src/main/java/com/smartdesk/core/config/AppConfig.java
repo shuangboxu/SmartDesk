@@ -25,38 +25,28 @@ public final class AppConfig {
         DEEPSEEK
     }
 
-    /**
-     * UI theme options.
-     */
-    public enum Theme {
-        LIGHT,
-        DARK
-    }
-
     private AiMode aiMode = AiMode.OFFLINE;
     private Provider provider = Provider.CHATGPT;
     private String apiKey = "";
     private String baseUrl = "";
     private String model = "";
-    private Theme theme = Theme.LIGHT;
     private List<String> customModels = new ArrayList<>();
 
     public AppConfig() {
     }
 
     public AppConfig(final AiMode aiMode, final Provider provider, final String apiKey,
-                     final String baseUrl, final String model, final Theme theme) {
+                     final String baseUrl, final String model) {
         this.aiMode = Objects.requireNonNull(aiMode, "aiMode");
         this.provider = Objects.requireNonNull(provider, "provider");
         this.apiKey = Objects.requireNonNull(apiKey, "apiKey");
         this.baseUrl = Objects.requireNonNull(baseUrl, "baseUrl");
         this.model = Objects.requireNonNull(model, "model");
-        this.theme = Objects.requireNonNull(theme, "theme");
         this.customModels = new ArrayList<>();
     }
 
     public AppConfig copy() {
-        AppConfig clone = new AppConfig(aiMode, provider, apiKey, baseUrl, model, theme);
+        AppConfig clone = new AppConfig(aiMode, provider, apiKey, baseUrl, model);
         clone.setCustomModels(new ArrayList<>(getCustomModels()));
         return clone;
     }
@@ -99,14 +89,6 @@ public final class AppConfig {
 
     public void setModel(final String model) {
         this.model = Objects.requireNonNull(model, "model");
-    }
-
-    public Theme getTheme() {
-        return theme;
-    }
-
-    public void setTheme(final Theme theme) {
-        this.theme = Objects.requireNonNull(theme, "theme");
     }
 
     public List<String> getCustomModels() {

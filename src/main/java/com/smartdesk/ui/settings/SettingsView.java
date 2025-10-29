@@ -36,7 +36,6 @@ public final class SettingsView extends BorderPane {
     private final ComboBox<String> baseUrlBox = new ComboBox<>();
     private final ComboBox<String> modelBox = new ComboBox<>();
     private final PasswordField apiKeyField = new PasswordField();
-    private final ComboBox<AppConfig.Theme> themeBox = new ComboBox<>();
     private final Label statusLabel = new Label();
     private final ListView<String> customModelList = new ListView<>();
     private final TextField customModelField = new TextField();
@@ -55,7 +54,7 @@ public final class SettingsView extends BorderPane {
     private VBox buildHeader() {
         Label title = new Label("系统设置");
         title.getStyleClass().add("settings-title");
-        Label subtitle = new Label("配置聊天模式、API 接入及主题");
+        Label subtitle = new Label("配置聊天模式和 API 接入");
         subtitle.getStyleClass().add("settings-subtitle");
         VBox header = new VBox(6, title, subtitle);
         header.setPadding(new Insets(0, 0, 16, 0));
@@ -69,8 +68,6 @@ public final class SettingsView extends BorderPane {
 
         modeBox.getItems().setAll(AppConfig.AiMode.values());
         providerBox.getItems().setAll(AppConfig.Provider.values());
-        themeBox.getItems().setAll(AppConfig.Theme.values());
-
         baseUrlBox.setEditable(true);
         modelBox.setEditable(true);
 
@@ -91,9 +88,6 @@ public final class SettingsView extends BorderPane {
         grid.add(buildCustomModelEditor(), 1, row++);
         grid.add(label("API Key"), 0, row);
         grid.add(apiKeyField, 1, row++);
-        grid.add(label("主题"), 0, row);
-        grid.add(themeBox, 1, row);
-
         GridPane.setHgrow(baseUrlBox, Priority.ALWAYS);
         GridPane.setHgrow(modelBox, Priority.ALWAYS);
         GridPane.setHgrow(apiKeyField, Priority.ALWAYS);
@@ -124,7 +118,6 @@ public final class SettingsView extends BorderPane {
         customModelList.getItems().setAll(models == null ? List.of() : models);
         updateProviderPresets(providerBox.getValue(), config.getBaseUrl(), config.getModel(), true);
         apiKeyField.setText(config.getApiKey());
-        themeBox.setValue(config.getTheme() == null ? AppConfig.Theme.LIGHT : config.getTheme());
         updateFieldState(modeBox.getValue());
         statusLabel.setText("配置已同步");
     }
@@ -146,7 +139,6 @@ public final class SettingsView extends BorderPane {
         config.setBaseUrl(getComboValue(baseUrlBox));
         config.setModel(getComboValue(modelBox));
         config.setApiKey(apiKeyField.getText() == null ? "" : apiKeyField.getText().trim());
-        config.setTheme(themeBox.getValue() == null ? AppConfig.Theme.LIGHT : themeBox.getValue());
         config.setCustomModels(List.copyOf(customModelList.getItems()));
         configManager.saveConfig(config);
         statusLabel.setText("已保存");

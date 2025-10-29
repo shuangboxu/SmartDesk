@@ -159,27 +159,10 @@
     -fx-effect: dropshadow(gaussian, rgba(76, 102, 192, 0.1), 20, 0.25, 0, 12);
 }
 
-/* Theme handling */
+/* 应用根节点样式 */
 
-.app-root.theme-light {
+.app-root {
     -fx-background-color: #eef1f8;
-}
-
-.app-root.theme-dark {
-    -fx-background-color: #1f2430;
-    -fx-text-fill: #f4f6fb;
-}
-
-.app-root.theme-dark .notes-detail-container,
-.app-root.theme-dark .notes-list-container,
-.app-root.theme-dark .task-dashboard-side,
-.app-root.theme-dark .task-section {
-    -fx-background-color: #2b3243;
-    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.35), 24, 0.3, 0, 12);
-}
-
-.app-root.theme-dark .chat-bubble-user {
-    -fx-background-color: linear-gradient(to right, #5562d8, #3f51b5);
 }
 
 /* Chat assistant styles */
@@ -253,10 +236,6 @@
     -fx-font-size: 20px;
     -fx-font-weight: bold;
     -fx-text-fill: #202a44;
-}
-
-.app-root.theme-dark .chat-view-title {
-    -fx-text-fill: #f4f6fb;
 }
 
 .chat-view-mode {
@@ -395,92 +374,6 @@
     -fx-background-color: rgba(63, 81, 181, 0.32);
 }
 
-.app-root.theme-dark .chat-bubble-assistant {
-    -fx-background-color: #2b3243;
-    -fx-text-fill: #e8ebff;
-}
-
-.app-root.theme-dark .chat-bubble-system {
-    -fx-background-color: rgba(92, 107, 192, 0.3);
-    -fx-text-fill: #d0d5f6;
-}
-
-.app-root.theme-dark .chat-view-mode {
-    -fx-text-fill: #d6dcff;
-}
-
-.app-root.theme-dark .chat-view-status {
-    -fx-text-fill: #cbd2ff;
-}
-
-.app-root.theme-dark .chat-sidebar {
-    -fx-background-color: rgba(33, 39, 54, 0.92);
-    -fx-border-color: rgba(148, 163, 255, 0.2);
-    -fx-border-radius: 18;
-    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.45), 18, 0.3, 0, 10);
-}
-
-.app-root.theme-dark .chat-model-selector {
-    -fx-background-color: #1f2535;
-    -fx-border-color: rgba(148, 163, 255, 0.45);
-    -fx-text-fill: #e6e9ff;
-}
-
-.app-root.theme-dark .chat-model-selector:focused {
-    -fx-border-color: rgba(148, 163, 255, 0.75);
-    -fx-effect: dropshadow(gaussian, rgba(148, 163, 255, 0.25), 12, 0.3, 0, 3);
-}
-
-.app-root.theme-dark .chat-session-header {
-    -fx-text-fill: #f4f6ff;
-}
-
-.app-root.theme-dark .chat-session-title {
-    -fx-text-fill: #f0f3ff;
-}
-
-.app-root.theme-dark .chat-session-meta {
-    -fx-text-fill: #aab4ff;
-}
-
-.app-root.theme-dark .chat-share-button {
-    -fx-background-color: rgba(92, 107, 192, 0.35);
-    -fx-text-fill: #e6e9ff;
-}
-
-.app-root.theme-dark .chat-share-button:hover {
-    -fx-background-color: rgba(92, 107, 192, 0.45);
-}
-
-.app-root.theme-dark .chat-share-button:pressed {
-    -fx-background-color: rgba(92, 107, 192, 0.6);
-}
-
-.app-root.theme-dark .chat-history-toggle {
-    -fx-background-color: rgba(92, 107, 192, 0.28);
-    -fx-text-fill: #e6e9ff;
-}
-
-.app-root.theme-dark .chat-history-toggle:hover {
-    -fx-background-color: rgba(92, 107, 192, 0.4);
-}
-
-.app-root.theme-dark .chat-history-toggle:pressed {
-    -fx-background-color: rgba(92, 107, 192, 0.55);
-}
-
-.app-root.theme-dark .chat-view-composer {
-    -fx-control-inner-background: #242b3b;
-    -fx-border-color: rgba(148, 163, 255, 0.45);
-    -fx-text-fill: #f4f6ff;
-    -fx-prompt-text-fill: rgba(201, 207, 255, 0.75);
-}
-
-.app-root.theme-dark .chat-view-composer:focused {
-    -fx-border-color: rgba(148, 163, 255, 0.75);
-    -fx-effect: dropshadow(gaussian, rgba(92, 107, 192, 0.45), 18, 0.35, 0, 6);
-}
-
 /* Settings view styles */
 
 .settings-view-root {
@@ -504,22 +397,6 @@
 
 .settings-status {
     -fx-text-fill: #8c9eff;
-}
-
-.app-root.theme-dark .settings-title {
-    -fx-text-fill: #f4f6fb;
-}
-
-.app-root.theme-dark .settings-subtitle {
-    -fx-text-fill: #d2d7ff;
-}
-
-.app-root.theme-dark .settings-label {
-    -fx-text-fill: #e2e6ff;
-}
-
-.app-root.theme-dark .settings-status {
-    -fx-text-fill: #cbd2ff;
 }
 
 .task-section-header {
@@ -591,29 +468,4 @@
 
 .task-upcoming-cell:filled:hover {
     -fx-background-color: rgba(63, 81, 181, 0.12);
-}
-
-.app-root.theme-dark .chat-bubble-time {
-    -fx-text-fill: #bfc7ff;
-}
-
-.app-root.theme-dark .text-field,
-.app-root.theme-dark .password-field,
-.app-root.theme-dark .combo-box-base,
-.app-root.theme-dark .text-area {
-    -fx-background-color: #1a1f2b;
-    -fx-text-fill: #f4f6ff;
-    -fx-border-color: rgba(148, 163, 255, 0.45);
-    -fx-border-radius: 10;
-    -fx-prompt-text-fill: rgba(201, 207, 255, 0.75);
-}
-
-.app-root.theme-dark .combo-box .list-cell,
-.app-root.theme-dark .list-view .list-cell {
-    -fx-text-fill: #e3e7ff;
-}
-
-.app-root.theme-dark .combo-box-popup .list-cell:hover,
-.app-root.theme-dark .list-view .list-cell:filled:hover {
-    -fx-background-color: rgba(124, 138, 255, 0.35);
 }
