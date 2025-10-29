@@ -30,8 +30,12 @@ abstract class AbstractJsonAiClient implements AiModelClient {
                               final String userMessage) throws AiClientException {
         Objects.requireNonNull(userMessage, "userMessage");
         try {
+            String endpoint = resolveEndpoint(config.getBaseUrl());
+            if (endpoint.isEmpty()) {
+                throw new AiClientException("AI 接口地址未配置");
+            }
             HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create(config.getBaseUrl()))
+                .uri(URI.create(endpoint))
                 .timeout(Duration.ofSeconds(60))
                 .header("Content-Type", "application/json")
                 .header("Authorization", "Bearer " + config.getApiKey())
@@ -74,6 +78,23 @@ abstract class AbstractJsonAiClient implements AiModelClient {
     }
 
     protected abstract void customisePayload(JsonObject payload);
+
+    private String resolveEndpoint(final String baseUrl) {
+        if (baseUrl == null) {
+            return "";
+        }
+        String trimmed = baseUrl.trim();
+        if (trimmed.isEmpty()) {
+            return "";
+        }
+        String normalised = trimmed.endsWith("/") ? trimmed.substring(0, trimmed.length() - 1) : trimmed;
+        String lower = normalised.toLowerCase();
+        if (lower.contains("/chat/completions") || lower.endsWith("/responses")
+            || lower.endsWith("/responses/beta") || lower.endsWith("/completions")) {
+            return normalised;
+        }
+        return normalised + "/chat/completions";
+    }
 
     protected String parseContent(final String rawBody) throws AiClientException {
         JsonElement parsed = gson.fromJson(rawBody, JsonElement.class);
