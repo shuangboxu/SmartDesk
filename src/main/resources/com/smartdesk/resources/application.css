@@ -159,6 +159,162 @@
     -fx-effect: dropshadow(gaussian, rgba(76, 102, 192, 0.1), 20, 0.25, 0, 12);
 }
 
+/* Theme handling */
+
+.app-root.theme-light {
+    -fx-background-color: #eef1f8;
+}
+
+.app-root.theme-dark {
+    -fx-background-color: #1f2430;
+    -fx-text-fill: #f4f6fb;
+}
+
+.app-root.theme-dark .notes-detail-container,
+.app-root.theme-dark .notes-list-container,
+.app-root.theme-dark .task-dashboard-side,
+.app-root.theme-dark .task-section {
+    -fx-background-color: #2b3243;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.35), 24, 0.3, 0, 12);
+}
+
+.app-root.theme-dark .chat-bubble-user {
+    -fx-background-color: linear-gradient(to right, #5562d8, #3f51b5);
+}
+
+/* Chat assistant styles */
+
+.chat-view-root {
+    -fx-background-color: transparent;
+    -fx-spacing: 12;
+}
+
+.chat-view-title {
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #202a44;
+}
+
+.app-root.theme-dark .chat-view-title {
+    -fx-text-fill: #f4f6fb;
+}
+
+.chat-view-mode {
+    -fx-text-fill: #5c6bc0;
+    -fx-font-size: 13px;
+}
+
+.chat-view-status {
+    -fx-text-fill: #8c9eff;
+    -fx-font-size: 12px;
+}
+
+.chat-view-scroll {
+    -fx-background-color: transparent;
+    -fx-padding: 12;
+}
+
+.chat-view-list {
+    -fx-background-color: transparent;
+}
+
+.chat-bubble-wrapper {
+    -fx-background-radius: 16;
+}
+
+.chat-bubble {
+    -fx-padding: 12 16;
+    -fx-background-radius: 16;
+    -fx-font-size: 14px;
+    -fx-max-width: 520;
+}
+
+.chat-bubble-user {
+    -fx-background-color: linear-gradient(to right, #3f51b5, #5a6fe0);
+    -fx-text-fill: white;
+}
+
+.chat-bubble-assistant {
+    -fx-background-color: white;
+    -fx-text-fill: #1f2a4a;
+    -fx-effect: dropshadow(gaussian, rgba(76, 102, 192, 0.15), 12, 0.2, 0, 6);
+}
+
+.chat-bubble-system {
+    -fx-background-color: rgba(63, 81, 181, 0.12);
+    -fx-text-fill: #253057;
+}
+
+.chat-bubble-time {
+    -fx-font-size: 11px;
+    -fx-text-fill: #9aa5d0;
+}
+
+.chat-view-composer {
+    -fx-background-radius: 14;
+    -fx-padding: 12;
+    -fx-font-size: 14px;
+}
+
+.app-root.theme-dark .chat-bubble-assistant {
+    -fx-background-color: #2b3243;
+    -fx-text-fill: #e8ebff;
+}
+
+.app-root.theme-dark .chat-bubble-system {
+    -fx-background-color: rgba(92, 107, 192, 0.3);
+    -fx-text-fill: #d0d5f6;
+}
+
+.app-root.theme-dark .chat-view-mode {
+    -fx-text-fill: #b4beff;
+}
+
+.app-root.theme-dark .chat-view-status {
+    -fx-text-fill: #9aa5ff;
+}
+
+/* Settings view styles */
+
+.settings-view-root {
+    -fx-spacing: 24;
+}
+
+.settings-title {
+    -fx-font-size: 22px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #202a44;
+}
+
+.settings-subtitle {
+    -fx-text-fill: #5c6bc0;
+    -fx-font-size: 13px;
+}
+
+.settings-label {
+    -fx-text-fill: #3a4260;
+}
+
+.settings-status {
+    -fx-text-fill: #8c9eff;
+}
+
+.app-root.theme-dark .settings-title {
+    -fx-text-fill: #f4f6fb;
+}
+
+.app-root.theme-dark .settings-subtitle {
+    -fx-text-fill: #b4beff;
+}
+
+.app-root.theme-dark .settings-label {
+    -fx-text-fill: #d0d5f6;
+}
+
+.app-root.theme-dark .settings-status {
+    -fx-text-fill: #9aa5ff;
+}
+
 .task-section-header {
     -fx-font-size: 18px;
     -fx-font-weight: bold;

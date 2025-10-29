@@ -1,6 +1,7 @@
 package com.smartdesk.ui;
 
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -26,9 +27,13 @@ import java.time.format.DateTimeFormatter;
 
 import javafx.geometry.Insets;
 
+import com.smartdesk.core.config.AppConfig;
+import com.smartdesk.core.config.ConfigManager;
 import com.smartdesk.core.task.model.TaskPriority;
 import com.smartdesk.core.task.model.TaskStatus;
 import com.smartdesk.core.task.model.TaskType;
+import com.smartdesk.ui.chat.ChatView;
+import com.smartdesk.ui.settings.SettingsView;
 import com.smartdesk.ui.tasks.TaskDashboardView;
 import com.smartdesk.ui.tasks.TaskViewModel;
 
@@ -37,22 +42,34 @@ import com.smartdesk.ui.tasks.TaskViewModel;
  */
 public class MainApp extends Application {
 
+    private ConfigManager configManager;
+    private ChatView chatView;
+    private SettingsView settingsView;
+    private TaskDashboardView taskDashboardView;
+    private Scene scene;
+
     @Override
     public void start(Stage primaryStage) {
         primaryStage.setTitle("SmartDesk");
 
+        configManager = new ConfigManager();
+
         TabPane tabPane = new TabPane();
         tabPane.getTabs().add(createNotesTab());
         tabPane.getTabs().add(createTaskTab());
-        tabPane.getTabs().add(createTab("聊天", "聊天模块即将上线"));
+        tabPane.getTabs().add(createChatTab());
         tabPane.getTabs().add(createTab("总结", "总结模块即将上线"));
-        tabPane.getTabs().add(createTab("设置", "设置模块即将上线"));
+        tabPane.getTabs().add(createSettingsTab());
 
         BorderPane root = new BorderPane(tabPane);
-        Scene scene = new Scene(root, 960, 600);
+        root.getStyleClass().add("app-root");
+        scene = new Scene(root, 960, 600);
         scene.getStylesheets().add(
                 getClass().getResource("/com/smartdesk/resources/application.css").toExternalForm()
         );
+        applyTheme(configManager.getConfig().getTheme());
+        configManager.registerListener(config -> Platform.runLater(() -> applyTheme(config.getTheme())));
+
         primaryStage.setScene(scene);
         primaryStage.show();
     }
@@ -61,6 +78,9 @@ public class MainApp extends Application {
     public void stop() {
         if (taskDashboardView != null) {
             taskDashboardView.getReminderManager().shutdown();
+        }
+        if (chatView != null) {
+            chatView.shutdown();
         }
     }
 
@@ -200,8 +220,6 @@ public class MainApp extends Application {
         return tab;
     }
 
-    private TaskDashboardView taskDashboardView;
-
     private Tab createTaskTab() {
         Tab tab = new Tab("任务");
         tab.setClosable(false);
@@ -209,6 +227,22 @@ public class MainApp extends Application {
         ObservableList<TaskViewModel> tasks = createSampleTasks();
         taskDashboardView = new TaskDashboardView(tasks);
         tab.setContent(taskDashboardView);
+        return tab;
+    }
+
+    private Tab createChatTab() {
+        Tab tab = new Tab("聊天");
+        tab.setClosable(false);
+        chatView = new ChatView(configManager);
+        tab.setContent(chatView);
+        return tab;
+    }
+
+    private Tab createSettingsTab() {
+        Tab tab = new Tab("设置");
+        tab.setClosable(false);
+        settingsView = new SettingsView(configManager);
+        tab.setContent(settingsView);
         return tab;
     }
 
@@ -233,6 +267,18 @@ public class MainApp extends Application {
         tab.setContent(new Label(placeholderText));
         tab.setClosable(false);
         return tab;
+    }
+
+    private void applyTheme(AppConfig.Theme theme) {
+        if (scene == null) {
+            return;
+        }
+        var root = scene.getRoot();
+        root.getStyleClass().removeAll("theme-light", "theme-dark");
+        String styleClass = theme == AppConfig.Theme.DARK ? "theme-dark" : "theme-light";
+        if (!root.getStyleClass().contains(styleClass)) {
+            root.getStyleClass().add(styleClass);
+        }
     }
 
     private ObservableList<TaskViewModel> createSampleTasks() {
