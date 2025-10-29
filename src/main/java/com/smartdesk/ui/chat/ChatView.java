@@ -29,7 +29,6 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
 import javafx.scene.web.WebView;
 
 import java.time.format.DateTimeFormatter;
@@ -79,7 +78,6 @@ public final class ChatView extends BorderPane {
         this.configManager = Objects.requireNonNull(configManager, "configManager");
         this.notes = Objects.requireNonNull(notes, "notes");
         this.tasks = Objects.requireNonNull(tasks, "tasks");
-        getStyleClass().add("chat-view-root");
         setPadding(new Insets(16));
 
         setLeft(buildSidebar());
@@ -99,32 +97,24 @@ public final class ChatView extends BorderPane {
 
     private Node buildSidebar() {
         Label title = new Label("对话历史");
-        title.getStyleClass().add("chat-session-header");
 
         Button newButton = new Button("新建对话");
-        newButton.getStyleClass().add("accent-button");
         newButton.setMaxWidth(Double.MAX_VALUE);
         newButton.setOnAction(evt -> startNewSession());
 
         sessionList.setPlaceholder(new Label("暂无对话，点击上方新建"));
 
         sidebar = new VBox(12, title, newButton, sessionList);
-        sidebar.getStyleClass().add("chat-sidebar");
         VBox.setVgrow(sessionList, Priority.ALWAYS);
         return sidebar;
     }
 
     private Node buildHeader() {
         Label title = new Label("聊天助理");
-        title.getStyleClass().add("chat-view-title");
-        modeLabel.getStyleClass().add("chat-view-mode");
-
         HBox titleRow = new HBox(8, title, modeLabel);
         titleRow.setAlignment(Pos.CENTER_LEFT);
 
         Label modelLabel = new Label("模型");
-        modelLabel.getStyleClass().add("chat-model-label");
-        modelSelector.getStyleClass().add("chat-model-selector");
         modelSelector.setVisibleRowCount(10);
         modelSelector.setPromptText("请选择模型");
         modelSelector.valueProperty().addListener((obs, oldValue, newValue) -> {
@@ -144,14 +134,11 @@ public final class ChatView extends BorderPane {
         });
 
         Region spacer = new Region();
-        toggleHistoryButton.getStyleClass().add("chat-history-toggle");
         toggleHistoryButton.setOnAction(evt -> toggleHistory());
 
         HBox controls = new HBox(12, modelLabel, modelSelector, spacer, toggleHistoryButton);
         controls.setAlignment(Pos.CENTER_LEFT);
         HBox.setHgrow(spacer, Priority.ALWAYS);
-
-        statusLabel.getStyleClass().add("chat-view-status");
 
         VBox header = new VBox(6, titleRow, controls, statusLabel);
         header.setPadding(new Insets(0, 0, 12, 0));
@@ -160,34 +147,24 @@ public final class ChatView extends BorderPane {
 
     private Node buildMessagePane() {
         messageList.setPadding(new Insets(12));
-        messageList.setStyle("-fx-background-color: transparent;");
         return messageList;
     }
 
     private Node buildComposer() {
         VBox container = new VBox(14);
         container.setPadding(new Insets(20, 0, 0, 0));
-        container.getStyleClass().add("chat-composer-panel");
-
         Label sectionTitle = new Label("快速提问");
-        sectionTitle.getStyleClass().add("chat-composer-title");
 
         Label sectionSubtitle = new Label("选择一个提示或点击按钮开始与助理对话");
-        sectionSubtitle.getStyleClass().add("chat-composer-subtitle");
-
-        suggestionBar.getStyleClass().add("chat-suggestion-bar");
         suggestionBar.setPrefWrapLength(420);
 
-        shareButton.getStyleClass().add("chat-ghost-button");
         shareButton.setOnAction(evt -> handleShareContext());
 
-        sendButton.getStyleClass().add("chat-primary-button");
         sendButton.setDefaultButton(true);
         sendButton.setOnAction(evt -> openComposerDialog(null));
 
         Region spacer = new Region();
         HBox actions = new HBox(12, shareButton, spacer, sendButton);
-        actions.getStyleClass().add("chat-composer-actions");
         actions.setAlignment(Pos.CENTER_LEFT);
         HBox.setHgrow(spacer, Priority.ALWAYS);
 
@@ -197,7 +174,6 @@ public final class ChatView extends BorderPane {
 
     private void configureSessionList() {
         sessionList.setCellFactory(list -> new ChatSessionCell());
-        sessionList.getStyleClass().add("chat-session-list");
         sessionList.getSelectionModel().selectedItemProperty().addListener((obs, old, value) -> {
             if (value == null) {
                 return;
@@ -212,7 +188,6 @@ public final class ChatView extends BorderPane {
 
     private void configureListView() {
         messageList.setCellFactory(list -> new ChatMessageCell());
-        messageList.getStyleClass().add("chat-view-list");
         messageList.setFocusTraversable(false);
         messageList.setPlaceholder(new Label("向 AI 发送你的第一个问题吧！"));
     }
@@ -227,7 +202,6 @@ public final class ChatView extends BorderPane {
 
     private Button createSuggestionChip(final String label, final String preset) {
         Button chip = new Button(label);
-        chip.getStyleClass().add("chat-suggestion-chip");
         chip.setOnAction(evt -> openComposerDialog(preset + System.lineSeparator() + System.lineSeparator()));
         return chip;
     }
@@ -457,9 +431,6 @@ public final class ChatView extends BorderPane {
         private final VBox container = new VBox(4, titleLabel, metaLabel);
 
         private ChatSessionCell() {
-            container.getStyleClass().add("chat-session-cell");
-            titleLabel.getStyleClass().add("chat-session-title");
-            metaLabel.getStyleClass().add("chat-session-meta");
         }
 
         @Override
@@ -482,36 +453,22 @@ public final class ChatView extends BorderPane {
     private final class ChatMessageCell extends ListCell<ChatMessage> {
         private final Label senderLabel = new Label();
         private final WebView markdownView = new WebView();
-        private final Label timeLabel = new Label();
-        private final VBox bubble = new VBox(6, senderLabel, markdownView, timeLabel);
-        private final HBox wrapper = new HBox(bubble);
+        private final VBox container = new VBox(4, senderLabel, markdownView);
 
         private ChatMessageCell() {
-            bubble.getStyleClass().add("chat-bubble");
-            senderLabel.getStyleClass().add("chat-bubble-sender");
-            timeLabel.getStyleClass().add("chat-bubble-time");
             senderLabel.setMaxWidth(Double.MAX_VALUE);
             senderLabel.setAlignment(Pos.CENTER_LEFT);
-            timeLabel.setMaxWidth(Double.MAX_VALUE);
-            timeLabel.setAlignment(Pos.CENTER_RIGHT);
 
             setPrefWidth(Region.USE_COMPUTED_SIZE);
             prefWidthProperty().bind(messageList.widthProperty().subtract(16));
             setMaxWidth(Double.MAX_VALUE);
 
-            bubble.setFillWidth(true);
-            bubble.setAlignment(Pos.TOP_LEFT);
-            bubble.setPadding(new Insets(12));
-            bubble.setMinWidth(0);
-            bubble.setMaxWidth(Double.MAX_VALUE);
+            container.setFillWidth(true);
+            container.setAlignment(Pos.TOP_LEFT);
+            container.setPadding(new Insets(8, 0, 8, 0));
+            container.setMinWidth(0);
+            container.setMaxWidth(Double.MAX_VALUE);
             VBox.setVgrow(markdownView, Priority.NEVER);
-            HBox.setHgrow(bubble, Priority.ALWAYS);
-
-            wrapper.setPadding(new Insets(4, 8, 4, 8));
-            wrapper.setFillHeight(true);
-            wrapper.setAlignment(Pos.TOP_LEFT);
-            wrapper.setMinWidth(0);
-            wrapper.setMaxWidth(Double.MAX_VALUE);
 
             markdownView.setContextMenuEnabled(false);
             markdownView.setZoom(1.0);
@@ -551,45 +508,14 @@ public final class ChatView extends BorderPane {
                 case SYSTEM -> "系统";
             };
             senderLabel.setText(senderName);
-            timeLabel.setText(item.getTimestamp().toLocalTime().format(MESSAGE_TIME_FORMAT));
-
-            String textColor;
-            String linkColor;
-            String bubbleStyle;
-            Pos alignment;
-            Color senderColor;
-            if (sender == ChatMessage.Sender.USER) {
-                textColor = "#1a1a1a";
-                linkColor = "#0f4c81";
-                bubbleStyle = "chat-bubble-user";
-                alignment = Pos.TOP_RIGHT;
-                senderColor = Color.web("#1a1a1a");
-            } else if (sender == ChatMessage.Sender.ASSISTANT) {
-                textColor = "#1a1a1a";
-                linkColor = "#1f4dc5";
-                bubbleStyle = "chat-bubble-assistant";
-                alignment = Pos.TOP_LEFT;
-                senderColor = Color.web("#1a1a1a");
-            } else {
-                textColor = "#253057";
-                linkColor = "#3f51b5";
-                bubbleStyle = "chat-bubble-system";
-                alignment = Pos.TOP_LEFT;
-                senderColor = Color.web("#253057");
-            }
             markdownView.setPrefHeight(Region.USE_COMPUTED_SIZE);
             markdownView.setMinHeight(0);
             markdownView.setPrefWidth(Double.MAX_VALUE);
             markdownView.setMinWidth(0);
-            String html = MarkdownRenderer.toHtml(item.getContent(), textColor, linkColor);
+            String html = MarkdownRenderer.toHtml(item.getContent());
             markdownView.getEngine().loadContent(html, "text/html; charset=UTF-8");
 
-            senderLabel.setTextFill(senderColor);
-            bubble.getStyleClass().setAll("chat-bubble", bubbleStyle);
-            senderLabel.setAlignment(alignment == Pos.TOP_RIGHT ? Pos.CENTER_RIGHT : Pos.CENTER_LEFT);
-            bubble.setAlignment(alignment);
-            wrapper.setAlignment(alignment);
-            setGraphic(wrapper);
+            setGraphic(container);
         }
     }
 }
