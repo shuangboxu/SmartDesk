@@ -189,6 +189,55 @@
     -fx-spacing: 12;
 }
 
+.chat-sidebar {
+    -fx-background-color: rgba(255, 255, 255, 0.85);
+    -fx-background-radius: 18;
+    -fx-padding: 16;
+    -fx-spacing: 12;
+    -fx-effect: dropshadow(gaussian, rgba(76, 102, 192, 0.16), 18, 0.2, 0, 8);
+    -fx-pref-width: 220;
+}
+
+.chat-session-header {
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #253057;
+}
+
+.chat-session-list {
+    -fx-background-color: transparent;
+    -fx-padding: 0;
+}
+
+.chat-session-list .list-cell {
+    -fx-background-color: transparent;
+    -fx-padding: 10 12;
+}
+
+.chat-session-list .list-cell:filled:hover {
+    -fx-background-color: rgba(63, 81, 181, 0.08);
+}
+
+.chat-session-list .list-cell:filled:selected,
+.chat-session-list .list-cell:filled:selected:hover {
+    -fx-background-color: rgba(63, 81, 181, 0.18);
+}
+
+.chat-session-cell {
+    -fx-spacing: 4;
+}
+
+.chat-session-title {
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #1d2748;
+}
+
+.chat-session-meta {
+    -fx-font-size: 12px;
+    -fx-text-fill: #5c6bc0;
+}
+
 .chat-view-title {
     -fx-font-size: 20px;
     -fx-font-weight: bold;
@@ -209,6 +258,14 @@
     -fx-font-size: 12px;
 }
 
+.chat-model-label {
+    -fx-text-fill: #3a4260;
+}
+
+.chat-model-selector {
+    -fx-pref-width: 200;
+}
+
 .chat-view-scroll {
     -fx-background-color: transparent;
     -fx-padding: 12;
@@ -227,6 +284,11 @@
     -fx-background-radius: 16;
     -fx-font-size: 14px;
     -fx-max-width: 520;
+}
+
+.chat-bubble-sender {
+    -fx-font-weight: bold;
+    -fx-text-fill: inherit;
 }
 
 .chat-bubble-user {
@@ -256,6 +318,26 @@
     -fx-font-size: 14px;
 }
 
+.chat-composer-actions {
+    -fx-alignment: center-right;
+}
+
+.chat-share-button {
+    -fx-background-color: rgba(63, 81, 181, 0.1);
+    -fx-text-fill: #3f51b5;
+    -fx-background-radius: 14;
+    -fx-padding: 8 18;
+    -fx-font-weight: bold;
+}
+
+.chat-share-button:hover {
+    -fx-background-color: rgba(63, 81, 181, 0.2);
+}
+
+.chat-share-button:pressed {
+    -fx-background-color: rgba(63, 81, 181, 0.32);
+}
+
 .app-root.theme-dark .chat-bubble-assistant {
     -fx-background-color: #2b3243;
     -fx-text-fill: #e8ebff;
@@ -272,6 +354,36 @@
 
 .app-root.theme-dark .chat-view-status {
     -fx-text-fill: #cbd2ff;
+}
+
+.app-root.theme-dark .chat-sidebar {
+    -fx-background-color: rgba(33, 39, 54, 0.92);
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.45), 18, 0.3, 0, 10);
+}
+
+.app-root.theme-dark .chat-session-header {
+    -fx-text-fill: #f4f6ff;
+}
+
+.app-root.theme-dark .chat-session-title {
+    -fx-text-fill: #f0f3ff;
+}
+
+.app-root.theme-dark .chat-session-meta {
+    -fx-text-fill: #aab4ff;
+}
+
+.app-root.theme-dark .chat-share-button {
+    -fx-background-color: rgba(92, 107, 192, 0.35);
+    -fx-text-fill: #e6e9ff;
+}
+
+.app-root.theme-dark .chat-share-button:hover {
+    -fx-background-color: rgba(92, 107, 192, 0.45);
+}
+
+.app-root.theme-dark .chat-share-button:pressed {
+    -fx-background-color: rgba(92, 107, 192, 0.6);
 }
 
 /* Settings view styles */

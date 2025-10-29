@@ -1,5 +1,7 @@
 package com.smartdesk.core.config;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -37,6 +39,7 @@ public final class AppConfig {
     private String baseUrl = "";
     private String model = "";
     private Theme theme = Theme.LIGHT;
+    private List<String> customModels = new ArrayList<>();
 
     public AppConfig() {
     }
@@ -49,6 +52,13 @@ public final class AppConfig {
         this.baseUrl = Objects.requireNonNull(baseUrl, "baseUrl");
         this.model = Objects.requireNonNull(model, "model");
         this.theme = Objects.requireNonNull(theme, "theme");
+        this.customModels = new ArrayList<>();
+    }
+
+    public AppConfig copy() {
+        AppConfig clone = new AppConfig(aiMode, provider, apiKey, baseUrl, model, theme);
+        clone.setCustomModels(new ArrayList<>(getCustomModels()));
+        return clone;
     }
 
     public AiMode getAiMode() {
@@ -97,5 +107,13 @@ public final class AppConfig {
 
     public void setTheme(final Theme theme) {
         this.theme = Objects.requireNonNull(theme, "theme");
+    }
+
+    public List<String> getCustomModels() {
+        return customModels;
+    }
+
+    public void setCustomModels(final List<String> customModels) {
+        this.customModels = customModels == null ? new ArrayList<>() : new ArrayList<>(customModels);
     }
 }

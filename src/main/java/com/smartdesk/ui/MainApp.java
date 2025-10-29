@@ -47,12 +47,17 @@ public class MainApp extends Application {
     private SettingsView settingsView;
     private TaskDashboardView taskDashboardView;
     private Scene scene;
+    private ObservableList<Note> notes;
+    private ObservableList<TaskViewModel> tasks;
 
     @Override
     public void start(Stage primaryStage) {
         primaryStage.setTitle("SmartDesk");
 
         configManager = new ConfigManager();
+
+        notes = createSampleNotes();
+        tasks = createSampleTasks();
 
         TabPane tabPane = new TabPane();
         tabPane.getTabs().add(createNotesTab());
@@ -90,12 +95,6 @@ public class MainApp extends Application {
 
         BorderPane notesLayout = new BorderPane();
         notesLayout.getStyleClass().add("notes-root");
-
-        ObservableList<Note> notes = FXCollections.observableArrayList(
-                new Note("会议记录", "讨论项目进度、风险以及下周的里程碑。", LocalDateTime.now().minusDays(1)),
-                new Note("灵感捕捉", "重新设计仪表盘配色，突出重点指标。", LocalDateTime.now().minusHours(6)),
-                new Note("阅读摘录", "《用户体验要素》关于信息架构的章节值得复盘。", LocalDateTime.now().minusDays(3))
-        );
 
         ListView<Note> noteListView = new ListView<>(notes);
         noteListView.getStyleClass().add("notes-list-view");
@@ -224,7 +223,6 @@ public class MainApp extends Application {
         Tab tab = new Tab("任务");
         tab.setClosable(false);
 
-        ObservableList<TaskViewModel> tasks = createSampleTasks();
         taskDashboardView = new TaskDashboardView(tasks);
         tab.setContent(taskDashboardView);
         return tab;
@@ -233,7 +231,7 @@ public class MainApp extends Application {
     private Tab createChatTab() {
         Tab tab = new Tab("聊天");
         tab.setClosable(false);
-        chatView = new ChatView(configManager);
+        chatView = new ChatView(configManager, notes, tasks);
         tab.setContent(chatView);
         return tab;
     }
@@ -348,7 +346,15 @@ public class MainApp extends Application {
         return tasks;
     }
 
-    private static class Note {
+    private ObservableList<Note> createSampleNotes() {
+        return FXCollections.observableArrayList(
+            new Note("会议记录", "讨论项目进度、风险以及下周的里程碑。", LocalDateTime.now().minusDays(1)),
+            new Note("灵感捕捉", "重新设计仪表盘配色，突出重点指标。", LocalDateTime.now().minusHours(6)),
+            new Note("阅读摘录", "《用户体验要素》关于信息架构的章节值得复盘。", LocalDateTime.now().minusDays(3))
+        );
+    }
+
+    public static class Note {
         private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
 
         private String title;

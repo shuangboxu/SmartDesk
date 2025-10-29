@@ -2,6 +2,7 @@ package com.smartdesk.ui.settings;
 
 import com.smartdesk.core.config.AppConfig;
 import com.smartdesk.core.config.ConfigManager;
+import com.smartdesk.core.config.ModelCatalog;
 import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -9,7 +10,11 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.scene.control.PasswordField;
+import javafx.scene.control.ListView;
+import javafx.scene.control.SelectionMode;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
@@ -17,7 +22,6 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 
 /**
@@ -34,6 +38,8 @@ public final class SettingsView extends BorderPane {
     private final PasswordField apiKeyField = new PasswordField();
     private final ComboBox<AppConfig.Theme> themeBox = new ComboBox<>();
     private final Label statusLabel = new Label();
+    private final ListView<String> customModelList = new ListView<>();
+    private final TextField customModelField = new TextField();
 
     public SettingsView(final ConfigManager configManager) {
         this.configManager = Objects.requireNonNull(configManager, "configManager");
@@ -68,22 +74,30 @@ public final class SettingsView extends BorderPane {
         baseUrlBox.setEditable(true);
         modelBox.setEditable(true);
 
-        grid.add(label("AI 模式"), 0, 0);
-        grid.add(modeBox, 1, 0);
-        grid.add(label("在线提供方"), 0, 1);
-        grid.add(providerBox, 1, 1);
-        grid.add(label("接口地址"), 0, 2);
-        grid.add(baseUrlBox, 1, 2);
-        grid.add(label("模型名称"), 0, 3);
-        grid.add(modelBox, 1, 3);
-        grid.add(label("API Key"), 0, 4);
-        grid.add(apiKeyField, 1, 4);
-        grid.add(label("主题"), 0, 5);
-        grid.add(themeBox, 1, 5);
+        customModelList.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
+        customModelList.setPrefHeight(120);
+        customModelList.setPlaceholder(new Label("暂无自定义模型"));
+
+        int row = 0;
+        grid.add(label("AI 模式"), 0, row);
+        grid.add(modeBox, 1, row++);
+        grid.add(label("在线提供方"), 0, row);
+        grid.add(providerBox, 1, row++);
+        grid.add(label("接口地址"), 0, row);
+        grid.add(baseUrlBox, 1, row++);
+        grid.add(label("默认模型"), 0, row);
+        grid.add(modelBox, 1, row++);
+        grid.add(label("自定义模型"), 0, row);
+        grid.add(buildCustomModelEditor(), 1, row++);
+        grid.add(label("API Key"), 0, row);
+        grid.add(apiKeyField, 1, row++);
+        grid.add(label("主题"), 0, row);
+        grid.add(themeBox, 1, row);
 
         GridPane.setHgrow(baseUrlBox, Priority.ALWAYS);
         GridPane.setHgrow(modelBox, Priority.ALWAYS);
         GridPane.setHgrow(apiKeyField, Priority.ALWAYS);
+        GridPane.setHgrow(customModelList, Priority.ALWAYS);
 
         modeBox.valueProperty().addListener((obs, old, value) -> updateFieldState(value));
         providerBox.valueProperty().addListener((obs, old, value) ->
@@ -106,6 +120,8 @@ public final class SettingsView extends BorderPane {
     private void populateFields(final AppConfig config) {
         modeBox.setValue(config.getAiMode() == null ? AppConfig.AiMode.OFFLINE : config.getAiMode());
         providerBox.setValue(config.getProvider() == null ? AppConfig.Provider.CHATGPT : config.getProvider());
+        List<String> models = config.getCustomModels();
+        customModelList.getItems().setAll(models == null ? List.of() : models);
         updateProviderPresets(providerBox.getValue(), config.getBaseUrl(), config.getModel(), true);
         apiKeyField.setText(config.getApiKey());
         themeBox.setValue(config.getTheme() == null ? AppConfig.Theme.LIGHT : config.getTheme());
@@ -118,6 +134,8 @@ public final class SettingsView extends BorderPane {
         providerBox.setDisable(!online);
         baseUrlBox.setDisable(!online);
         modelBox.setDisable(!online);
+        customModelList.setDisable(!online);
+        customModelField.setDisable(!online);
         apiKeyField.setDisable(!online);
     }
 
@@ -129,6 +147,7 @@ public final class SettingsView extends BorderPane {
         config.setModel(getComboValue(modelBox));
         config.setApiKey(apiKeyField.getText() == null ? "" : apiKeyField.getText().trim());
         config.setTheme(themeBox.getValue() == null ? AppConfig.Theme.LIGHT : themeBox.getValue());
+        config.setCustomModels(List.copyOf(customModelList.getItems()));
         configManager.saveConfig(config);
         statusLabel.setText("已保存");
     }
@@ -141,11 +160,9 @@ public final class SettingsView extends BorderPane {
 
     private void updateProviderPresets(final AppConfig.Provider provider, final String baseValue,
                                        final String modelValue, final boolean preserveExisting) {
-        AppConfig.Provider resolved = provider == null ? AppConfig.Provider.CHATGPT : provider;
-        List<String> baseOptions = BASE_URL_PRESETS.getOrDefault(resolved, List.of());
-        List<String> modelOptions = MODEL_PRESETS.getOrDefault(resolved, List.of());
+        List<String> baseOptions = ModelCatalog.getBaseUrlPresets(provider);
         applyPreset(baseUrlBox, baseOptions, baseValue, preserveExisting);
-        applyPreset(modelBox, modelOptions, modelValue, preserveExisting);
+        refreshModelBox(ModelCatalog.getModelPresets(provider), modelValue, preserveExisting);
     }
 
     private void applyPreset(final ComboBox<String> comboBox, final List<String> options,
@@ -166,6 +183,29 @@ public final class SettingsView extends BorderPane {
         }
     }
 
+    private void refreshModelBox(final List<String> providerModels, final String override,
+                                 final boolean preserveExisting) {
+        ObservableList<String> combined = FXCollections.observableArrayList();
+        if (providerModels != null) {
+            combined.addAll(providerModels);
+        }
+        for (String model : customModelList.getItems()) {
+            if (model != null) {
+                String trimmed = model.trim();
+                if (!trimmed.isEmpty() && !combined.contains(trimmed)) {
+                    combined.add(trimmed);
+                }
+            }
+        }
+        String trimmedOverride = override == null ? "" : override.trim();
+        String currentText = preserveExisting ? getComboValue(modelBox) : "";
+        String target = !trimmedOverride.isEmpty() ? trimmedOverride : currentText;
+        if (!target.isEmpty() && !combined.contains(target)) {
+            combined.add(0, target);
+        }
+        applyPreset(modelBox, combined, target, false);
+    }
+
     private String getComboValue(final ComboBox<String> comboBox) {
         String editorText = comboBox.getEditor().getText();
         if (editorText != null && !editorText.trim().isEmpty()) {
@@ -175,30 +215,39 @@ public final class SettingsView extends BorderPane {
         return value == null ? "" : value.trim();
     }
 
-    private static final Map<AppConfig.Provider, List<String>> BASE_URL_PRESETS = Map.of(
-        AppConfig.Provider.CHATGPT, List.of(
-            "https://api.openai.com/v1/chat/completions",
-            "https://api.openai.com/v1/responses",
-            "https://api.openai.com/v1"
-        ),
-        AppConfig.Provider.DEEPSEEK, List.of(
-            "https://api.deepseek.com/v1/chat/completions",
-            "https://api.deepseek.com/v1",
-            "https://api.deepseek.com"
-        )
-    );
+    private VBox buildCustomModelEditor() {
+        customModelField.setPromptText("输入模型名称后点击添加");
+        Button addButton = new Button("添加");
+        Button removeButton = new Button("移除选中");
+        addButton.getStyleClass().add("accent-button");
+        removeButton.getStyleClass().add("task-card-button");
 
-    private static final Map<AppConfig.Provider, List<String>> MODEL_PRESETS = Map.of(
-        AppConfig.Provider.CHATGPT, List.of(
-            "gpt-4.1",
-            "gpt-4.1-mini",
-            "gpt-4o",
-            "gpt-4o-mini",
-            "gpt-3.5-turbo"
-        ),
-        AppConfig.Provider.DEEPSEEK, List.of(
-            "deepseek-chat",
-            "deepseek-reasoner"
-        )
-    );
+        addButton.setOnAction(evt -> {
+            String candidate = customModelField.getText();
+            if (candidate != null) {
+                String trimmed = candidate.trim();
+                if (!trimmed.isEmpty() && !customModelList.getItems().contains(trimmed)) {
+                    customModelList.getItems().add(trimmed);
+                    customModelField.clear();
+                    refreshModelBox(ModelCatalog.getModelPresets(providerBox.getValue()), trimmed, true);
+                }
+            }
+        });
+
+        removeButton.setOnAction(evt -> {
+            String selected = customModelList.getSelectionModel().getSelectedItem();
+            if (selected != null) {
+                customModelList.getItems().remove(selected);
+                refreshModelBox(ModelCatalog.getModelPresets(providerBox.getValue()), modelBox.getValue(), true);
+            }
+        });
+
+        HBox controls = new HBox(8, customModelField, addButton, removeButton);
+        controls.setAlignment(Pos.CENTER_LEFT);
+        HBox.setHgrow(customModelField, Priority.ALWAYS);
+
+        VBox container = new VBox(8, customModelList, controls);
+        container.setFillWidth(true);
+        return container;
+    }
 }
