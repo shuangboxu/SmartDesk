@@ -56,3 +56,8 @@
 1. 执行 `mvn -DskipTests package` 编译项目，确保新增模块通过构建。
 2. 在任意入口创建 `TaskService` 与 `ReminderScheduler`，调用 `createTask` 创建带提醒的任务，观察调度器回调是否触发。
 3. 利用 `buildDashboard(LocalDate.now(), 3)` 获取仪表盘快照，确认任务被正确归类到 TODAY/UPCOMING/ANNIVERSARY 等分区。
+
+## 最新调整 - 聊天配置与暗色主题
+- 设置面板中的接口地址与模型输入改为可编辑下拉框，内置 OpenAI、DeepSeek 预设选项同时支持手动填写。
+- 在线聊天请求会在缺省基础地址时自动补全 `/chat/completions`，并在地址缺失时给出明确提示。
+- 优化暗色主题下的界面文字与输入控件对比度，使状态提示、标签、列表和输入框在暗色背景上更加清晰。

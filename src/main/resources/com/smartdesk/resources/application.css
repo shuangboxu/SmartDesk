@@ -267,11 +267,11 @@
 }
 
 .app-root.theme-dark .chat-view-mode {
-    -fx-text-fill: #b4beff;
+    -fx-text-fill: #d6dcff;
 }
 
 .app-root.theme-dark .chat-view-status {
-    -fx-text-fill: #9aa5ff;
+    -fx-text-fill: #cbd2ff;
 }
 
 /* Settings view styles */
@@ -304,15 +304,15 @@
 }
 
 .app-root.theme-dark .settings-subtitle {
-    -fx-text-fill: #b4beff;
+    -fx-text-fill: #d2d7ff;
 }
 
 .app-root.theme-dark .settings-label {
-    -fx-text-fill: #d0d5f6;
+    -fx-text-fill: #e2e6ff;
 }
 
 .app-root.theme-dark .settings-status {
-    -fx-text-fill: #9aa5ff;
+    -fx-text-fill: #cbd2ff;
 }
 
 .task-section-header {
@@ -384,4 +384,29 @@
 
 .task-upcoming-cell:filled:hover {
     -fx-background-color: rgba(63, 81, 181, 0.12);
+}
+
+.app-root.theme-dark .chat-bubble-time {
+    -fx-text-fill: #bfc7ff;
+}
+
+.app-root.theme-dark .text-field,
+.app-root.theme-dark .password-field,
+.app-root.theme-dark .combo-box-base,
+.app-root.theme-dark .text-area {
+    -fx-background-color: #1a1f2b;
+    -fx-text-fill: #f4f6ff;
+    -fx-border-color: rgba(148, 163, 255, 0.45);
+    -fx-border-radius: 10;
+    -fx-prompt-text-fill: rgba(201, 207, 255, 0.75);
+}
+
+.app-root.theme-dark .combo-box .list-cell,
+.app-root.theme-dark .list-view .list-cell {
+    -fx-text-fill: #e3e7ff;
+}
+
+.app-root.theme-dark .combo-box-popup .list-cell:hover,
+.app-root.theme-dark .list-view .list-cell:filled:hover {
+    -fx-background-color: rgba(124, 138, 255, 0.35);
 }
