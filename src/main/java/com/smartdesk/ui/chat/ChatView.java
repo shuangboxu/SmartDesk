@@ -137,22 +137,34 @@ public final class ChatView extends BorderPane {
         return header;
     }
 
+//    private Node buildMessagePane() {
+//        messageList.setPadding(new Insets(8));
+//        messageList.setStyle("-fx-background-color: white;");
+//
+//        ScrollPane scroll = new ScrollPane(messageList);
+//        scroll.setFitToWidth(true);
+//        scroll.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+//        scroll.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
+//        scroll.setStyle("-fx-background-color: transparent; -fx-padding:0;");
+//
+//        // 关键：让聊天区自动拉伸，占满剩余空间
+//        VBox.setVgrow(scroll, Priority.ALWAYS);
+//
+//        return scroll;
+//    }
+
+
     private Node buildMessagePane() {
         messageList.setPadding(new Insets(8));
         messageList.setStyle("-fx-background-color: white;");
-
-        ScrollPane scroll = new ScrollPane(messageList);
-        scroll.setFitToWidth(true);
-        scroll.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
-        scroll.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
-        scroll.setStyle("-fx-background-color: transparent; -fx-padding:0;");
-
-        // 关键：让聊天区自动拉伸，占满剩余空间
-        VBox.setVgrow(scroll, Priority.ALWAYS);
-
-        return scroll;
+        messageList.setFocusTraversable(false);
+        messageList.setMinHeight(0);
+        messageList.setPrefHeight(Double.MAX_VALUE);
+        // 关键：直接使用 ListView，让 BorderPane 中心区域自动铺满剩余高度
+        VBox.setVgrow(messageList, Priority.ALWAYS);
+        BorderPane.setMargin(messageList, Insets.EMPTY);
+        return messageList;
     }
-
 
     private Node buildComposer() {
         VBox container = new VBox(6);

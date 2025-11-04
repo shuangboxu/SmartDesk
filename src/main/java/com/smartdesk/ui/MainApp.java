@@ -1,19 +1,22 @@
 package com.smartdesk.ui;
 
+import com.smartdesk.core.config.AppConfig;
+import com.smartdesk.core.config.ConfigManager;
+import com.smartdesk.core.task.model.TaskPriority;
+import com.smartdesk.core.task.model.TaskStatus;
+import com.smartdesk.core.task.model.TaskType;
+import com.smartdesk.ui.chat.ChatView;
+import com.smartdesk.ui.settings.SettingsView;
+import com.smartdesk.ui.tasks.TaskDashboardView;
+import com.smartdesk.ui.tasks.TaskViewModel;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.geometry.Insets;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.ListCell;
-import javafx.scene.control.ListView;
-import javafx.scene.control.Tab;
-import javafx.scene.control.TabPane;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
@@ -24,18 +27,6 @@ import javafx.util.Callback;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-
-import javafx.geometry.Insets;
-
-import com.smartdesk.core.config.AppConfig;
-import com.smartdesk.core.config.ConfigManager;
-import com.smartdesk.core.task.model.TaskPriority;
-import com.smartdesk.core.task.model.TaskStatus;
-import com.smartdesk.core.task.model.TaskType;
-import com.smartdesk.ui.chat.ChatView;
-import com.smartdesk.ui.settings.SettingsView;
-import com.smartdesk.ui.tasks.TaskDashboardView;
-import com.smartdesk.ui.tasks.TaskViewModel;
 
 /**
  * Main application entry point for SmartDesk.
@@ -76,6 +67,7 @@ public class MainApp extends Application {
         configManager.registerListener(config -> Platform.runLater(() -> applyTheme(config.getTheme())));
 
         primaryStage.setScene(scene);
+        primaryStage.setMaximized(true);
         primaryStage.show();
     }
 
