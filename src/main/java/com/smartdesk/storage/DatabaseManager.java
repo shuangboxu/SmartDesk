@@ -1,5 +1,8 @@
 package com.smartdesk.storage;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -25,6 +28,9 @@ public class DatabaseManager {
 
     /** Default file name for the SQLite database if no explicit URL is provided. */
     public static final String DEFAULT_DATABASE_FILE = "smartdesk.db";
+
+    /** Directory (relative to the user home) that stores persistent application data. */
+    private static final String DEFAULT_DATA_DIRECTORY = ".smartdesk";
 
     /** JDBC connection prefix for SQLite databases. */
     private static final String SQLITE_JDBC_PREFIX = "jdbc:sqlite:";
@@ -72,6 +78,37 @@ public class DatabaseManager {
             ON tasks (reminder_enabled, status, due_at)
         """;
 
+    /** DDL statement creating the {@code chat_sessions} table. */
+    public static final String CREATE_CHAT_SESSIONS_TABLE_SQL = """
+        CREATE TABLE IF NOT EXISTS chat_sessions (
+            id TEXT PRIMARY KEY,
+            default_title TEXT NOT NULL,
+            title TEXT NOT NULL,
+            auto_title INTEGER NOT NULL,
+            model_name TEXT,
+            created_at TEXT NOT NULL,
+            updated_at TEXT NOT NULL
+        )
+        """;
+
+    /** DDL statement creating the {@code chat_messages} table. */
+    public static final String CREATE_CHAT_MESSAGES_TABLE_SQL = """
+        CREATE TABLE IF NOT EXISTS chat_messages (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            session_id TEXT NOT NULL,
+            sender TEXT NOT NULL,
+            content TEXT NOT NULL,
+            timestamp TEXT NOT NULL,
+            FOREIGN KEY (session_id) REFERENCES chat_sessions(id) ON DELETE CASCADE
+        )
+        """;
+
+    /** Index accelerating chat history retrieval ordered by timestamp. */
+    public static final String CREATE_CHAT_MESSAGES_INDEX_SQL = """
+        CREATE INDEX IF NOT EXISTS idx_chat_messages_session
+            ON chat_messages (session_id, timestamp)
+        """;
+
     static {
         try {
             Class.forName("org.sqlite.JDBC");
@@ -87,7 +124,7 @@ public class DatabaseManager {
      * working directory ({@value #DEFAULT_DATABASE_FILE}).
      */
     public DatabaseManager() {
-        this(SQLITE_JDBC_PREFIX + DEFAULT_DATABASE_FILE);
+        this(resolveDefaultDatabaseUrl());
     }
 
     /**
@@ -98,6 +135,26 @@ public class DatabaseManager {
     public DatabaseManager(final String databaseUrl) {
         this.databaseUrl = Objects.requireNonNull(databaseUrl, "databaseUrl must not be null");
         initializeDatabase();
+    }
+
+    private static String resolveDefaultDatabaseUrl() {
+        final String userHome = System.getProperty("user.home");
+        if (userHome == null || userHome.isBlank()) {
+            LOGGER.log(Level.WARNING, "User home directory is undefined; falling back to working directory for database storage.");
+            return SQLITE_JDBC_PREFIX + DEFAULT_DATABASE_FILE;
+        }
+
+        final Path dataDirectory = Path.of(userHome, DEFAULT_DATA_DIRECTORY);
+        try {
+            Files.createDirectories(dataDirectory);
+        } catch (IOException ex) {
+            LOGGER.log(Level.WARNING, "Failed to create SmartDesk data directory at {0}, falling back to working directory.", dataDirectory);
+            LOGGER.log(Level.FINE, "Directory creation failure", ex);
+            return SQLITE_JDBC_PREFIX + DEFAULT_DATABASE_FILE;
+        }
+
+        final Path databaseFile = dataDirectory.resolve(DEFAULT_DATABASE_FILE);
+        return SQLITE_JDBC_PREFIX + databaseFile.toAbsolutePath();
     }
 
     /**
@@ -130,6 +187,9 @@ public class DatabaseManager {
             statement.execute(CREATE_NOTES_TABLE_SQL);
             statement.execute(CREATE_TASKS_TABLE_SQL);
             statement.execute(CREATE_TASKS_REMINDER_INDEX_SQL);
+            statement.execute(CREATE_CHAT_SESSIONS_TABLE_SQL);
+            statement.execute(CREATE_CHAT_MESSAGES_TABLE_SQL);
+            statement.execute(CREATE_CHAT_MESSAGES_INDEX_SQL);
             LOGGER.log(Level.INFO, "Database initialised using URL: {0}", databaseUrl);
         } catch (SQLException ex) {
             LOGGER.log(Level.SEVERE, "Failed to initialise SQLite database", ex);

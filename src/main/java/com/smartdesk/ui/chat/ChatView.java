@@ -1,6 +1,7 @@
 package com.smartdesk.ui.chat;
 
 import com.smartdesk.core.chat.*;
+import com.smartdesk.core.chat.ChatHistoryService;
 import com.smartdesk.core.config.AppConfig;
 import com.smartdesk.core.config.ConfigManager;
 import com.smartdesk.core.config.ModelCatalog;
@@ -19,7 +20,10 @@ import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 
 import java.time.format.DateTimeFormatter;
+import java.time.LocalDateTime;
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * 精简版 ChatView：去除所有装饰，用简单 Label 显示消息，
@@ -36,6 +40,7 @@ public final class ChatView extends BorderPane {
     private final ConfigManager configManager;
     private final ObservableList<MainApp.Note> notes;
     private final ObservableList<TaskViewModel> tasks;
+    private final ChatHistoryService chatHistoryService;
     private final ChatHistory history = new ChatHistory();
 
     private final ObservableList<ChatSession> sessions = FXCollections.observableArrayList();
@@ -62,10 +67,12 @@ public final class ChatView extends BorderPane {
 
     public ChatView(final ConfigManager configManager,
                     final ObservableList<MainApp.Note> notes,
-                    final ObservableList<TaskViewModel> tasks) {
+                    final ObservableList<TaskViewModel> tasks,
+                    final ChatHistoryService chatHistoryService) {
         this.configManager = Objects.requireNonNull(configManager, "configManager");
         this.notes = Objects.requireNonNull(notes, "notes");
         this.tasks = Objects.requireNonNull(tasks, "tasks");
+        this.chatHistoryService = Objects.requireNonNull(chatHistoryService, "chatHistoryService");
 
         // 简化外层边距
         setPadding(new Insets(4));
@@ -86,9 +93,43 @@ public final class ChatView extends BorderPane {
         widthProperty().addListener((obs, oldVal, newVal) -> Platform.runLater(this::requestLayout));
         heightProperty().addListener((obs, oldVal, newVal) -> Platform.runLater(this::requestLayout));
 
+        loadPersistedSessions();
         applyConfig(configManager.getConfig());
         configManager.registerListener(config -> Platform.runLater(() -> applyConfig(config)));
 
+    }
+
+    private void loadPersistedSessions() {
+        try {
+            List<ChatSession> stored = chatHistoryService.loadAllSessions();
+            sessions.setAll(stored);
+            sessionCounter = Math.max(sessionCounter, computeNextSessionCounter(stored));
+        } catch (IllegalStateException ex) {
+            updateStatus("加载聊天历史失败: " + ex.getMessage());
+        }
+    }
+
+    private int computeNextSessionCounter(final List<ChatSession> stored) {
+        if (stored == null || stored.isEmpty()) {
+            return 1;
+        }
+        Pattern pattern = Pattern.compile(".*?(\\d+)\\s*$");
+        int max = 0;
+        for (ChatSession session : stored) {
+            String title = session.getDefaultTitle();
+            if (title == null) {
+                continue;
+            }
+            Matcher matcher = pattern.matcher(title.trim());
+            if (matcher.matches()) {
+                try {
+                    max = Math.max(max, Integer.parseInt(matcher.group(1)));
+                } catch (NumberFormatException ignore) {
+                    // ignore non-numeric suffix
+                }
+            }
+        }
+        return Math.max(max + 1, stored.size() + 1);
     }
 
     private Node buildSidebar() {
@@ -120,7 +161,11 @@ public final class ChatView extends BorderPane {
             if (updatingModel) return;
             if (newValue == null || newValue.isBlank()) return;
             activeModel = newValue;
-            if (activeSession != null) activeSession.setModelName(activeModel);
+            if (activeSession != null) {
+                activeSession.setModelName(activeModel);
+                activeSession.setUpdatedAt(LocalDateTime.now());
+                persistSessionMetadata(activeSession);
+            }
             configureAssistant();
             updateModeLabel();
             updateStatus("已切换到模型：" + activeModel);
@@ -322,12 +367,17 @@ public final class ChatView extends BorderPane {
     }
 
     private void startNewSession() {
-        ChatSession session = new ChatSession("对话 " + sessionCounter++);
-        session.setModelName(activeModel != null && !activeModel.isBlank() ? activeModel : baseConfig.getModel());
-        sessions.add(0, session);
-        sessionList.getSelectionModel().select(session);
-        openSession(session);
-        updateStatus("已开始新的对话");
+        String defaultTitle = "对话 " + sessionCounter++;
+        String modelName = activeModel != null && !activeModel.isBlank() ? activeModel : baseConfig.getModel();
+        try {
+            ChatSession session = chatHistoryService.createSession(defaultTitle, modelName);
+            sessions.add(0, session);
+            sessionList.getSelectionModel().select(session);
+            openSession(session);
+            updateStatus("已开始新的对话");
+        } catch (IllegalStateException ex) {
+            updateStatus("创建新对话失败: " + ex.getMessage());
+        }
     }
 
     private void openSession(final ChatSession session) {
@@ -337,6 +387,7 @@ public final class ChatView extends BorderPane {
         ensureSessionGreeting(session);
         refreshModelSelector();
         session.setModelName(activeModel);
+        persistSessionMetadata(session);
         syncHistoryFromSession(session);
         configureAssistant();
         updateModeLabel();
@@ -347,6 +398,7 @@ public final class ChatView extends BorderPane {
         if (session.getMessages().isEmpty()) {
             ChatMessage greeting = ChatMessage.of(ChatMessage.Sender.SYSTEM, "欢迎使用智能聊天助理，有任何问题都可以告诉我！");
             session.addMessage(greeting);
+            persistMessage(session, greeting);
         }
     }
 
@@ -360,26 +412,53 @@ public final class ChatView extends BorderPane {
             updateStatus("助手尚未初始化，请检查设置");
             return;
         }
+        final ChatSession targetSession = activeSession;
+        if (targetSession == null) {
+            updateStatus("请先选择或创建对话");
+            return;
+        }
         String text = composer.getText();
         if (text == null || text.isBlank()) return;
         String content = text.trim();
         composer.clear();
         ChatMessage userMessage = ChatMessage.of(ChatMessage.Sender.USER, content);
-        activeSession.addMessage(userMessage);
-        refreshSessionOrder(activeSession);
-        messageList.scrollTo(Math.max(activeSession.getMessages().size() - 1, 0));
+        targetSession.addMessage(userMessage);
+        persistMessage(targetSession, userMessage);
+        refreshSessionOrder(targetSession);
+        if (targetSession == activeSession) {
+            messageList.scrollTo(Math.max(activeSession.getMessages().size() - 1, 0));
+        }
         sendButton.setDisable(true);
         updateStatus("发送中...");
         assistant.sendMessage(userMessage, response -> Platform.runLater(() -> {
-            activeSession.addMessage(response);
-            refreshSessionOrder(activeSession);
-            messageList.scrollTo(Math.max(activeSession.getMessages().size() - 1, 0));
+            targetSession.addMessage(response);
+            persistMessage(targetSession, response);
+            refreshSessionOrder(targetSession);
+            if (targetSession == activeSession) {
+                messageList.scrollTo(Math.max(activeSession.getMessages().size() - 1, 0));
+            }
             updateStatus("响应时间: " + response.getTimestamp().toLocalTime().format(MESSAGE_TIME_FORMAT));
             sendButton.setDisable(false);
         }), error -> Platform.runLater(() -> {
             updateStatus("发生错误: " + error.getMessage());
             sendButton.setDisable(false);
         }));
+    }
+
+    private void persistMessage(final ChatSession session, final ChatMessage message) {
+        try {
+            chatHistoryService.persistMessage(session, message);
+        } catch (IllegalStateException ex) {
+            updateStatus("保存聊天记录失败: " + ex.getMessage());
+        }
+    }
+
+    private void persistSessionMetadata(final ChatSession session) {
+        try {
+            chatHistoryService.updateSessionMetadata(session);
+        } catch (IllegalStateException ex) {
+            updateStatus("更新会话信息失败: " + ex.getMessage());
+        }
     }
 
     private void handleShareContext() {

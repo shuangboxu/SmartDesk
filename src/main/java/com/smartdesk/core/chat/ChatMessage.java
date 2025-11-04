@@ -28,6 +28,19 @@ public final class ChatMessage {
         return new ChatMessage(sender, content, LocalDateTime.now());
     }
 
+    /**
+     * Creates a chat message using an explicit timestamp. Primarily used when
+     * reconstructing persisted chat history from the database.
+     *
+     * @param sender    the message sender
+     * @param content   the message text
+     * @param timestamp the timestamp associated with the message
+     * @return a new {@link ChatMessage} instance populated with the supplied data
+     */
+    public static ChatMessage of(final Sender sender, final String content, final LocalDateTime timestamp) {
+        return new ChatMessage(sender, content, timestamp);
+    }
+
     public Sender getSender() {
         return sender;
     }

@@ -104,7 +104,7 @@ SmartDesk
 | `tasks` | id, title, priority, deadline, status | 任务信息 |
 | `chat_history` | id, role, message, timestamp | 聊天记录 |
 
-数据库采用 **SQLite** 本地持久化，使用 JDBC 管理。
+数据库采用 **SQLite** 本地持久化，使用 JDBC 管理。默认情况下，数据文件会存放在用户主目录下的 `~/.smartdesk/smartdesk.db`，确保聊天记录、任务与笔记在应用重启后依然可用。
 
 ---
 

@@ -12,22 +12,41 @@ import java.util.UUID;
  */
 public final class ChatSession {
 
-    private final UUID id = UUID.randomUUID();
+    private final UUID id;
     private final ObservableList<ChatMessage> messages = FXCollections.observableArrayList();
     private final String defaultTitle;
     private String title;
-    private boolean autoTitle = true;
-    private final LocalDateTime createdAt = LocalDateTime.now();
-    private LocalDateTime updatedAt = createdAt;
-    private String modelName = "";
+    private boolean autoTitle;
+    private final LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
+    private String modelName;
 
     public ChatSession(final String defaultTitle) {
+        this(UUID.randomUUID(), defaultTitle, defaultTitle, true, LocalDateTime.now(), LocalDateTime.now(), "");
+    }
+
+    public ChatSession(final UUID id,
+                       final String defaultTitle,
+                       final String title,
+                       final boolean autoTitle,
+                       final LocalDateTime createdAt,
+                       final LocalDateTime updatedAt,
+                       final String modelName) {
+        this.id = Objects.requireNonNull(id, "id");
         this.defaultTitle = Objects.requireNonNull(defaultTitle, "defaultTitle");
-        this.title = defaultTitle;
+        this.title = title == null || title.isBlank() ? defaultTitle : title;
+        this.autoTitle = autoTitle;
+        this.createdAt = createdAt == null ? LocalDateTime.now() : createdAt;
+        this.updatedAt = updatedAt == null ? this.createdAt : updatedAt;
+        this.modelName = modelName == null ? "" : modelName;
     }
 
     public UUID getId() {
         return id;
+    }
+
+    public String getDefaultTitle() {
+        return defaultTitle;
     }
 
     public ObservableList<ChatMessage> getMessages() {
@@ -42,6 +61,10 @@ public final class ChatSession {
             title = summarise(message.getContent());
             autoTitle = false;
         }
+    }
+
+    public boolean isAutoTitle() {
+        return autoTitle;
     }
 
     private String summarise(final String content) {
@@ -69,6 +92,10 @@ public final class ChatSession {
         return updatedAt;
     }
 
+    public void setUpdatedAt(final LocalDateTime updatedAt) {
+        this.updatedAt = updatedAt == null ? LocalDateTime.now() : updatedAt;
+    }
+
     public String getModelName() {
         return modelName;
     }
@@ -82,5 +109,9 @@ public final class ChatSession {
             this.title = customTitle.trim();
             this.autoTitle = false;
         }
+    }
+
+    public void setAutoTitle(final boolean autoTitle) {
+        this.autoTitle = autoTitle;
     }
 }

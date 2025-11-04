@@ -1,5 +1,7 @@
 package com.smartdesk.ui.tasks;
 
+import com.smartdesk.core.task.TaskService;
+import com.smartdesk.core.task.model.Task;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -13,6 +15,9 @@ import javafx.collections.ObservableList;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonBar.ButtonData;
 import javafx.scene.control.ButtonType;
+import java.util.Optional;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Background reminder manager that periodically scans tasks and surfaces
@@ -20,15 +25,19 @@ import javafx.scene.control.ButtonType;
  */
 public final class TaskReminderManager {
 
+    private static final Logger LOGGER = Logger.getLogger(TaskReminderManager.class.getName());
+
     private final ObservableList<TaskViewModel> tasks;
+    private final TaskService taskService;
     private final ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor(r -> {
         Thread thread = new Thread(r, "task-reminder-thread");
         thread.setDaemon(true);
         return thread;
     });
 
-    public TaskReminderManager(final ObservableList<TaskViewModel> tasks) {
+    public TaskReminderManager(final ObservableList<TaskViewModel> tasks, final TaskService taskService) {
         this.tasks = tasks;
+        this.taskService = taskService;
         tasks.addListener((ListChangeListener<TaskViewModel>) change -> resetReminderStateForRemoved(change));
         scheduler.scheduleAtFixedRate(this::scanAndNotify, 5, 30, TimeUnit.SECONDS);
     }
@@ -70,6 +79,7 @@ public final class TaskReminderManager {
 
     private void presentNotification(final TaskViewModel task, final LocalDateTime now) {
         task.markReminderTriggered(now);
+        persistTaskChanges(task);
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("任务提醒");
         alert.setHeaderText(task.getTitle());
@@ -81,14 +91,33 @@ public final class TaskReminderManager {
         alert.setOnHidden(evt -> {
             ButtonType result = alert.getResult();
             if (result == completeButton) {
-                task.setStatus(com.smartdesk.core.task.model.TaskStatus.COMPLETED);
-                task.setReminderEnabled(false);
+                if (task.isPersisted()) {
+                    try {
+                        Optional<Task> updated = taskService.markTaskCompleted(task.getId());
+                        updated.ifPresent(task::applyDomain);
+                    } catch (IllegalStateException ex) {
+                        LOGGER.log(Level.SEVERE, "Failed to mark task completed from reminder", ex);
+                    }
+                }
             } else if (result == snoozeButton) {
                 task.setReminderTriggered(false);
                 task.setReminderLeadMinutes(Math.max(5, task.getReminderLeadMinutes() / 2));
+                persistTaskChanges(task);
             }
         });
         alert.show();
+    }
+
+    private void persistTaskChanges(final TaskViewModel task) {
+        if (!task.isPersisted()) {
+            return;
+        }
+        try {
+            Task updated = taskService.updateTask(task.toDomain());
+            task.applyDomain(updated);
+        } catch (IllegalStateException ex) {
+            LOGGER.log(Level.SEVERE, "Failed to persist task reminder change", ex);
+        }
     }
 
     public void shutdown() {
