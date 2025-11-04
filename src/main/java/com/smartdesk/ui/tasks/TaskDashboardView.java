@@ -1,5 +1,7 @@
 package com.smartdesk.ui.tasks;
 
+import com.smartdesk.core.task.TaskService;
+import com.smartdesk.core.task.model.Task;
 import com.smartdesk.core.task.model.TaskLane;
 import com.smartdesk.core.task.model.TaskPriority;
 import com.smartdesk.core.task.model.TaskStatus;
@@ -13,8 +15,11 @@ import java.util.IdentityHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.beans.InvalidationListener;
 import javafx.beans.Observable;
 import javafx.beans.binding.Bindings;
@@ -40,13 +45,17 @@ import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
+import javafx.scene.control.Alert;
 
 /**
  * Rich dashboard view dedicated to the SmartDesk task module.
  */
 public final class TaskDashboardView extends BorderPane {
 
+    private static final Logger LOGGER = Logger.getLogger(TaskDashboardView.class.getName());
+
     private final ObservableList<TaskViewModel> tasks;
+    private final TaskService taskService;
     private final ObjectProperty<TaskType> typeFilter = new SimpleObjectProperty<>(null);
     private final ObjectProperty<TaskStatus> statusFilter = new SimpleObjectProperty<>(null);
     private final ObjectProperty<TaskPriority> minimumPriorityFilter = new SimpleObjectProperty<>(null);
@@ -60,8 +69,9 @@ public final class TaskDashboardView extends BorderPane {
     private final Map<TaskViewModel, List<Observable>> observedTaskProperties = new IdentityHashMap<>();
     private final InvalidationListener taskPropertyListener = obs -> refresh();
 
-    public TaskDashboardView(final ObservableList<TaskViewModel> tasks) {
+    public TaskDashboardView(final ObservableList<TaskViewModel> tasks, final TaskService taskService) {
         this.tasks = Objects.requireNonNull(tasks, "tasks");
+        this.taskService = Objects.requireNonNull(taskService, "taskService");
         getStyleClass().add("task-dashboard-root");
 
         setPadding(new Insets(16));
@@ -87,7 +97,7 @@ public final class TaskDashboardView extends BorderPane {
         minimumPriorityFilter.addListener((obs, oldValue, newValue) -> refresh());
         searchField.textProperty().addListener((obs, oldText, newText) -> refresh());
 
-        reminderManager = new TaskReminderManager(tasks);
+        reminderManager = new TaskReminderManager(tasks, taskService);
 
         refresh();
     }
@@ -111,7 +121,8 @@ public final class TaskDashboardView extends BorderPane {
             task.reminderEnabledProperty(),
             task.reminderLeadMinutesProperty(),
             task.lastRemindedAtProperty(),
-            task.reminderTriggeredProperty()
+            task.reminderTriggeredProperty(),
+            task.updatedAtProperty()
         );
         observables.forEach(observable -> observable.addListener(taskPropertyListener));
         observedTaskProperties.put(task, observables);
@@ -320,23 +331,29 @@ public final class TaskDashboardView extends BorderPane {
     private void openEditor(final TaskViewModel taskToEdit) {
         TaskEditorDialog dialog = new TaskEditorDialog(taskToEdit);
         dialog.showAndAwaitResult().ifPresent(updated -> {
-            if (taskToEdit == null) {
-                tasks.add(updated);
-            } else {
-                taskToEdit.setTitle(updated.getTitle());
-                taskToEdit.setDescription(updated.getDescription());
-                taskToEdit.setType(updated.getType());
-                taskToEdit.setPriority(updated.getPriority());
-                taskToEdit.setStatus(updated.getStatus());
-                taskToEdit.setStartDateTime(updated.getStartDateTime());
-                taskToEdit.setDueDateTime(updated.getDueDateTime());
-                taskToEdit.setReminderEnabled(updated.isReminderEnabled());
-                taskToEdit.setReminderLeadMinutes(updated.getReminderLeadMinutes());
-                taskToEdit.setLastRemindedAt(updated.getLastRemindedAt());
-                taskToEdit.setReminderTriggered(updated.isReminderTriggered());
+            try {
+                if (taskToEdit == null) {
+                    Task created = taskService.createTask(updated.toDomain());
+                    TaskViewModel persisted = TaskViewModel.fromDomain(created);
+                    tasks.add(persisted);
+                } else {
+                    Task persisted = taskService.updateTask(updated.toDomain());
+                    taskToEdit.applyDomain(persisted);
+                }
+                refresh();
+            } catch (IllegalStateException ex) {
+                LOGGER.log(Level.SEVERE, "Failed to persist task changes", ex);
+                showError("保存任务失败", "请稍后再试或检查日志。");
             }
-            refresh();
         });
+    }
+
+    private void showError(final String title, final String message) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle(title);
+        alert.setHeaderText(title);
+        alert.setContentText(message);
+        alert.showAndWait();
     }
 
     private final class TaskSectionPane extends VBox {
@@ -400,10 +417,15 @@ public final class TaskDashboardView extends BorderPane {
             completeButton.getStyleClass().add("task-card-button");
             completeButton.setOnAction(evt -> {
                 TaskViewModel item = getItem();
-                if (item != null) {
-                    item.setStatus(TaskStatus.COMPLETED);
-                    item.setReminderEnabled(false);
-                    refresh();
+                if (item != null && item.isPersisted()) {
+                    try {
+                        Optional<Task> updated = taskService.markTaskCompleted(item.getId());
+                        updated.ifPresent(item::applyDomain);
+                        TaskDashboardView.this.refresh();
+                    } catch (IllegalStateException ex) {
+                        LOGGER.log(Level.SEVERE, "Failed to mark task completed", ex);
+                        showError("更新任务失败", "无法标记任务完成，请稍后再试。");
+                    }
                 }
             });
 

@@ -1,5 +1,6 @@
 package com.smartdesk.ui.tasks;
 
+import com.smartdesk.core.task.model.Task;
 import com.smartdesk.core.task.model.TaskPriority;
 import com.smartdesk.core.task.model.TaskStatus;
 import com.smartdesk.core.task.model.TaskType;
@@ -8,7 +9,6 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Objects;
-import java.util.concurrent.atomic.AtomicLong;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.LongProperty;
@@ -26,11 +26,10 @@ import javafx.beans.property.StringProperty;
  */
 public final class TaskViewModel {
 
-    private static final AtomicLong ID_GENERATOR = new AtomicLong(1000);
     private static final DateTimeFormatter DATE_TIME_FORMATTER =
         DateTimeFormatter.ofPattern("MM-dd HH:mm");
 
-    private final LongProperty id = new SimpleLongProperty(this, "id", ID_GENERATOR.getAndIncrement());
+    private final LongProperty id = new SimpleLongProperty(this, "id", 0);
     private final StringProperty title = new SimpleStringProperty(this, "title", "");
     private final StringProperty description = new SimpleStringProperty(this, "description", "");
     private final ObjectProperty<LocalDateTime> startDateTime =
@@ -51,6 +50,11 @@ public final class TaskViewModel {
         new SimpleObjectProperty<>(this, "lastRemindedAt", null);
     private final BooleanProperty reminderTriggered =
         new SimpleBooleanProperty(this, "reminderTriggered", false);
+    private final ObjectProperty<LocalDateTime> createdAt =
+        new SimpleObjectProperty<>(this, "createdAt", null);
+    private final ObjectProperty<LocalDateTime> updatedAt =
+        new SimpleObjectProperty<>(this, "updatedAt", null);
+    private final BooleanProperty persisted = new SimpleBooleanProperty(this, "persisted", false);
 
     public TaskViewModel() {
     }
@@ -69,6 +73,9 @@ public final class TaskViewModel {
         copy.setReminderLeadMinutes(getReminderLeadMinutes());
         copy.setLastRemindedAt(getLastRemindedAt());
         copy.setReminderTriggered(isReminderTriggered());
+        copy.setCreatedAt(getCreatedAt());
+        copy.setUpdatedAt(getUpdatedAt());
+        copy.setPersisted(isPersisted());
         return copy;
     }
 
@@ -82,6 +89,18 @@ public final class TaskViewModel {
 
     public LongProperty idProperty() {
         return id;
+    }
+
+    public boolean isPersisted() {
+        return persisted.get();
+    }
+
+    public void setPersisted(final boolean value) {
+        persisted.set(value);
+    }
+
+    public BooleanProperty persistedProperty() {
+        return persisted;
     }
 
     public String getTitle() {
@@ -216,6 +235,30 @@ public final class TaskViewModel {
         return reminderTriggered;
     }
 
+    public LocalDateTime getCreatedAt() {
+        return createdAt.get();
+    }
+
+    public void setCreatedAt(final LocalDateTime value) {
+        createdAt.set(value);
+    }
+
+    public ObjectProperty<LocalDateTime> createdAtProperty() {
+        return createdAt;
+    }
+
+    public LocalDateTime getUpdatedAt() {
+        return updatedAt.get();
+    }
+
+    public void setUpdatedAt(final LocalDateTime value) {
+        updatedAt.set(value);
+    }
+
+    public ObjectProperty<LocalDateTime> updatedAtProperty() {
+        return updatedAt;
+    }
+
     public String getFormattedDueDate() {
         LocalDateTime due = getDueDateTime();
         if (due == null) {
@@ -260,6 +303,53 @@ public final class TaskViewModel {
         setLastRemindedAt(null);
     }
 
+    public Task toDomain() {
+        return Task.builder()
+            .withId(isPersisted() ? getId() : null)
+            .withTitle(getTitle())
+            .withDescription(getDescription())
+            .withStartDateTime(getStartDateTime())
+            .withDueDateTime(getDueDateTime())
+            .withPriority(getPriority())
+            .withType(getType())
+            .withReminderEnabled(isReminderEnabled())
+            .withReminderLeadMinutes(getReminderLeadMinutes())
+            .withStatus(getStatus())
+            .withLastRemindedAt(getLastRemindedAt())
+            .withCreatedAt(getCreatedAt())
+            .withUpdatedAt(getUpdatedAt())
+            .build();
+    }
+
+    public static TaskViewModel fromDomain(final Task task) {
+        TaskViewModel viewModel = new TaskViewModel();
+        viewModel.applyDomain(task);
+        return viewModel;
+    }
+
+    public void applyDomain(final Task task) {
+        Objects.requireNonNull(task, "task");
+        if (task.getId() != null) {
+            setId(task.getId());
+            setPersisted(true);
+        }
+        setTitle(task.getTitle());
+        setDescription(task.getDescription());
+        setStartDateTime(task.getStartDateTime());
+        setDueDateTime(task.getDueDateTime());
+        setPriority(task.getPriority() == null ? TaskPriority.NORMAL : task.getPriority());
+        setType(task.getType() == null ? TaskType.TODO : task.getType());
+        setStatus(task.getStatus() == null ? TaskStatus.PLANNED : task.getStatus());
+        setReminderEnabled(task.isReminderEnabled());
+        setReminderLeadMinutes(task.getReminderLeadMinutes());
+        setLastRemindedAt(task.getLastRemindedAt());
+        setCreatedAt(task.getCreatedAt());
+        setUpdatedAt(task.getUpdatedAt());
+        if (task.getStatus() == TaskStatus.COMPLETED) {
+            setReminderEnabled(false);
+        }
+    }
+
     @Override
     public String toString() {
         return getTitle();
@@ -273,11 +363,14 @@ public final class TaskViewModel {
         if (!(obj instanceof TaskViewModel other)) {
             return false;
         }
-        return getId() == other.getId();
+        if (isPersisted() && other.isPersisted()) {
+            return getId() == other.getId();
+        }
+        return this == other;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getId());
+        return isPersisted() ? Objects.hash(getId()) : System.identityHashCode(this);
     }
 }

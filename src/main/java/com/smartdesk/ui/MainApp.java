@@ -1,7 +1,11 @@
 package com.smartdesk.ui;
 
+import com.smartdesk.core.chat.ChatHistoryService;
 import com.smartdesk.core.config.AppConfig;
 import com.smartdesk.core.config.ConfigManager;
+import com.smartdesk.core.note.NoteService;
+import com.smartdesk.core.task.TaskService;
+import com.smartdesk.core.task.model.Task;
 import com.smartdesk.core.task.model.TaskPriority;
 import com.smartdesk.core.task.model.TaskStatus;
 import com.smartdesk.core.task.model.TaskType;
@@ -9,6 +13,8 @@ import com.smartdesk.ui.chat.ChatView;
 import com.smartdesk.ui.settings.SettingsView;
 import com.smartdesk.ui.tasks.TaskDashboardView;
 import com.smartdesk.ui.tasks.TaskViewModel;
+import com.smartdesk.storage.DatabaseManager;
+import com.smartdesk.storage.entity.NoteEntity;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
@@ -27,11 +33,17 @@ import javafx.util.Callback;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 /**
  * Main application entry point for SmartDesk.
  */
 public class MainApp extends Application {
+
+    private static final Logger LOGGER = Logger.getLogger(MainApp.class.getName());
 
     private ConfigManager configManager;
     private ChatView chatView;
@@ -40,6 +52,10 @@ public class MainApp extends Application {
     private Scene scene;
     private ObservableList<Note> notes;
     private ObservableList<TaskViewModel> tasks;
+    private DatabaseManager databaseManager;
+    private NoteService noteService;
+    private TaskService taskService;
+    private ChatHistoryService chatHistoryService;
 
     @Override
     public void start(Stage primaryStage) {
@@ -47,8 +63,13 @@ public class MainApp extends Application {
 
         configManager = new ConfigManager();
 
-        notes = createSampleNotes();
-        tasks = createSampleTasks();
+        databaseManager = new DatabaseManager();
+        noteService = new NoteService(databaseManager);
+        taskService = new TaskService(databaseManager);
+        chatHistoryService = new ChatHistoryService(databaseManager);
+
+        notes = loadNotes();
+        tasks = loadTasks();
 
         TabPane tabPane = new TabPane();
         tabPane.getTabs().add(createNotesTab());
@@ -178,21 +199,40 @@ public class MainApp extends Application {
         deleteButton.disableProperty().bind(Bindings.isNull(noteListView.getSelectionModel().selectedItemProperty()));
 
         addButton.setOnAction(event -> {
-            Note newNote = new Note("未命名笔记", "", LocalDateTime.now());
-            notes.add(0, newNote);
-            noteListView.getSelectionModel().select(newNote);
-            statusLabel.setText("已创建新笔记");
-            titleField.requestFocus();
+            NoteEntity entity = new NoteEntity();
+            entity.setTitle("未命名笔记");
+            entity.setContent("");
+            entity.setTag(null);
+            entity.setDate(LocalDateTime.now());
+            try {
+                NoteEntity persisted = noteService.createNote(entity);
+                Note newNote = Note.fromEntity(persisted);
+                notes.add(0, newNote);
+                noteListView.getSelectionModel().select(newNote);
+                statusLabel.setText("已创建新笔记");
+                titleField.requestFocus();
+            } catch (IllegalStateException ex) {
+                LOGGER.log(Level.SEVERE, "Failed to create note", ex);
+                statusLabel.setText("新建笔记失败");
+            }
         });
 
         deleteButton.setOnAction(event -> {
             Note selectedNote = noteListView.getSelectionModel().getSelectedItem();
             if (selectedNote != null) {
                 int index = noteListView.getSelectionModel().getSelectedIndex();
-                notes.remove(selectedNote);
-                statusLabel.setText("已删除笔记");
-                if (!notes.isEmpty()) {
-                    noteListView.getSelectionModel().select(Math.min(index, notes.size() - 1));
+                try {
+                    if (selectedNote.getId() != null) {
+                        noteService.deleteNote(selectedNote.getId());
+                    }
+                    notes.remove(selectedNote);
+                    statusLabel.setText("已删除笔记");
+                    if (!notes.isEmpty()) {
+                        noteListView.getSelectionModel().select(Math.min(index, notes.size() - 1));
+                    }
+                } catch (IllegalStateException ex) {
+                    LOGGER.log(Level.SEVERE, "Failed to delete note", ex);
+                    statusLabel.setText("删除笔记失败");
                 }
             }
         });
@@ -215,7 +255,7 @@ public class MainApp extends Application {
         Tab tab = new Tab("任务");
         tab.setClosable(false);
 
-        taskDashboardView = new TaskDashboardView(tasks);
+        taskDashboardView = new TaskDashboardView(tasks, taskService);
         tab.setContent(taskDashboardView);
         return tab;
     }
@@ -223,7 +263,7 @@ public class MainApp extends Application {
     private Tab createChatTab() {
         Tab tab = new Tab("聊天");
         tab.setClosable(false);
-        chatView = new ChatView(configManager, notes, tasks);
+        chatView = new ChatView(configManager, notes, tasks, chatHistoryService);
         tab.setContent(chatView);
         return tab;
     }
@@ -246,9 +286,15 @@ public class MainApp extends Application {
             selectedNote.setTitle(titleField.getText().isBlank() ? "未命名笔记" : titleField.getText());
             selectedNote.setContent(contentArea.getText());
             selectedNote.setLastUpdated(LocalDateTime.now());
-            lastUpdatedLabel.setText("最后编辑：" + selectedNote.getFormattedTimestamp());
-            statusLabel.setText("已保存笔记");
-            noteListView.refresh();
+            try {
+                noteService.updateNote(selectedNote.toEntity());
+                lastUpdatedLabel.setText("最后编辑：" + selectedNote.getFormattedTimestamp());
+                statusLabel.setText("已保存笔记");
+                noteListView.refresh();
+            } catch (IllegalStateException ex) {
+                LOGGER.log(Level.SEVERE, "Failed to update note", ex);
+                statusLabel.setText("保存失败，请稍后再试");
+            }
         }
     }
 
@@ -271,92 +317,167 @@ public class MainApp extends Application {
         }
     }
 
-    private ObservableList<TaskViewModel> createSampleTasks() {
-        ObservableList<TaskViewModel> tasks = FXCollections.observableArrayList();
-
-        TaskViewModel designReview = new TaskViewModel();
-        designReview.setTitle("设计评审");
-        designReview.setDescription("准备周四的设计评审资料，突出关键交互流程。");
-        designReview.setType(TaskType.EVENT);
-        designReview.setPriority(TaskPriority.HIGH);
-        designReview.setStatus(TaskStatus.IN_PROGRESS);
-        designReview.setStartDateTime(LocalDateTime.now().minusDays(1));
-        designReview.setDueDateTime(LocalDateTime.now().plusDays(1).withHour(15).withMinute(0));
-        designReview.setReminderLeadMinutes(30);
-        tasks.add(designReview);
-
-        TaskViewModel requirementAnalysis = new TaskViewModel();
-        requirementAnalysis.setTitle("需求梳理");
-        requirementAnalysis.setDescription("梳理 V2.3 版本需求并输出原型草稿。");
-        requirementAnalysis.setType(TaskType.TODO);
-        requirementAnalysis.setPriority(TaskPriority.NORMAL);
-        requirementAnalysis.setStatus(TaskStatus.PLANNED);
-        requirementAnalysis.setDueDateTime(LocalDateTime.now().plusDays(3).withHour(11).withMinute(0));
-        requirementAnalysis.setReminderLeadMinutes(60);
-        tasks.add(requirementAnalysis);
-
-        TaskViewModel regression = new TaskViewModel();
-        regression.setTitle("BUG 回归");
-        regression.setDescription("回归测试登录流程相关缺陷并记录测试结果。");
-        regression.setType(TaskType.TODO);
-        regression.setPriority(TaskPriority.URGENT);
-        regression.setStatus(TaskStatus.IN_PROGRESS);
-        regression.setDueDateTime(LocalDateTime.now().plusHours(6));
-        regression.setReminderLeadMinutes(20);
-        tasks.add(regression);
-
-        TaskViewModel teamSync = new TaskViewModel();
-        teamSync.setTitle("团队同步");
-        teamSync.setDescription("整理本周进展并准备周会同步材料。");
-        teamSync.setType(TaskType.EVENT);
-        teamSync.setPriority(TaskPriority.LOW);
-        teamSync.setStatus(TaskStatus.COMPLETED);
-        teamSync.setDueDateTime(LocalDateTime.now().minusDays(1));
-        teamSync.setReminderEnabled(false);
-        tasks.add(teamSync);
-
-        TaskViewModel uiCourse = new TaskViewModel();
-        uiCourse.setTitle("UI 设计进阶课");
-        uiCourse.setDescription("第 6 周：交互流设计复盘与作业提交。");
-        uiCourse.setType(TaskType.COURSE);
-        uiCourse.setPriority(TaskPriority.NORMAL);
-        uiCourse.setStatus(TaskStatus.IN_PROGRESS);
-        uiCourse.setDueDateTime(LocalDateTime.now().plusDays(5).withHour(20));
-        uiCourse.setReminderLeadMinutes(90);
-        tasks.add(uiCourse);
-
-        TaskViewModel anniversary = new TaskViewModel();
-        anniversary.setTitle("团队成立纪念日");
-        anniversary.setDescription("准备庆祝活动并发布内部分享。");
-        anniversary.setType(TaskType.ANNIVERSARY);
-        anniversary.setPriority(TaskPriority.HIGH);
-        anniversary.setStatus(TaskStatus.PLANNED);
-        anniversary.setDueDateTime(LocalDateTime.now().plusDays(10).withHour(9));
-        anniversary.setReminderLeadMinutes(120);
-        tasks.add(anniversary);
-
-        return tasks;
+    private ObservableList<TaskViewModel> loadTasks() {
+        List<Task> persistedTasks = taskService.listAllTasks();
+        if (persistedTasks.isEmpty()) {
+            seedDefaultTasks();
+            persistedTasks = taskService.listAllTasks();
+        }
+        List<TaskViewModel> models = persistedTasks.stream()
+            .map(TaskViewModel::fromDomain)
+            .collect(Collectors.toList());
+        return FXCollections.observableArrayList(models);
     }
 
-    private ObservableList<Note> createSampleNotes() {
-        return FXCollections.observableArrayList(
-            new Note("会议记录", "讨论项目进度、风险以及下周的里程碑。", LocalDateTime.now().minusDays(1)),
-            new Note("灵感捕捉", "重新设计仪表盘配色，突出重点指标。", LocalDateTime.now().minusHours(6)),
-            new Note("阅读摘录", "《用户体验要素》关于信息架构的章节值得复盘。", LocalDateTime.now().minusDays(3))
-        );
+    private ObservableList<Note> loadNotes() {
+        List<NoteEntity> persistedNotes = noteService.getAllNotes();
+        if (persistedNotes.isEmpty()) {
+            seedDefaultNotes();
+            persistedNotes = noteService.getAllNotes();
+        }
+        List<Note> models = persistedNotes.stream()
+            .map(Note::fromEntity)
+            .collect(Collectors.toList());
+        return FXCollections.observableArrayList(models);
+    }
+
+    private void seedDefaultNotes() {
+        createNote("会议记录", "讨论项目进度、风险以及下周的里程碑。", LocalDateTime.now().minusDays(1));
+        createNote("灵感捕捉", "重新设计仪表盘配色，突出重点指标。", LocalDateTime.now().minusHours(6));
+        createNote("阅读摘录", "《用户体验要素》关于信息架构的章节值得复盘。", LocalDateTime.now().minusDays(3));
+    }
+
+    private void createNote(final String title, final String content, final LocalDateTime timestamp) {
+        NoteEntity entity = new NoteEntity();
+        entity.setTitle(title);
+        entity.setContent(content);
+        entity.setTag(null);
+        entity.setDate(timestamp);
+        try {
+            noteService.createNote(entity);
+        } catch (IllegalStateException ex) {
+            LOGGER.log(Level.SEVERE, "Failed to seed default note", ex);
+        }
+    }
+
+    private void seedDefaultTasks() {
+        LocalDateTime now = LocalDateTime.now();
+        createTask(
+            Task.builder()
+                .withTitle("设计评审")
+                .withDescription("准备周四的设计评审资料，突出关键交互流程。")
+                .withType(TaskType.EVENT)
+                .withPriority(TaskPriority.HIGH)
+                .withStatus(TaskStatus.IN_PROGRESS)
+                .withStartDateTime(now.minusDays(1))
+                .withDueDateTime(now.plusDays(1).withHour(15).withMinute(0))
+                .withReminderEnabled(true)
+                .withReminderLeadMinutes(30)
+                .build());
+
+        createTask(
+            Task.builder()
+                .withTitle("需求梳理")
+                .withDescription("梳理 V2.3 版本需求并输出原型草稿。")
+                .withType(TaskType.TODO)
+                .withPriority(TaskPriority.NORMAL)
+                .withStatus(TaskStatus.PLANNED)
+                .withDueDateTime(now.plusDays(3).withHour(11).withMinute(0))
+                .withReminderEnabled(true)
+                .withReminderLeadMinutes(60)
+                .build());
+
+        createTask(
+            Task.builder()
+                .withTitle("BUG 回归")
+                .withDescription("回归测试登录流程相关缺陷并记录测试结果。")
+                .withType(TaskType.TODO)
+                .withPriority(TaskPriority.URGENT)
+                .withStatus(TaskStatus.IN_PROGRESS)
+                .withDueDateTime(now.plusHours(6))
+                .withReminderEnabled(true)
+                .withReminderLeadMinutes(20)
+                .build());
+
+        createTask(
+            Task.builder()
+                .withTitle("团队同步")
+                .withDescription("整理本周进展并准备周会同步材料。")
+                .withType(TaskType.EVENT)
+                .withPriority(TaskPriority.LOW)
+                .withStatus(TaskStatus.COMPLETED)
+                .withDueDateTime(now.minusDays(1))
+                .withReminderEnabled(false)
+                .build());
+
+        createTask(
+            Task.builder()
+                .withTitle("UI 设计进阶课")
+                .withDescription("第 6 周：交互流设计复盘与作业提交。")
+                .withType(TaskType.COURSE)
+                .withPriority(TaskPriority.NORMAL)
+                .withStatus(TaskStatus.IN_PROGRESS)
+                .withDueDateTime(now.plusDays(5).withHour(20))
+                .withReminderEnabled(true)
+                .withReminderLeadMinutes(90)
+                .build());
+
+        createTask(
+            Task.builder()
+                .withTitle("团队成立纪念日")
+                .withDescription("准备庆祝活动并发布内部分享。")
+                .withType(TaskType.ANNIVERSARY)
+                .withPriority(TaskPriority.HIGH)
+                .withStatus(TaskStatus.PLANNED)
+                .withDueDateTime(now.plusDays(10).withHour(9))
+                .withReminderEnabled(true)
+                .withReminderLeadMinutes(120)
+                .build());
+    }
+
+    private void createTask(final Task task) {
+        try {
+            taskService.createTask(task);
+        } catch (IllegalStateException ex) {
+            LOGGER.log(Level.SEVERE, "Failed to seed default task", ex);
+        }
     }
 
     public static class Note {
         private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
 
+        private Long id;
         private String title;
         private String content;
         private LocalDateTime lastUpdated;
 
-        private Note(String title, String content, LocalDateTime lastUpdated) {
+        private Note(Long id, String title, String content, LocalDateTime lastUpdated) {
+            this.id = id;
             this.title = title;
             this.content = content;
             this.lastUpdated = lastUpdated;
+        }
+
+        public static Note fromEntity(final NoteEntity entity) {
+            return new Note(entity.getId(), entity.getTitle(), entity.getContent(), entity.getDate());
+        }
+
+        public NoteEntity toEntity() {
+            NoteEntity entity = new NoteEntity();
+            entity.setId(id);
+            entity.setTitle(title);
+            entity.setContent(content);
+            entity.setTag(null);
+            entity.setDate(lastUpdated != null ? lastUpdated : LocalDateTime.now());
+            return entity;
+        }
+
+        public Long getId() {
+            return id;
+        }
+
+        public void setId(final Long id) {
+            this.id = id;
         }
 
         public String getTitle() {
