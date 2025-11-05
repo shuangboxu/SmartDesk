@@ -27,7 +27,7 @@ abstract class AbstractJsonAiClient implements AiModelClient {
 
     @Override
     public String sendMessage(final AppConfig config, final List<ChatMessage> history,
-                              final String userMessage) throws AiClientException {
+                              final ChatMessage userMessage) throws AiClientException {
         Objects.requireNonNull(userMessage, "userMessage");
         try {
             String endpoint = resolveEndpoint(config.getBaseUrl());
@@ -61,7 +61,7 @@ abstract class AbstractJsonAiClient implements AiModelClient {
         for (ChatMessage message : history) {
             JsonObject jsonMessage = new JsonObject();
             jsonMessage.addProperty("role", mapRole(message));
-            jsonMessage.addProperty("content", message.getContent());
+            jsonMessage.addProperty("content", formatContent(message));
             messages.add(jsonMessage);
         }
         customisePayload(payload);
@@ -78,6 +78,10 @@ abstract class AbstractJsonAiClient implements AiModelClient {
     }
 
     protected abstract void customisePayload(JsonObject payload);
+
+    protected String formatContent(final ChatMessage message) {
+        return message == null ? "" : message.getContent();
+    }
 
     private String resolveEndpoint(final String baseUrl) {
         if (baseUrl == null) {

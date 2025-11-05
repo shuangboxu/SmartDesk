@@ -8,6 +8,7 @@ import com.smartdesk.core.config.ModelCatalog;
 import com.smartdesk.ui.MainApp;
 import com.smartdesk.ui.tasks.TaskViewModel;
 import javafx.application.Platform;
+import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
@@ -18,9 +19,15 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.layout.*;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
+import javafx.stage.FileChooser;
+import javafx.stage.Window;
 
 import java.time.format.DateTimeFormatter;
 import java.time.LocalDateTime;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -49,10 +56,13 @@ public final class ChatView extends BorderPane {
     private final TextArea composer = new TextArea();
     private final Button sendButton = new Button("发送");
     private final Button shareButton = new Button("插入资料");
+    private final Button attachButton = new Button("上传文件");
     private final Button toggleHistoryButton = new Button("折叠历史");
     private final ComboBox<String> modelSelector = new ComboBox<>();
     private final Label modeLabel = new Label();
     private final Label statusLabel = new Label();
+    private final FlowPane attachmentPreview = new FlowPane(8, 8);
+    private final List<ChatAttachment> pendingAttachments = new ArrayList<>();
 
     private ChatAssistant assistant;
     private AppConfig baseConfig;
@@ -139,9 +149,14 @@ public final class ChatView extends BorderPane {
         newButton.setMaxWidth(Double.MAX_VALUE);
         newButton.setOnAction(evt -> startNewSession());
 
+        Button deleteButton = new Button("删除对话");
+        deleteButton.setMaxWidth(Double.MAX_VALUE);
+        deleteButton.disableProperty().bind(Bindings.isNull(sessionList.getSelectionModel().selectedItemProperty()));
+        deleteButton.setOnAction(evt -> requestDeleteSelectedSession());
+
         sessionList.setPlaceholder(new Label("暂无对话"));
 
-        sidebar = new VBox(8, title, newButton, sessionList);
+        sidebar = new VBox(8, title, newButton, deleteButton, sessionList);
         VBox.setVgrow(sessionList, Priority.ALWAYS);
         sidebar.setPadding(new Insets(6));
         sidebar.setMinWidth(160);
@@ -222,15 +237,22 @@ public final class ChatView extends BorderPane {
         composer.setMaxHeight(MAX_COMPOSER_HEIGHT);
 
         shareButton.setOnAction(evt -> handleShareContext());
+        attachButton.setOnAction(evt -> promptAttachmentSelection());
 
         sendButton.setDefaultButton(true);
         sendButton.setOnAction(evt -> dispatchMessage());
 
-        HBox actionBar = new HBox(8, shareButton, new Region(), sendButton);
-        HBox.setHgrow(actionBar.getChildren().get(1), Priority.ALWAYS);
+        attachmentPreview.setPadding(new Insets(4));
+        attachmentPreview.setVisible(false);
+        attachmentPreview.setManaged(false);
+        attachmentPreview.setStyle("-fx-background-color: #f6f8fb; -fx-border-color: #d0d7e2; -fx-border-radius: 4; -fx-background-radius: 4;");
+
+        Region spacer = new Region();
+        HBox actionBar = new HBox(8, shareButton, attachButton, spacer, sendButton);
+        HBox.setHgrow(spacer, Priority.ALWAYS);
         actionBar.setAlignment(Pos.CENTER_RIGHT);
 
-        container.getChildren().addAll(composer, actionBar);
+        container.getChildren().addAll(attachmentPreview, composer, actionBar);
         VBox.setVgrow(composer, Priority.ALWAYS);
         return container;
     }
@@ -347,7 +369,7 @@ public final class ChatView extends BorderPane {
         if (assistant != null) assistant.shutdown();
         AppConfig working = baseConfig.copy();
         if (activeModel != null && !activeModel.isBlank()) working.setModel(activeModel);
-        assistant = ChatAssistantFactory.createAssistant(history, working);
+        assistant = ChatAssistantFactory.createAssistant(history, chatHistoryService, working);
     }
 
     private void updateModeLabel() {
@@ -394,6 +416,47 @@ public final class ChatView extends BorderPane {
         messageList.scrollTo(Math.max(session.getMessages().size() - 1, 0));
     }
 
+    private void requestDeleteSelectedSession() {
+        ChatSession selected = sessionList.getSelectionModel().getSelectedItem();
+        if (selected == null) {
+            return;
+        }
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("删除对话");
+        alert.setHeaderText("确认删除选中的对话？");
+        alert.setContentText("该操作会永久删除聊天记录，且无法恢复。");
+        Optional<ButtonType> result = alert.showAndWait();
+        if (result.isPresent() && result.get() == ButtonType.OK) {
+            deleteSession(selected);
+        }
+    }
+
+    private void deleteSession(final ChatSession session) {
+        if (session == null) {
+            return;
+        }
+        try {
+            chatHistoryService.deleteSession(session.getId());
+            boolean removed = sessions.remove(session);
+            if (removed) {
+                if (session == activeSession) {
+                    activeSession = null;
+                    history.clear();
+                    if (sessions.isEmpty()) {
+                        startNewSession();
+                    } else {
+                        sessionList.getSelectionModel().selectFirst();
+                    }
+                } else if (sessionList.getSelectionModel().getSelectedItem() == null && !sessions.isEmpty()) {
+                    sessionList.getSelectionModel().selectFirst();
+                }
+            }
+            updateStatus("对话已删除");
+        } catch (IllegalStateException ex) {
+            updateStatus("删除对话失败: " + ex.getMessage());
+        }
+    }
+
     private void ensureSessionGreeting(final ChatSession session) {
         if (session.getMessages().isEmpty()) {
             ChatMessage greeting = ChatMessage.of(ChatMessage.Sender.SYSTEM, "欢迎使用智能聊天助理，有任何问题都可以告诉我！");
@@ -418,10 +481,22 @@ public final class ChatView extends BorderPane {
             return;
         }
         String text = composer.getText();
-        if (text == null || text.isBlank()) return;
-        String content = text.trim();
+        boolean hasText = text != null && !text.isBlank();
+        if (!hasText && pendingAttachments.isEmpty()) return;
+        String content = hasText ? text.trim() : "";
         composer.clear();
-        ChatMessage userMessage = ChatMessage.of(ChatMessage.Sender.USER, content);
+        List<ChatAttachment> attachments = pendingAttachments.isEmpty() ? Collections.emptyList() : new ArrayList<>(pendingAttachments);
+        pendingAttachments.clear();
+        refreshAttachmentPreview();
+        if (!hasText && attachments.isEmpty()) {
+            return;
+        }
+        if (!hasText && !attachments.isEmpty()) {
+            content = "(已上传附件)";
+        }
+        final ChatMessage userMessage = attachments.isEmpty()
+            ? ChatMessage.of(ChatMessage.Sender.USER, content)
+            : ChatMessage.withAttachments(ChatMessage.Sender.USER, content, attachments);
         targetSession.addMessage(userMessage);
         persistMessage(targetSession, userMessage);
         refreshSessionOrder(targetSession);
@@ -472,6 +547,81 @@ public final class ChatView extends BorderPane {
                 composer.positionCaret(position + snippet.length() + 1);
             }
         });
+    }
+
+    private void promptAttachmentSelection() {
+        FileChooser chooser = new FileChooser();
+        chooser.setTitle("选择要上传的文件");
+        chooser.getExtensionFilters().addAll(
+            new FileChooser.ExtensionFilter("所有文件", "*.*"),
+            new FileChooser.ExtensionFilter("图片", "*.png", "*.jpg", "*.jpeg", "*.gif"),
+            new FileChooser.ExtensionFilter("文档", "*.pdf", "*.docx", "*.doc", "*.pptx", "*.txt")
+        );
+        Window owner = getScene() == null ? null : getScene().getWindow();
+        List<File> files = chooser.showOpenMultipleDialog(owner);
+        if (files == null || files.isEmpty()) {
+            return;
+        }
+        int success = 0;
+        for (File file : files) {
+            if (file == null) continue;
+            try {
+                ChatAttachment attachment = ChatAttachment.fromFile(file.toPath());
+                pendingAttachments.add(attachment);
+                success++;
+            } catch (IOException ex) {
+                updateStatus("读取文件失败: " + file.getName());
+            }
+        }
+        if (success > 0) {
+            refreshAttachmentPreview();
+            updateStatus("已添加 " + success + " 个附件");
+        }
+    }
+
+    private void refreshAttachmentPreview() {
+        attachmentPreview.getChildren().clear();
+        if (pendingAttachments.isEmpty()) {
+            attachmentPreview.setVisible(false);
+            attachmentPreview.setManaged(false);
+            return;
+        }
+        attachmentPreview.setVisible(true);
+        attachmentPreview.setManaged(true);
+        for (ChatAttachment attachment : pendingAttachments) {
+            Label name = new Label(attachment.describe());
+            Button remove = new Button("移除");
+            remove.setOnAction(evt -> {
+                pendingAttachments.remove(attachment);
+                refreshAttachmentPreview();
+            });
+            remove.setFocusTraversable(false);
+            HBox chip = new HBox(8, name, remove);
+            chip.setAlignment(Pos.CENTER_LEFT);
+            chip.setPadding(new Insets(2, 6, 2, 6));
+            chip.setStyle("-fx-background-color: white; -fx-border-color: #d0d7e2; -fx-border-radius: 4; -fx-background-radius: 4;");
+            attachmentPreview.getChildren().add(chip);
+        }
+    }
+
+    private void saveAttachmentToDisk(final ChatAttachment attachment) {
+        if (attachment == null) {
+            return;
+        }
+        FileChooser chooser = new FileChooser();
+        chooser.setTitle("保存附件");
+        chooser.setInitialFileName(attachment.getFileName());
+        Window owner = getScene() == null ? null : getScene().getWindow();
+        File destination = chooser.showSaveDialog(owner);
+        if (destination == null) {
+            return;
+        }
+        try {
+            Files.copy(attachment.getFilePath(), destination.toPath(), StandardCopyOption.REPLACE_EXISTING);
+            updateStatus("附件已保存至: " + destination.getAbsolutePath());
+        } catch (IOException ex) {
+            updateStatus("保存附件失败: " + ex.getMessage());
+        }
     }
 
     private void refreshSessionOrder(final ChatSession session) {
@@ -535,7 +685,8 @@ public final class ChatView extends BorderPane {
         private final Label senderLabel = new Label();
         private final Label contentLabel = new Label();
         private final Label timeLabel = new Label();
-        private final VBox bubble = new VBox(6, senderLabel, contentLabel, timeLabel);
+        private final VBox attachmentsBox = new VBox(4);
+        private final VBox bubble = new VBox(6, senderLabel, contentLabel, attachmentsBox, timeLabel);
         private final HBox wrapper = new HBox(bubble);
 
         private ChatMessageCell() {
@@ -550,6 +701,9 @@ public final class ChatView extends BorderPane {
             contentLabel.maxWidthProperty().bind(bubble.maxWidthProperty().subtract(16));
             senderLabel.setStyle("-fx-font-weight: bold;");
             timeLabel.setStyle("-fx-font-size: 11px; -fx-text-fill: #666;");
+            attachmentsBox.setVisible(false);
+            attachmentsBox.setManaged(false);
+            attachmentsBox.setPadding(new Insets(0, 0, 0, 0));
 
             wrapper.setPadding(new Insets(4, 8, 4, 8));
             wrapper.setFillHeight(true);
@@ -586,8 +740,28 @@ public final class ChatView extends BorderPane {
 
             // 直接显示原始文本（不渲染 Markdown）
             contentLabel.setText(item.getContent());
+            populateAttachments(item);
 
             setGraphic(wrapper);
+        }
+
+        private void populateAttachments(final ChatMessage message) {
+            attachmentsBox.getChildren().clear();
+            if (message == null || !message.hasAttachments()) {
+                attachmentsBox.setVisible(false);
+                attachmentsBox.setManaged(false);
+                return;
+            }
+            attachmentsBox.setVisible(true);
+            attachmentsBox.setManaged(true);
+            for (ChatAttachment attachment : message.getAttachments()) {
+                Label info = new Label(attachment.describe());
+                Hyperlink saveLink = new Hyperlink("另存为");
+                saveLink.setOnAction(evt -> saveAttachmentToDisk(attachment));
+                HBox row = new HBox(8, info, saveLink);
+                row.setAlignment(Pos.CENTER_LEFT);
+                attachmentsBox.getChildren().add(row);
+            }
         }
     }
 }

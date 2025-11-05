@@ -2,10 +2,12 @@ package com.smartdesk.core.chat;
 
 import com.smartdesk.storage.DatabaseManager;
 
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -48,11 +50,34 @@ public final class ChatHistoryService {
         VALUES (?, ?, ?, ?)
         """;
 
+    private static final String DELETE_SESSION_SQL = """
+        DELETE FROM chat_sessions
+         WHERE id = ?
+        """;
+
     private static final String SELECT_MESSAGES_FOR_SESSION_SQL = """
         SELECT id, sender, content, timestamp
           FROM chat_messages
          WHERE session_id = ?
          ORDER BY datetime(timestamp), id
+        """;
+
+    private static final String INSERT_ATTACHMENT_SQL = """
+        INSERT INTO chat_attachments (message_id, file_name, mime_type, data, file_id)
+        VALUES (?, ?, ?, ?, ?)
+        """;
+
+    private static final String SELECT_ATTACHMENTS_FOR_MESSAGE_SQL = """
+        SELECT id, file_name, mime_type, data, file_id
+          FROM chat_attachments
+         WHERE message_id = ?
+         ORDER BY id
+        """;
+
+    private static final String UPDATE_ATTACHMENT_FILE_ID_SQL = """
+        UPDATE chat_attachments
+           SET file_id = ?
+         WHERE id = ?
         """;
 
     private final DatabaseManager databaseManager;
@@ -96,10 +121,15 @@ public final class ChatHistoryService {
                     messageStatement.setString(1, entry.getKey());
                     try (ResultSet messageResult = messageStatement.executeQuery()) {
                         while (messageResult.next()) {
+                            final long messageId = messageResult.getLong("id");
                             final ChatMessage.Sender sender = ChatMessage.Sender.valueOf(messageResult.getString("sender"));
                             final String content = messageResult.getString("content");
                             final LocalDateTime timestamp = LocalDateTime.parse(messageResult.getString("timestamp"), FORMATTER);
-                            entry.getValue().addMessage(ChatMessage.of(sender, content, timestamp));
+                            List<ChatAttachment> attachments = loadAttachments(connection, messageId);
+                            ChatMessage message = attachments.isEmpty()
+                                ? ChatMessage.of(sender, content, timestamp)
+                                : ChatMessage.withAttachments(sender, content, timestamp, attachments);
+                            entry.getValue().addMessage(message);
                         }
                     }
                 }
@@ -160,7 +190,7 @@ public final class ChatHistoryService {
 
         try (Connection connection = databaseManager.getConnection()) {
             connection.setAutoCommit(false);
-            try (PreparedStatement insertMessage = connection.prepareStatement(INSERT_MESSAGE_SQL);
+            try (PreparedStatement insertMessage = connection.prepareStatement(INSERT_MESSAGE_SQL, Statement.RETURN_GENERATED_KEYS);
                  PreparedStatement updateSession = connection.prepareStatement(UPDATE_SESSION_SQL)) {
 
                 insertMessage.setString(1, session.getId().toString());
@@ -168,6 +198,10 @@ public final class ChatHistoryService {
                 insertMessage.setString(3, message.getContent());
                 insertMessage.setString(4, FORMATTER.format(message.getTimestamp()));
                 insertMessage.executeUpdate();
+                long messageId = extractGeneratedKey(insertMessage);
+                if (message.hasAttachments()) {
+                    persistAttachments(connection, messageId, message.getAttachments());
+                }
 
                 updateSession.setString(1, session.getTitle());
                 updateSession.setInt(2, session.isAutoTitle() ? 1 : 0);
@@ -208,6 +242,89 @@ public final class ChatHistoryService {
         } catch (SQLException ex) {
             LOGGER.log(Level.SEVERE, "Failed to update chat session metadata", ex);
             throw new IllegalStateException("Failed to update chat session metadata", ex);
+        }
+    }
+
+    /**
+     * Deletes the given chat session together with all persisted messages
+     * and attachments (enforced by ON DELETE CASCADE constraints).
+     */
+    public void deleteSession(final UUID sessionId) {
+        Objects.requireNonNull(sessionId, "sessionId");
+        try (Connection connection = databaseManager.getConnection();
+             PreparedStatement statement = connection.prepareStatement(DELETE_SESSION_SQL)) {
+            statement.setString(1, sessionId.toString());
+            statement.executeUpdate();
+        } catch (SQLException ex) {
+            LOGGER.log(Level.SEVERE, "Failed to delete chat session", ex);
+            throw new IllegalStateException("Failed to delete chat session", ex);
+        }
+    }
+
+    private void persistAttachments(final Connection connection,
+                                    final long messageId,
+                                    final List<ChatAttachment> attachments) throws SQLException {
+        if (attachments == null || attachments.isEmpty()) {
+            return;
+        }
+        try (PreparedStatement statement = connection.prepareStatement(INSERT_ATTACHMENT_SQL, Statement.RETURN_GENERATED_KEYS)) {
+            for (ChatAttachment attachment : attachments) {
+                try {
+                    statement.setLong(1, messageId);
+                    statement.setString(2, attachment.getFileName());
+                    statement.setString(3, attachment.getMimeType());
+                    statement.setBytes(4, attachment.readAllBytes());
+                    statement.setString(5, attachment.getProviderFileId().orElse(null));
+                    statement.executeUpdate();
+                    long id = extractGeneratedKey(statement);
+                    attachment.setDatabaseId(id);
+                } catch (IOException ex) {
+                    throw new SQLException("Failed to read attachment data", ex);
+                }
+            }
+        }
+    }
+
+    private List<ChatAttachment> loadAttachments(final Connection connection, final long messageId) throws SQLException {
+        try (PreparedStatement statement = connection.prepareStatement(SELECT_ATTACHMENTS_FOR_MESSAGE_SQL)) {
+            statement.setLong(1, messageId);
+            try (ResultSet rs = statement.executeQuery()) {
+                List<ChatAttachment> attachments = new ArrayList<>();
+                while (rs.next()) {
+                    long id = rs.getLong("id");
+                    String fileName = rs.getString("file_name");
+                    String mimeType = rs.getString("mime_type");
+                    byte[] data = rs.getBytes("data");
+                    String fileId = rs.getString("file_id");
+                    try {
+                        ChatAttachment attachment = ChatAttachment.fromDatabase(id, fileName, mimeType, data, fileId);
+                        attachments.add(attachment);
+                    } catch (IOException ex) {
+                        LOGGER.log(Level.WARNING, "Failed to restore attachment {0}", fileName);
+                    }
+                }
+                return attachments;
+            }
+        }
+    }
+
+    public void updateAttachmentFileId(final long attachmentId, final String fileId) {
+        try (Connection connection = databaseManager.getConnection();
+             PreparedStatement statement = connection.prepareStatement(UPDATE_ATTACHMENT_FILE_ID_SQL)) {
+            statement.setString(1, fileId);
+            statement.setLong(2, attachmentId);
+            statement.executeUpdate();
+        } catch (SQLException ex) {
+            LOGGER.log(Level.WARNING, "Failed to update file_id for attachment {0}", attachmentId);
+        }
+    }
+
+    private long extractGeneratedKey(final PreparedStatement statement) throws SQLException {
+        try (ResultSet keys = statement.getGeneratedKeys()) {
+            if (keys.next()) {
+                return keys.getLong(1);
+            }
+            throw new SQLException("Failed to obtain generated message identifier");
         }
     }
 }

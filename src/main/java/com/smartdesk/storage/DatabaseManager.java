@@ -5,6 +5,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Objects;
@@ -103,6 +104,19 @@ public class DatabaseManager {
         )
         """;
 
+    /** DDL statement creating the attachment table backing uploaded files. */
+    public static final String CREATE_CHAT_ATTACHMENTS_TABLE_SQL = """
+        CREATE TABLE IF NOT EXISTS chat_attachments (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            message_id INTEGER NOT NULL,
+            file_name TEXT NOT NULL,
+            mime_type TEXT,
+            data BLOB NOT NULL,
+            file_id TEXT,
+            FOREIGN KEY (message_id) REFERENCES chat_messages(id) ON DELETE CASCADE
+        )
+        """;
+
     /** Index accelerating chat history retrieval ordered by timestamp. */
     public static final String CREATE_CHAT_MESSAGES_INDEX_SQL = """
         CREATE INDEX IF NOT EXISTS idx_chat_messages_session
@@ -189,11 +203,36 @@ public class DatabaseManager {
             statement.execute(CREATE_TASKS_REMINDER_INDEX_SQL);
             statement.execute(CREATE_CHAT_SESSIONS_TABLE_SQL);
             statement.execute(CREATE_CHAT_MESSAGES_TABLE_SQL);
+            statement.execute(CREATE_CHAT_ATTACHMENTS_TABLE_SQL);
             statement.execute(CREATE_CHAT_MESSAGES_INDEX_SQL);
+            upgradeChatAttachmentsTable(connection);
             LOGGER.log(Level.INFO, "Database initialised using URL: {0}", databaseUrl);
         } catch (SQLException ex) {
             LOGGER.log(Level.SEVERE, "Failed to initialise SQLite database", ex);
             throw new IllegalStateException("Failed to initialise SQLite database", ex);
+        }
+    }
+
+    private void upgradeChatAttachmentsTable(final Connection connection) throws SQLException {
+        ensureColumn(connection, "chat_attachments", "file_id TEXT", "file_id");
+    }
+
+    private void ensureColumn(final Connection connection, final String table, final String columnDefinition,
+                              final String columnName) throws SQLException {
+        boolean present = false;
+        try (Statement statement = connection.createStatement();
+             ResultSet rs = statement.executeQuery("PRAGMA table_info(" + table + ")")) {
+            while (rs.next()) {
+                if (columnName.equalsIgnoreCase(rs.getString("name"))) {
+                    present = true;
+                    break;
+                }
+            }
+        }
+        if (!present) {
+            try (Statement alter = connection.createStatement()) {
+                alter.execute("ALTER TABLE " + table + " ADD COLUMN " + columnDefinition);
+            }
         }
     }
 }

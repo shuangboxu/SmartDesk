@@ -68,3 +68,27 @@
 - 发送区加入“插入资料”按钮，可从笔记或任务中挑选部分/全部字段一键插入给 AI。
 - 会话内可快捷切换模型，所选模型会同步至当前会话并即时重建助手配置。
 - 设置页支持维护自定义模型列表，并在保存时写入配置供对话界面选择。
+
+## 最新调整 - 聊天文件上传
+- `src/main/java/com/smartdesk/core/chat/ChatAttachment.java`
+  - 新增二进制附件模型，支持从文件系统读取、展示描述信息以及转为 Base64 块传递给 AI。
+- `src/main/java/com/smartdesk/core/chat/ChatMessage.java`
+  - 扩展消息以携带附件列表，新增 `getPayloadContent` 将附件编码到请求文本中。
+- `src/main/java/com/smartdesk/core/chat/ChatHistoryService.java` / `src/main/java/com/smartdesk/storage/DatabaseManager.java`
+  - 构建 `chat_attachments` 表并在消息持久化/加载流程中读写附件 BLOB。
+- `src/main/java/com/smartdesk/ui/chat/ChatView.java`
+  - 发送区新增“上传文件”按钮、附件预览与“另存为”操作，支持无文本的纯附件消息。
+- `src/main/java/com/smartdesk/core/chat/online/AbstractJsonAiClient.java`
+  - 在线模型调用会携带附件展开后的 Base64 文本，确保 AI 可获取图片、文档内容。
+
+## 最新调整 - 多提供方附件管线
+- `src/main/java/com/smartdesk/core/chat/ChatAttachment.java`、`AttachmentStorage.java`
+  - 附件仅保存文件名/类型/体积/路径等元数据，统一落盘后按需流式读取，完全移除 Base64 拼接。
+- `src/main/java/com/smartdesk/core/chat/ChatHistoryService.java`、`DatabaseManager.java`
+  - `chat_attachments` 表新增 `file_id` 列，持久化时写回附件 ID 并在加载时恢复临时文件。
+- `src/main/java/com/smartdesk/core/chat/online/OpenAiClient.java`
+  - 新增 OpenAI 客户端：先调用 `/v1/files` 上传附件获得 `file.id`，随后在 `/v1/responses` 请求中通过 `attachments.file_id` 引用。
+- `src/main/java/com/smartdesk/core/chat/online/DeepSeekClient.java` 等
+  - 统一通过 `AttachmentPromptFormatter` 将附件提取出的纯文本（或元信息摘要）拼接进 Prompt，避免再传输 Base64。
+- `src/main/java/com/smartdesk/ui/chat/ChatView.java`
+  - “另存为”操作直接从落盘路径复制原始文件，界面交互保持不变。

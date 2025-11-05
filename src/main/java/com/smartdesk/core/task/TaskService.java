@@ -175,8 +175,8 @@ public class TaskService implements TaskQuerySupport {
             return statement.executeUpdate() > 0;
         } catch (SQLException ex) {
             LOGGER.log(Level.SEVERE, "Failed to delete task", ex);
+            throw new IllegalStateException("Failed to delete task", ex);
         }
-        return false;
     }
 
     /**

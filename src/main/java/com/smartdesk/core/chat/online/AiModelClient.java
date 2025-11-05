@@ -19,5 +19,5 @@ public interface AiModelClient {
      * @return assistant reply text
      * @throws AiClientException when the remote provider fails or the response is invalid
      */
-    String sendMessage(AppConfig config, List<ChatMessage> history, String userMessage) throws AiClientException;
+    String sendMessage(AppConfig config, List<ChatMessage> history, ChatMessage userMessage) throws AiClientException;
 }

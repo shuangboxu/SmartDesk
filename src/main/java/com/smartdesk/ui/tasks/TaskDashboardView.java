@@ -31,6 +31,7 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DateCell;
 import javafx.scene.control.DatePicker;
@@ -348,6 +349,32 @@ public final class TaskDashboardView extends BorderPane {
         });
     }
 
+    private void deleteTask(final TaskViewModel task) {
+        if (task == null || !task.isPersisted()) {
+            return;
+        }
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("删除任务");
+        alert.setHeaderText("确认删除任务《" + task.getTitle() + "》？");
+        alert.setContentText("删除后无法恢复，请谨慎操作。");
+        Optional<ButtonType> result = alert.showAndWait();
+        if (result.isEmpty() || result.get() != ButtonType.OK) {
+            return;
+        }
+        try {
+            boolean deleted = taskService.deleteTask(task.getId());
+            if (deleted) {
+                tasks.remove(task);
+                refresh();
+            } else {
+                showError("删除任务失败", "未找到该任务，可能已经被删除。");
+            }
+        } catch (IllegalStateException ex) {
+            LOGGER.log(Level.SEVERE, "Failed to delete task", ex);
+            showError("删除任务失败", "无法删除任务，请稍后再试。");
+        }
+    }
+
     private void showError(final String title, final String message) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle(title);
@@ -402,6 +429,7 @@ public final class TaskDashboardView extends BorderPane {
         private final HBox actions = new HBox(8);
         private final Button editButton = new Button("编辑");
         private final Button completeButton = new Button("完成");
+        private final Button deleteButton = new Button("删除");
         private final VBox container = new VBox(6);
 
         TaskCardCell() {
@@ -429,7 +457,10 @@ public final class TaskDashboardView extends BorderPane {
                 }
             });
 
-            actions.getChildren().addAll(editButton, completeButton);
+            deleteButton.getStyleClass().add("task-card-button");
+            deleteButton.setOnAction(evt -> deleteTask(getItem()));
+
+            actions.getChildren().addAll(editButton, completeButton, deleteButton);
 
             container.getChildren().addAll(title, meta, description, actions);
             container.getStyleClass().add("task-card-container");
@@ -440,6 +471,7 @@ public final class TaskDashboardView extends BorderPane {
             super.updateItem(item, empty);
             if (empty || item == null) {
                 completeButton.disableProperty().unbind();
+                deleteButton.setDisable(true);
                 setGraphic(null);
             } else {
                 title.setText(item.getTitle());
@@ -457,6 +489,7 @@ public final class TaskDashboardView extends BorderPane {
                 completeButton.disableProperty().bind(Bindings.createBooleanBinding(
                     () -> item.getStatus() == TaskStatus.COMPLETED,
                     item.statusProperty()));
+                deleteButton.setDisable(!item.isPersisted());
                 setGraphic(container);
             }
         }

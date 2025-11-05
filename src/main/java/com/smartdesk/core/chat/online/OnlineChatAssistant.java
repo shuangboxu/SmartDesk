@@ -48,7 +48,7 @@ public final class OnlineChatAssistant implements ChatAssistant {
         history.add(userMessage);
         CompletableFuture.supplyAsync(() -> {
             try {
-                return client.sendMessage(config, history.getMessages(), userMessage.getContent());
+                return client.sendMessage(config, history.getMessages(), userMessage);
             } catch (AiClientException ex) {
                 throw new RuntimeException(ex);
             }

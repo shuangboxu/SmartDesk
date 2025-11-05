@@ -1,5 +1,6 @@
 package com.smartdesk.core.chat.offline;
 
+import com.smartdesk.core.chat.AttachmentPromptFormatter;
 import com.smartdesk.core.chat.ChatAssistant;
 import com.smartdesk.core.chat.ChatHistory;
 import com.smartdesk.core.chat.ChatMessage;
@@ -35,7 +36,7 @@ public final class OfflineChatAssistant implements ChatAssistant {
         history.add(userMessage);
         executor.submit(() -> {
             try {
-                String reply = responder.respond(userMessage.getContent());
+                String reply = responder.respond(AttachmentPromptFormatter.buildContentWithAttachments(userMessage));
                 ChatMessage response = ChatMessage.of(ChatMessage.Sender.ASSISTANT, reply);
                 history.add(response);
                 onSuccess.accept(response);
