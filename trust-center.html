@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <title>SmartDesk 信任中心</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    :root {
+      --bg: #f7f8fb;
+      --surface: #ffffff;
+      --text-strong: #0f172a;
+      --text: #1f2937;
+      --text-soft: #64748b;
+      --border: #e2e8f0;
+      --primary: #0ea5e9;
+      --accent: #9333ea;
+      --radius: 22px;
+      --shadow: 0 15px 40px rgba(15, 23, 42, 0.08);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: "Inter", "Segoe UI", -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    .page {
+      max-width: 1080px;
+      margin: 0 auto;
+      padding: 40px 16px 80px;
+    }
+
+    .hero { text-align: center; margin-bottom: 32px; }
+
+    .kicker {
+      display: inline-flex;
+      padding: 6px 16px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: #fff;
+      letter-spacing: 0.12em;
+      color: var(--primary);
+      font-size: 12px;
+    }
+
+    h1 { margin-top: 16px; font-size: clamp(30px, 4vw, 40px); color: var(--text-strong); }
+
+    .hero p {
+      margin-top: 10px;
+      color: var(--text-soft);
+      line-height: 1.8;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 18px;
+    }
+
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 22px;
+      box-shadow: var(--shadow);
+      line-height: 1.7;
+      font-size: 14px;
+    }
+
+    .card h2 {
+      font-size: 18px;
+      color: var(--text-strong);
+      margin-bottom: 8px;
+    }
+
+    code { color: var(--primary); font-size: 12px; }
+
+    .faq {
+      margin-top: 36px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 24px;
+    }
+
+    .faq h3 { font-size: 20px; margin-bottom: 16px; color: var(--text-strong); }
+
+    .faq-item + .faq-item { margin-top: 18px; }
+
+    .faq-item strong { display: block; margin-bottom: 6px; color: var(--text-strong); }
+
+    .footer { margin-top: 32px; text-align: center; font-size: 12px; color: var(--text-soft); }
+
+    a { color: var(--primary); }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <section class="hero">
+      <div class="kicker">Trust · Privacy · Transparency</div>
+      <h1>SmartDesk 信任中心</h1>
+      <p>聚焦“用户关系”三大主题：数据落地、联网行为与授权安全。答案均来源于当前 SmartDesk 源码（LicenseValidator、MembershipService、OnlineSeatUsageTracker 等）。</p>
+    </section>
+
+    <section class="grid">
+      <article class="card">
+        <h2>数据落地策略</h2>
+        <p>所有业务数据、授权状态、配额与日志均保存在 <code>~/.smartdesk</code>：SQLite DB、membership-state.json、premium-usage.json、online-seat-usage.json 等，均可自行备份或删除。</p>
+      </article>
+      <article class="card">
+        <h2>联网与本地平衡</h2>
+        <p>默认离线运行，仅在以下情形联网：1) 获取图书馆/空教室数据；2) 在线抢座提交（Pro）；3) 授权时间校验；4) 你主动启用的 AI API。其它逻辑在本地线程完成。</p>
+      </article>
+      <article class="card">
+        <h2>授权文件原理</h2>
+        <p>license.json 含 deviceId、学号、过期时间与 tier，附带 RSA-SHA256 签名。LicenseValidator 校验设备、学号、签名、剩余天数，任何字段不符即视为无效。</p>
+      </article>
+      <article class="card">
+        <h2>隐私承诺</h2>
+        <p>SmartDesk 不内置登录或云端账号，不收集真实姓名/学号以外的敏感信息。deviceId 在本地生成，仅用于授权校验。日志不会自动上传。</p>
+      </article>
+      <article class="card">
+        <h2>撤销与自助</h2>
+        <p>删除 <code>license.json</code> 即回到 Free；可在设置页点击“禁用会员”临时关闭高级功能；需要重置数据时，删除整个 <code>~/.smartdesk</code> 目录即可。</p>
+      </article>
+      <article class="card">
+        <h2>防止走捷径</h2>
+        <p>授权绑定设备 + 学号，配额即便手动修改 JSON 也会按硬上限（5/150/500/10）重新计算。若发现异常使用，将吊销证书并拒绝更新。</p>
+      </article>
+    </section>
+
+    <section class="faq">
+      <h3>常见问题</h3>
+      <div class="faq-item">
+        <strong>Q：如何验证 license.json 真伪？</strong>
+        A：可使用 SmartDesk 附带的 LicenseGeneratorUI 或任何 RSA 验签工具，配合 README 中的公钥验证签名。
+      </div>
+      <div class="faq-item">
+        <strong>Q：迁移设备需要做什么？</strong>
+        A：在新电脑安装 SmartDesk，复制新的 deviceId，与旧授权信息一起联系作者重新生成 license，新旧设备互不干扰。
+      </div>
+      <div class="faq-item">
+        <strong>Q：AI 模块会上传我的数据吗？</strong>
+        A：只有在你主动填写 API Key 并点击发送时才会调用在线模型，未开启时聊天助手保持离线，全部数据存本地。
+      </div>
+      <div class="faq-item">
+        <strong>Q：误删数据如何恢复？</strong>
+        A：提前备份 <code>~/.smartdesk</code> 目录即可快速恢复。建议定期打包该目录到网盘或移动硬盘。
+      </div>
+    </section>
+
+    <div class="footer">
+      查看 <a href="membership.html">会员方案</a> · <a href="compliance.html">公平说明</a> · <a href="index.html">返回首页</a>
+    </div>
+  </div>
+</body>
+</html>

@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <title>SmartDesk 会员方案</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="了解 SmartDesk Free / Plus / Pro 授权权益、配额与隐私保障。" />
+  <style>
+    :root {
+      --bg: #f7f8fb;
+      --surface: #ffffff;
+      --text-strong: #0f172a;
+      --text: #1f2937;
+      --text-soft: #64748b;
+      --border: #e2e8f0;
+      --primary: #0ea5e9;
+      --primary-dark: #0284c7;
+      --radius: 22px;
+      --shadow: 0 15px 40px rgba(15, 23, 42, 0.08);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: "Inter", "Segoe UI", -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    a {
+      color: var(--primary-dark);
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    .page {
+      max-width: 1080px;
+      margin: 0 auto;
+      padding: 40px 16px 72px;
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 32px;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 14px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: #fff;
+      color: var(--primary-dark);
+      font-size: 12px;
+      letter-spacing: 0.08em;
+    }
+
+    h1 {
+      margin-top: 18px;
+      font-size: clamp(30px, 4vw, 40px);
+      color: var(--text-strong);
+    }
+
+    .subtitle {
+      margin: 12px auto 0;
+      max-width: 720px;
+      line-height: 1.8;
+      color: var(--text-soft);
+      font-size: 15px;
+    }
+
+    .plans {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 20px;
+      margin-top: 28px;
+    }
+
+    .plan-card {
+      background: var(--surface);
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      padding: 24px;
+      box-shadow: var(--shadow);
+    }
+
+    .plan-card h2 {
+      font-size: 22px;
+      color: var(--text-strong);
+    }
+
+    .plan-card p {
+      margin: 10px 0 16px;
+      color: var(--text-soft);
+      line-height: 1.7;
+      min-height: 42px;
+    }
+
+    .plan-card ul {
+      list-style: none;
+      color: var(--text);
+      line-height: 1.7;
+      font-size: 14px;
+    }
+
+    .plan-card ul li + li {
+      margin-top: 6px;
+    }
+
+    .highlight {
+      display: inline-block;
+      margin-top: 14px;
+      padding: 4px 12px;
+      border-radius: 12px;
+      background: rgba(14, 165, 233, 0.12);
+      color: var(--primary-dark);
+      font-size: 12px;
+    }
+
+    .section-title {
+      margin-top: 48px;
+      font-size: 24px;
+      color: var(--text-strong);
+    }
+
+    .section-desc {
+      margin-top: 8px;
+      font-size: 14px;
+      color: var(--text-soft);
+      line-height: 1.7;
+      max-width: 720px;
+    }
+
+    .table-wrapper {
+      margin-top: 20px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow-x: auto;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 14px;
+    }
+
+    th, td {
+      padding: 14px 16px;
+      border-bottom: 1px solid var(--border);
+      text-align: left;
+    }
+
+    th {
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--text-soft);
+    }
+
+    tbody tr:last-child td {
+      border-bottom: none;
+    }
+
+    .grid {
+      margin-top: 32px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 18px;
+    }
+
+    .info-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px;
+      line-height: 1.8;
+      font-size: 14px;
+      color: var(--text);
+      box-shadow: var(--shadow);
+    }
+
+    .info-card strong {
+      color: var(--text-strong);
+    }
+
+    footer {
+      margin-top: 40px;
+      text-align: center;
+      color: var(--text-soft);
+      font-size: 12px;
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <header class="header">
+      <div class="badge">deviceId × 学号 × RSA 签名三重校验</div>
+      <h1>SmartDesk 会员体系</h1>
+      <p class="subtitle">
+        Free 默认启用；导入 license.json 即可激活 Plus 或 Pro。你可以在 SmartDesk 设置页随时启用、禁用或切换模式，
+        下述权益均基于 PremiumQuotaTracker、OnlineSeatUsageTracker 与 LicenseValidator 的最新实现。
+      </p>
+    </header>
+
+    <section class="plans">
+      <article class="plan-card">
+        <h2>Free</h2>
+        <p>基础等级，适合体验与离线演示。</p>
+        <ul>
+          <li>支持笔记、任务、聊天、文档总结等学习工具。</li>
+          <li>图书馆自动助手需手动确认，每月持续搜索/定时各 5 次。</li>
+          <li>无法打开 Home 视图，无法使用在线抢座。</li>
+        </ul>
+        <div class="highlight">默认启用</div>
+      </article>
+      <article class="plan-card">
+        <h2>Plus</h2>
+        <p>在 Free 基础上打开 Home 与更高配额，仍需人工确认。</p>
+        <ul>
+          <li>Home + 启动页自定义、主题切换。</li>
+          <li>持续搜索/定时任务每月 150 次。</li>
+          <li>可预配置自动助手参数，方便升级到 Pro。</li>
+        </ul>
+        <div class="highlight">适合保持在线看板</div>
+      </article>
+      <article class="plan-card">
+        <h2>Pro</h2>
+        <p>解锁无人值守自动化与在线抢座，面向重度用户。</p>
+        <ul>
+          <li>持续搜索/定时任务每月 500 次，可后台守护线程。</li>
+          <li>在线抢座：授权剩余天数 = 总额度，上限 10 次/日。</li>
+          <li>自动通知、预约历史追踪、在线抢座配额记录。</li>
+        </ul>
+        <div class="highlight">自动化全开</div>
+      </article>
+    </section>
+
+    <section>
+      <h2 class="section-title">能力矩阵</h2>
+      <p class="section-desc">所有授权数据与配额文件保存在本机 <code>~/.smartdesk</code>，卸载不会删除，可随时备份或清理。</p>
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>能力</th>
+              <th>Free</th>
+              <th>Plus</th>
+              <th>Pro</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Home / 启动页</td>
+              <td>不可用</td>
+              <td>可开启</td>
+              <td>可定制模块</td>
+            </tr>
+            <tr>
+              <td>持续搜索配额 / 月</td>
+              <td>5 次（手动确认）</td>
+              <td>150 次（手动确认）</td>
+              <td>500 次（全自动）</td>
+            </tr>
+            <tr>
+              <td>定时抢座配额 / 月</td>
+              <td>5 次（需在线守候）</td>
+              <td>150 次（需在线守候）</td>
+              <td>500 次（后台线程）</td>
+            </tr>
+            <tr>
+              <td>在线抢座</td>
+              <td>未开放</td>
+              <td>未开放</td>
+              <td>开放，10 次/日 + 授权天数总额度</td>
+            </tr>
+            <tr>
+              <td>数据存储</td>
+              <td colspan="3">所有数据写入 <code>~/.smartdesk</code>，可手动备份</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="grid">
+      <div class="info-card">
+        <strong>如何获取授权？</strong><br />
+        1. 打开 SmartDesk 设置 → 会员 → 展开设备信息，复制 deviceId。<br />
+        2. 确认“统一身份认证学号”填写正确。<br />
+        3. 将 deviceId + 学号发给作者，说明天数/等级需求。<br />
+        4. 导入收到的 <code>license.json</code>，即可激活对应等级。
+      </div>
+      <div class="info-card">
+        <strong>隐私与公平</strong><br />
+        - 授权文件使用 RSA-SHA256 签名，无法伪造。<br />
+        - PremiumQuotaTracker、OnlineSeatUsageTracker 仅在本地记录配额，不上传。<br />
+        - 需要停用时可删除 license.json 或在设置页禁用会员。<br />
+        更多细节见 <a href="trust-center.html">信任中心</a> 与 <a href="compliance.html">公平说明</a>。
+      </div>
+    </section>
+
+    <footer>
+      © 2025 SmartDesk · 北京理工大学 | <a href="index.html">回到首页</a>
+    </footer>
+  </div>
+</body>
+</html>

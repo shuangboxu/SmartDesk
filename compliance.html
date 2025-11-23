@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <title>SmartDesk 公平合规</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    :root {
+      --bg: #f7f8fb;
+      --surface: #ffffff;
+      --text-strong: #0f172a;
+      --text: #1f2937;
+      --text-soft: #64748b;
+      --border: #e2e8f0;
+      --primary: #0ea5e9;
+      --radius: 20px;
+      --shadow: 0 15px 40px rgba(15, 23, 42, 0.08);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: "Inter", "Segoe UI", -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    a { color: var(--primary); }
+    a:hover { text-decoration: none; }
+
+    .page {
+      max-width: 1080px;
+      margin: 0 auto;
+      padding: 40px 16px 72px;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 32px;
+    }
+
+    .badge {
+      display: inline-flex;
+      padding: 6px 16px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: #fff;
+      color: var(--primary);
+      font-size: 12px;
+      letter-spacing: 0.12em;
+    }
+
+    h1 {
+      margin-top: 18px;
+      font-size: clamp(28px, 4vw, 38px);
+      color: var(--text-strong);
+    }
+
+    header p {
+      margin-top: 10px;
+      color: var(--text-soft);
+      line-height: 1.8;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 18px;
+    }
+
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 22px;
+      box-shadow: var(--shadow);
+      line-height: 1.7;
+      font-size: 14px;
+    }
+
+    .card h2 {
+      font-size: 18px;
+      color: var(--text-strong);
+      margin-bottom: 10px;
+    }
+
+    .card ul {
+      list-style: none;
+      color: var(--text);
+    }
+
+    .card ul li + li { margin-top: 8px; }
+
+    .callout {
+      margin-top: 30px;
+      padding: 18px;
+      border-radius: var(--radius);
+      border: 1px solid rgba(14, 165, 233, 0.3);
+      background: linear-gradient(135deg, #f0f9ff, #fdf2ff);
+      color: var(--text);
+      line-height: 1.7;
+      font-size: 14px;
+    }
+
+    .feedback-row {
+      margin-top: 22px;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 12px;
+    }
+
+    .feedback-button {
+      border: 0;
+      padding: 12px 18px;
+      border-radius: 999px;
+      background: #0ea5e9;
+      color: #fff;
+      font-weight: 600;
+      font-size: 14px;
+      box-shadow: 0 10px 20px rgba(14, 165, 233, 0.25);
+      cursor: pointer;
+      transition: transform .2s ease, box-shadow .2s ease;
+    }
+
+    .feedback-button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 14px 24px rgba(14, 165, 233, 0.35);
+    }
+
+    .feedback-modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.6);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .2s ease;
+      z-index: 40;
+    }
+
+    .feedback-modal.is-visible {
+      opacity: 1;
+      pointer-events: all;
+    }
+
+    .modal-card {
+      width: min(560px, 100%);
+      background: var(--surface);
+      border-radius: var(--radius);
+      padding: 28px;
+      position: relative;
+      box-shadow: 0 25px 40px rgba(15, 23, 42, 0.25);
+      max-height: 80vh;
+      overflow-y: auto;
+      line-height: 1.8;
+      font-size: 15px;
+    }
+
+    .modal-title {
+      margin-bottom: 12px;
+      font-size: 20px;
+      color: var(--text-strong);
+    }
+
+    .modal-body p {
+      margin-bottom: 12px;
+    }
+
+    .modal-body ul {
+      margin-bottom: 12px;
+      padding-left: 20px;
+    }
+
+    .modal-close {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      border: none;
+      background: transparent;
+      font-size: 24px;
+      cursor: pointer;
+      color: var(--text-soft);
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <header>
+      <div class="badge">Fair · Transparent · Auditable</div>
+      <h1>SmartDesk 公平性与合规说明</h1>
+      <p>SmartDesk 仅在本地执行自动化逻辑，通过配额、授权与日志控制确保使用公平且可追溯。以下内容说明我们如何保护校园资源与用户数据。</p>
+    </header>
+
+    <section class="grid">
+      <article class="card">
+        <h2>配额与资源公平</h2>
+        <ul>
+          <li>Free/Plus/Pro 对应 5/150/500 次每月配额，记录于 <code>premium-usage.json</code> 并按上限计算剩余额度。</li>
+          <li>Pro 在线抢座限定 10 次/日，提交历史写入 <code>online-seat-usage.json</code>。</li>
+          <li>持续搜索采用固定间隔，避免对学校接口造成额外压力。</li>
+        </ul>
+      </article>
+      <article class="card">
+        <h2>授权合法性</h2>
+        <ul>
+          <li>license.json 绑定 deviceId、学号、过期时间与等级，使用 RSA-SHA256 验签。</li>
+          <li>LicenseValidator 必要时访问可信时间源，防止人为回拨系统时间。</li>
+          <li>授权失效或被禁用时自动回落到 Free，确保无越权能力。</li>
+        </ul>
+      </article>
+      <article class="card">
+        <h2>隐私与日志</h2>
+        <ul>
+          <li>所有数据存储在 <code>~/.smartdesk</code>，包括 SQLite、授权状态、配额与日志。</li>
+          <li>联网仅涉及学校公开 API、公共时间源及你主动配置的 AI API。</li>
+          <li>问题排查仅在用户自愿分享日志的前提下进行，不做云端采集。</li>
+        </ul>
+      </article>
+      <article class="card">
+        <h2>使用者责任</h2>
+        <ul>
+          <li>勿共享授权文件，deviceId 与学号不符会立即失效。</li>
+          <li>仅将自动化用于合法学习需求，禁止批量刷席和倒卖账号。</li>
+          <li>若发现恶意行为，将吊销 license 并阻止更新。</li>
+        </ul>
+      </article>
+      <article class="card">
+        <h2>校园规则对齐</h2>
+        <ul>
+          <li>SmartDesk 不绕过认证，所有请求沿用学校的官方接口。</li>
+          <li>预约历史可导出，用于必要时向学校说明自动化行为。</li>
+          <li>若校园规则调整，会在会员页和应用中同步更新策略。</li>
+        </ul>
+      </article>
+      <article class="card">
+        <h2>退出与撤销</h2>
+        <ul>
+          <li>设置页可禁用会员、删除 license 或清空配额文件。</li>
+          <li>卸载不会删除数据目录，如需彻底清理可手动移除 <code>~/.smartdesk</code>。</li>
+
+        </ul>
+      </article>
+    </section>
+
+    <div class="callout">
+      更多隐私、授权和数据问题，请访问 <a href="trust-center.html">SmartDesk 信任中心</a>；若需了解会员权益，请查看 <a href="membership.html">会员方案</a>。
+    </div>
+
+    <div class="feedback-row">
+      <button type="button" class="feedback-button" data-target="student">我是学生，我不满 😡</button>
+      <button type="button" class="feedback-button" data-target="it">我是学校 IT，我不满 🤨</button>
+      <button type="button" class="feedback-button" data-target="admin">我是管理员，我不满 😐</button>
+    </div>
+
+    <div id="feedback-modal" class="feedback-modal" aria-hidden="true">
+      <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+        <button class="modal-close" aria-label="关闭">×</button>
+        <h3 id="modal-title" class="modal-title"></h3>
+        <div class="modal-body"></div>
+      </div>
+    </div>
+  </div>
+  <script>
+    (function() {
+      const templates = {
+        student: {
+          title: "我是学生，我不满 😡",
+          body: `<p>😡 我也是学生，你凭什么收费？而且还闭源？</p>
+            <p><strong>首先说收费：</strong>SmartDesk 不是写完就能放着不管的小脚本，而是：</p>
+            <ul>
+              <li>需要云服务器（不是免费的）</li>
+              <li>要维护防刷机制、并发队列、故障恢复</li>
+              <li>学校系统哪天抽风，我这边就必须连夜修</li>
+            </ul>
+            <p>换句话说：</p>
+            <p>如果不收费，这个项目一周就烂掉；如果收费，才能稳定、能维护、不炸、不中断。</p>
+            <p><strong>然后说闭源：</strong>这个决定不是“神秘主义”，更不是“不给大家学习”。</p>
+            <p>是因为：</p>
+            <ul>
+              <li>一旦开源，会出现各种魔改版、违规版、暴力刷版</li>
+              <li>这些版本滥用接口 → 学校封端口 → 全体陪葬</li>
+              <li>开源意味着公开所有逻辑，包括安全验证、风控、请求模式</li>
+              <li>会给“代课代测、违规抢座”这些人提供现成漏洞</li>
+            </ul>
+            <p>你肯定也不希望有一天 SmartDesk 被别人改成：“代抢课程、批量占座、统一代测跑步”的神器，最后把大家都害惨。</p>
+            <p><strong>SmartDesk 闭源不是为了“神秘”，而是为了：</strong></p>
+            <p>不让任何人把你的校园账号拿去做危险操作。</p>
+            <p>最后重复一句：</p>
+            <p>你可以不用 SmartDesk，但它的成本和风险真实存在。收费和闭源，是为了把它做成“可用、稳定、不会坑你的东西”。</p>`
+        },
+        it: {
+          title: "我是学校 IT，我不满 🤨",
+          body: `<p>🤨 老师您好，我知道 SmartDesk 让您有点不舒服。</p>
+            <p>但先说一句公道话：SmartDesk 不是反学校系统，而是学生在被动经历过：</p>
+            <ul>
+              <li>年年物理实验抢课的“高并发灾难现场”</li>
+              <li>i北理切换课表一转就转半天</li>
+              <li>空闲教室查询入口像密室逃脱</li>
+              <li>图书馆昏暗区长期“不修不动”</li>
+            </ul>
+            <p>SmartDesk 不跳权限、不破坏系统、不做违规行为，只是在可用的范围里让流程顺一点。</p>
+            <p>如果学校系统变得足够稳定快速，SmartDesk 会自然失业——说实话，那是我会真心高兴的一天。</p>
+            <p>我们不是对抗 IT，我们只是学生体验的“体温计”。体温太高时，体温计不舒服，但它不是发烧的原因。</p>`
+        },
+        admin: {
+          title: "我是管理员，我不满 😐",
+          body: `<p>😐 管理员老师您好，这里是学生侧的一个吐槽窗口。</p>
+            <p>先说 SmartDesk：</p>
+            <ul>
+              <li>不越权、不刷席、不代课、不代测</li>
+              <li>合法登录、合法查询、合法预约</li>
+              <li>做的只是把“本来就允许的操作”变顺滑一点</li>
+            </ul>
+            <p>但如果要说“需要重点治理的对象”，SmartDesk 绝对排不上号。</p>
+            <p>校园里长期存在的真正风险是：</p>
+            <ul>
+              <li>代课、代签到：公开报价“45 分钟 18 元”</li>
+              <li>代体测、代跑步：微信小广告多到像一门正规生意</li>
+              <li>违规占座、批量占座：影响公共资源公平</li>
+            </ul>
+            <p>这些才是最该优先处理的问题，而不是一个只让学生自己使用、不会帮别人违规的小工具。</p>
+            <p>SmartDesk 的存在反而说明：学生愿意按规则做事，只是规则执行体验太差。</p>
+            <p>如果学校把官方系统做得更快、更稳、更好——你甚至不用下达“整改通知”，SmartDesk 会自动退休。</p>
+            <p>它并不是负担，它只是学生在说：“我们愿意遵守规则，只希望规则也对我们友好一点。”</p>`
+        }
+      };
+
+      const modal = document.getElementById("feedback-modal");
+      const titleEl = modal.querySelector(".modal-title");
+      const bodyEl = modal.querySelector(".modal-body");
+      const closeBtn = modal.querySelector(".modal-close");
+
+      const showModal = (key) => {
+        if (!templates[key]) return;
+        titleEl.textContent = templates[key].title;
+        bodyEl.innerHTML = templates[key].body;
+        modal.classList.add("is-visible");
+        modal.setAttribute("aria-hidden", "false");
+      };
+
+      const hideModal = () => {
+        modal.classList.remove("is-visible");
+        modal.setAttribute("aria-hidden", "true");
+      };
+
+      document.querySelectorAll(".feedback-button").forEach((button) => {
+        button.addEventListener("click", () => showModal(button.getAttribute("data-target")));
+      });
+
+      closeBtn.addEventListener("click", hideModal);
+      modal.addEventListener("click", (event) => {
+        if (event.target === modal) {
+          hideModal();
+        }
+      });
+
+      document.addEventListener("keydown", (event) => {
+        if (event.key === "Escape" && modal.classList.contains("is-visible")) {
+          hideModal();
+        }
+      });
+    })();
+  </script>
+</body>
+</html>

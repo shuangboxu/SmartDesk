@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <title>SmartDesk · 北理工智能座位与学习助理</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="SmartDesk 提供图书馆抢座、空教室、任务、笔记、AI 助手与会员自动化能力。" />
+  <style>
+    :root {
+      --bg: #f7f8fb;
+      --surface: #ffffff;
+      --text-strong: #0f172a;
+      --text: #1f2937;
+      --text-soft: #64748b;
+      --border: #e2e8f0;
+      --primary: #0ea5e9;
+      --primary-dark: #0284c7;
+      --accent: #9333ea;
+      --radius-lg: 20px;
+      --shadow: 0 15px 40px rgba(15, 23, 42, 0.08);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: "Inter", "Segoe UI", -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    a {
+      color: var(--primary-dark);
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    .page {
+      max-width: 1080px;
+      margin: 0 auto;
+      padding: 32px 16px 64px;
+    }
+
+    .nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 20px 0 16px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .logo {
+      width: 42px;
+      height: 42px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, #0ea5e9, #9333ea);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600;
+      color: #fff;
+      letter-spacing: 0.05em;
+      box-shadow: 0 10px 30px rgba(14, 165, 233, 0.35);
+    }
+
+    .brand-text {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .brand-text strong {
+      color: var(--text-strong);
+      font-size: 15px;
+    }
+
+    .brand-text span {
+      color: var(--text-soft);
+      font-size: 12px;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 14px;
+      font-size: 14px;
+      color: var(--text-soft);
+    }
+
+    .nav-link {
+      padding: 8px 12px;
+      border-radius: 999px;
+      transition: background 0.2s ease;
+    }
+
+    .nav-link:hover {
+      background: rgba(14, 165, 233, 0.08);
+      color: var(--text-strong);
+    }
+
+    .cta {
+      padding: 10px 20px;
+      border-radius: 999px;
+      background: var(--text-strong);
+      color: #fff;
+      font-size: 13px;
+      font-weight: 600;
+      border: none;
+    }
+
+    .hero {
+      margin-top: 24px;
+      background: var(--surface);
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border);
+      padding: 42px;
+      box-shadow: var(--shadow);
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 28px;
+    }
+
+    .hero h1 {
+      font-size: clamp(34px, 5vw, 48px);
+      color: var(--text-strong);
+      margin-bottom: 18px;
+    }
+
+    .hero p {
+      font-size: 16px;
+      color: var(--text);
+      line-height: 1.7;
+      margin-bottom: 24px;
+    }
+
+    .hero-actions {
+      display: flex;
+      gap: 14px;
+      flex-wrap: wrap;
+      font-size: 14px;
+    }
+
+    .hero-note {
+      background: linear-gradient(135deg, rgba(14, 165, 233, 0.08), rgba(147, 51, 234, 0.08));
+      border-radius: 16px;
+      padding: 18px;
+      font-size: 13px;
+      color: var(--text-soft);
+      border: 1px solid var(--border);
+    }
+
+    .section {
+      margin-top: 48px;
+    }
+
+    .section-header {
+      margin-bottom: 20px;
+    }
+
+    .section-header span {
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      font-size: 12px;
+      color: var(--primary-dark);
+    }
+
+    .section-header h2 {
+      font-size: 26px;
+      color: var(--text-strong);
+      margin-top: 10px;
+    }
+
+    .section-header p {
+      font-size: 14px;
+      color: var(--text-soft);
+      margin-top: 10px;
+      max-width: 640px;
+      line-height: 1.7;
+    }
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 18px;
+    }
+
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 20px;
+      box-shadow: var(--shadow);
+      font-size: 14px;
+      line-height: 1.6;
+      color: var(--text);
+    }
+
+    .card h3 {
+      font-size: 18px;
+      margin-bottom: 8px;
+      color: var(--text-strong);
+    }
+
+    .card p {
+      color: var(--text-soft);
+      font-size: 13px;
+      line-height: 1.7;
+    }
+
+    .card ul {
+      list-style: none;
+      margin-top: 10px;
+      color: var(--text);
+    }
+
+    .card ul li + li {
+      margin-top: 6px;
+    }
+
+    .pill {
+      display: inline-block;
+      margin-top: 12px;
+      padding: 4px 10px;
+      border-radius: 999px;
+      font-size: 12px;
+      color: var(--primary-dark);
+      background: rgba(14, 165, 233, 0.12);
+    }
+
+    .table-wrapper {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow);
+      padding: 20px;
+      overflow-x: auto;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+    }
+
+    th, td {
+      padding: 12px 10px;
+      border-bottom: 1px solid var(--border);
+      text-align: left;
+      color: var(--text);
+    }
+
+    th {
+      color: var(--text-soft);
+      font-size: 12px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    tbody tr:last-child td {
+      border-bottom: none;
+    }
+
+    .trust {
+      background: linear-gradient(135deg, #f0f9ff, #f8f5ff);
+      border: 1px solid rgba(14, 165, 233, 0.15);
+      border-radius: var(--radius-lg);
+      padding: 28px;
+      margin-top: 32px;
+    }
+
+    footer {
+      margin-top: 48px;
+      font-size: 12px;
+      color: var(--text-soft);
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <nav class="nav">
+      <div class="brand">
+        <div class="logo">SD</div>
+        <div class="brand-text">
+          <strong>SmartDesk</strong>
+          <span>Learning Copilot</span>
+        </div>
+      </div>
+      <div class="nav-links">
+        <a class="nav-link" href="#features">特性</a>
+        <a class="nav-link" href="#automation">自动助手</a>
+        <a class="nav-link" href="#membership">会员</a>
+        <a class="nav-link" href="trust-center.html">信任中心</a>
+        <a class="nav-link" href="compliance.html">公平合规</a>
+      </div>
+      <a class="cta" href="smartdesk-seat-tasks/README.md">下载体验</a>
+    </nav>
+
+    <section class="hero">
+      <div>
+        <p class="pill">北理工图书馆与学习空间助手</p>
+        <h1>更快找到座位，更沉浸地学习。</h1>
+        <p>
+          SmartDesk 将图书馆抢座、空教室、任务、笔记与 AI 助手整合在一个本地桌面应用中，
+          并用授权驱动的自动化引擎提供持续搜索、定时抢座与在线预约能力。
+        </p>
+        <div class="hero-actions">
+          <a class="cta" href="membership.html" style="background: var(--primary);">查看会员方案</a>
+          <a href="README.md">阅读项目说明 →</a>
+        </div>
+      </div>
+      <div class="hero-note">
+        • 持续搜索：Free 5 次 / Plus 150 次 / Pro 500 次（每月重置）<br />
+        • 定时抢座：配额同上，Pro 可后台运行<br />
+        • 在线抢座：仅 Pro，剩余天数 = 总额度，10 次/日<br />
+        • 数据存储：全部落在 <code>~/.smartdesk</code>
+      </div>
+    </section>
+
+    <section id="features" class="section">
+      <div class="section-header">
+        <span>capabilities</span>
+        <h2>覆盖“预约 + 学习”全链路的桌面体验</h2>
+        <p>图书馆助手与学习工具共享统一界面和数据存储，全部功能默认离线可用，联网仅发生在必要的学校接口或你授权的 AI API。</p>
+      </div>
+      <div class="cards">
+        <div class="card">
+          <h3>图书馆自动助手</h3>
+          <p>LibrarySeatView 提供持续搜索、定时任务、在线抢座与历史追踪；Free/Plus 需手动确认，Pro 可无人值守。</p>
+        </div>
+        <div class="card">
+          <h3>空教室与自习室</h3>
+          <p>FreeRoom 模块实时展示教学楼占用，为临时讨论或复习提供可视化参考。</p>
+        </div>
+        <div class="card">
+          <h3>笔记 · 任务 · AI</h3>
+          <p>内置 SQLite 存储，支持任务提醒、笔记管理、聊天助理与文档总结，可选接入在线模型。</p>
+        </div>
+        <div class="card">
+          <h3>Home 视图</h3>
+          <p>Plus/Pro 可打开 Home 页面，展示提醒、状态与个性化启动模块。</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="automation" class="section">
+      <div class="section-header">
+        <span>automation engine</span>
+        <h2>会员驱动的自动化与配额系统</h2>
+        <p>PremiumQuotaTracker、OnlineSeatUsageTracker 与 LicenseValidator 协同工作：记录配额、验证授权、限制在线抢座提交次数，确保公平与透明。</p>
+      </div>
+      <div class="cards">
+        <div class="card">
+          <h3>设备与学号绑定</h3>
+          <ul>
+            <li>license.json 绑定 deviceId + 统一身份认证学号。</li>
+            <li>RSA-SHA256 签名防篡改，时间源防回拨。</li>
+            <li>设置页可随时导入、禁用或切换模式。</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3>配额守护</h3>
+          <ul>
+            <li>Free/Plus/Pro 每月 5/150/500 次持续搜索与定时配额。</li>
+            <li>Pro 在线抢座：10 次/日 + 剩余天数总额度。</li>
+            <li>所有记录保存在 <code>premium-usage.json</code> 与 <code>online-seat-usage.json</code>。</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3>数据透明</h3>
+          <ul>
+            <li>用户数据、授权状态、日志全部在本地 <code>~/.smartdesk</code>。</li>
+            <li>无云端收集，手动分享日志可定位问题。</li>
+            <li>详见 <a href="trust-center.html">信任中心</a> 与 <a href="compliance.html">公平说明</a>。</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section id="membership" class="section">
+      <div class="section-header">
+        <span>membership</span>
+        <h2>会员等级速览</h2>
+        <p>Free 默认启用；导入授权文件即可激活 Plus / Pro。授权保留在本地，可以随时禁用或迁移。</p>
+      </div>
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>能力</th>
+              <th>Free</th>
+              <th>Plus</th>
+              <th>Pro</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Home & 启动页</td>
+              <td>不可用</td>
+              <td>开启 Home</td>
+              <td>Home + 模块自定义</td>
+            </tr>
+            <tr>
+              <td>持续搜索配额 / 月</td>
+              <td>5 次 · 手动确认</td>
+              <td>150 次 · 手动确认</td>
+              <td>500 次 · 无人值守</td>
+            </tr>
+            <tr>
+              <td>定时抢座配额 / 月</td>
+              <td>5 次 · 需在线守候</td>
+              <td>150 次 · 需在线守候</td>
+              <td>500 次 · 后台线程</td>
+            </tr>
+            <tr>
+              <td>在线抢座</td>
+              <td>未开放</td>
+              <td>未开放</td>
+              <td>开放 · 10 次/日 + 授权天数总额</td>
+            </tr>
+            <tr>
+              <td>数据存储</td>
+              <td colspan="3">所有数据均存储在 <code>~/.smartdesk</code>，卸载不会删除</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="trust">
+        有授权或隐私问题？请查看 <a href="membership.html">会员方案详情</a>、<a href="compliance.html">公平说明</a> 或 <a href="trust-center.html">信任中心</a>，了解授权流程、设备绑定、数据备份方法。
+      </div>
+    </section>
+
+    <footer>
+      © 2025 SmartDesk · 北京理工大学 | <a href="README.md">README</a> · <a href="membership.html">会员方案</a> · <a href="trust-center.html">信任中心</a>
+    </footer>
+  </div>
+</body>
+</html>
