@@ -1,3 +1,4 @@
+<!-- Improved Trust Center HTML will go here. -->
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
@@ -196,54 +197,58 @@
       <p>SmartDesk 仅在本地执行自动化逻辑，通过配额、授权与日志控制确保使用公平且可追溯。以下内容说明我们如何保护校园资源与用户数据。</p>
     </header>
 
-    <section class="grid">
-      <article class="card">
-        <h2>配额与资源公平</h2>
+    <section class="grid" style="grid-template-columns: 1fr 1fr;">
+      <article class="card" style="grid-column: span 2;">
+        <h2>SmartDesk 是怎么工作的？（用人话解释）</h2>
+        <p>一句话版本：<strong>SmartDesk = 我帮你点，但我不会偷、不会记、不会乱来。</strong></p>
+        <p>再加一句话：<em>“SmartDesk 比官方系统靠谱一点点（但别指望它有魔法）。”</em></p>
         <ul>
-          <li>Free/Plus/Pro 对应 5/150/500 次每月配额，记录于 <code>premium-usage.json</code> 并按上限计算剩余额度。</li>
-          <li>Pro 在线抢座限定 10 次/日，提交历史写入 <code>online-seat-usage.json</code>。</li>
-          <li>持续搜索采用固定间隔，避免对学校接口造成额外压力。</li>
-        </ul>
-      </article>
-      <article class="card">
-        <h2>授权合法性</h2>
-        <ul>
-          <li>license.json 绑定 deviceId、学号、过期时间与等级，使用 RSA-SHA256 验签。</li>
-          <li>LicenseValidator 必要时访问可信时间源，防止人为回拨系统时间。</li>
-          <li>授权失效或被禁用时自动回落到 Free，确保无越权能力。</li>
-        </ul>
-      </article>
-      <article class="card">
-        <h2>隐私与日志</h2>
-        <ul>
-          <li>所有数据存储在 <code>~/.smartdesk</code>，包括 SQLite、授权状态、配额与日志。</li>
-          <li>联网仅涉及学校公开 API、公共时间源及你主动配置的 AI API。</li>
-          <li>问题排查仅在用户自愿分享日志的前提下进行，不做云端采集。</li>
-        </ul>
-      </article>
-      <article class="card">
-        <h2>使用者责任</h2>
-        <ul>
-          <li>勿共享授权文件，deviceId 与学号不符会立即失效。</li>
-          <li>仅将自动化用于合法学习需求，禁止批量刷席和倒卖账号。</li>
-          <li>若发现恶意行为，将吊销 license 并阻止更新。</li>
-        </ul>
-      </article>
-      <article class="card">
-        <h2>校园规则对齐</h2>
-        <ul>
-          <li>SmartDesk 不绕过认证，所有请求沿用学校的官方接口。</li>
-          <li>预约历史可导出，用于必要时向学校说明自动化行为。</li>
-          <li>若校园规则调整，会在会员页和应用中同步更新策略。</li>
-        </ul>
-      </article>
-      <article class="card">
-        <h2>退出与撤销</h2>
-        <ul>
-          <li>设置页可禁用会员、删除 license 或清空配额文件。</li>
-          <li>卸载不会删除数据目录，如需彻底清理可手动移除 <code>~/.smartdesk</code>。</li>
+          <li>不记录密码，不上传密码。</li>
+          <li>所有自动化逻辑都在你自己的电脑里跑。</li>
+          <li>访问的只有学校官方 API，没有奇怪的第三方。</li>
+        </ul><p style="margin-top:10px; font-size:13px; color:var(--text-soft);"><strong>特别说明：</strong>只有 <strong>Pro 用户</strong> 在提交“定时在线预约”任务时，请求才会上传到服务器，由服务器替你在目标时刻帮你点。普通免费用户和 Plus 用户不会上传任何东西，都是在本地完成，不触及服务器。</p></article>
 
+      <article class="card">
+        <h2>密码真的安全吗？</h2>
+        <p>放心，SmartDesk 看到你密码的概率 ≈ i北理课表切换周次一秒内加载成功的概率：非常低。</p>
+        <ul>
+          <li>登录框是学校 CAS，SmartDesk 连碰都碰不到。</li>
+          <li>不会存、不上传、不缓存，连“看一眼”权限都没有。</li>
+          <li>Pro 在线任务需要加密传输密码 → 服务器只会瞬间解密用一下 → 用完立刻扔掉。</li>
         </ul>
+        <p style="color:var(--text-soft); font-size:12px;">（放心吧，我们既吃不下、也留不住你的密码。）</p>
+      </article>
+
+      <article class="card">
+        <h2>SmartDesk 不会上传什么？</h2>
+        <ul>
+          <li>不会上传你的密码。</li>
+          <li>不会上传你的课表（我们知道官方的课表也加载不出来）。</li>
+          <li>不会上传你的学习行为、浏览记录、成绩、奇怪的隐私。</li>
+        </ul>
+        <p>只有 <strong>Pro 的定时在线抢座</strong> 会上传任务请求，其余免费/Plus 全部本地完成。</p>
+        <p style="color:var(--text-soft); font-size:12px;">（说白了：大部分人连“上传”资格都没有。）</p>
+      </article>
+
+      <article class="card" style="grid-column: span 2;">
+        <h2>请不要手欠改会员文件 🙏（否则后果自负）</h2>
+        <p>SmartDesk 的会员、配额、日志全都老老实实放在你的电脑本地。</p>
+        <p><strong>但是拜托，真的不要手欠！</strong> 例如：</p>
+        <ul>
+          <li><code>membership-state.json</code>（会员状态）</li>
+          <li><code>premium-usage.json</code>（Pro 配额）</li>
+          <li><code>online-seat-usage.json</code>（在线任务记录）</li>
+        </ul>
+        <p>你一改，SmartDesk 会想：</p>
+        <p><em>“哎哟，这位同学要单挑系统？那我只能按规矩来了。”</em></p>
+        <p>结果？程序可能会：</p>
+        <ul>
+          <li>把你当成“黑客同学”</li>
+          <li>自动收走会员权限</li>
+          <li>让高级功能一键蒸发</li>
+        </ul>
+        <p><strong>而且我们不会补发会员。</strong>你把文件改坏 → 你自己重买，互不相欠。</p>
+        <p style="color:var(--text-soft); font-size:12px;">（那些“我们不能明说的机制”，正常使用永远不会触发。）</p>
       </article>
     </section>
 
@@ -366,5 +371,5 @@
       });
     })();
   </script>
-</body>
+<p style="text-align:center; margin-top:32px; color:var(--text-soft); font-size:13px;">※ SmartDesk 不是官方服务，也不保证百分之百能约上座位 —— 但我们至少不会像物理实验选课那样“年年崩、年年抢、年年道歉、年年不改”。（但我们会尽力比官方稳定）。</p></body>
 </html>
