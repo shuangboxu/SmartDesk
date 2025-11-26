@@ -217,6 +217,13 @@
       color: var(--text-strong);
     }
 
+    .wechat-qr {
+      margin-top: 12px;
+      width: min(220px, 100%);
+      border-radius: 16px;
+      box-shadow: 0 10px 20px rgba(15, 23, 42, 0.1);
+    }
+
     footer {
       margin-top: 40px;
       text-align: center;
@@ -333,6 +340,11 @@
         <p data-i18n-html="info.privacy.step3">- 需要停用时可删除 <code>license.json</code> 或在设置页禁用会员。</p>
         <p data-i18n-html="info.privacy.detail">更多细节见 <a href="trust-center.html" data-lang-link-target="trust-center.html">信任中心</a> 与 <a href="compliance.html" data-lang-link-target="compliance.html">公平说明</a>。</p>
       </div>
+      <div class="info-card">
+        <strong data-i18n="info.wechat.title">加入微信群咨询</strong><br />
+        <p data-i18n="info.wechat.detail">保存下方二维码后用微信扫一扫即可加入微信群，群内可直接问作者关于会员权益、配额与授权的任何问题。</p>
+        <img src="images/wechat-group.jpg" class="wechat-qr" data-i18n-alt="info.wechat.alt" alt="微信扫码" />
+      </div>
     </section>
 
     <footer>
@@ -408,6 +420,9 @@
           'info.privacy.step2': '- PremiumQuotaTracker、OnlineSeatUsageTracker 仅在本地记录配额，不上传。',
           'info.privacy.step3': '- 需要停用时可删除 <code>license.json</code> 或在设置页禁用会员。',
           'info.privacy.detail': '更多细节见 <a href="trust-center.html" data-lang-link-target="trust-center.html">信任中心</a> 与 <a href="compliance.html" data-lang-link-target="compliance.html">公平说明</a>。',
+          'info.wechat.title': '加入微信群咨询',
+          'info.wechat.detail': '保存下方二维码后用微信扫一扫即可加入微信群，群内可直接问作者关于会员权益、配额与授权的任何问题。',
+          'info.wechat.alt': '扫码加入 SmartDesk 会员咨询微信群',
           'footer.text': '© 2025 SmartDesk · 北京理工大学 | <a href="index.html" data-lang-link-target="index.html">返回首页</a>'
         },
         en: {
@@ -470,6 +485,9 @@
           'info.privacy.step2': '- PremiumQuotaTracker and OnlineSeatUsageTracker only keep local quota logs; nothing uploads.',
           'info.privacy.step3': '- Disable membership anytime or delete the <code>license.json</code> file.',
           'info.privacy.detail': 'See the <a href="trust-center.html" data-lang-link-target="trust-center.html">Trust Center</a> and <a href="compliance.html" data-lang-link-target="compliance.html">Compliance</a> for more details.',
+          'info.wechat.title': 'Join the WeChat group',
+          'info.wechat.detail': 'Save the QR code below and scan it through WeChat to join the group; you can ask the author about memberships, quotas, or authorization anytime.',
+          'info.wechat.alt': 'Scan to join SmartDesk membership WeChat group',
           'footer.text': '© 2025 SmartDesk · Beijing Institute of Technology | <a href="index.html" data-lang-link-target="index.html">Return to homepage</a>'
         }
       };
@@ -510,6 +528,12 @@
           const key = node.getAttribute('data-i18n-html');
           if (key && dictionary[key]) {
             node.innerHTML = dictionary[key];
+          }
+        });
+        document.querySelectorAll('[data-i18n-alt]').forEach((node) => {
+          const key = node.getAttribute('data-i18n-alt');
+          if (key && dictionary[key]) {
+            node.setAttribute('alt', dictionary[key]);
           }
         });
         document.querySelectorAll('[data-lang-link-target]').forEach((link) => {

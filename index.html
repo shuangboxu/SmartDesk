@@ -180,15 +180,6 @@
       font-size: 14px;
     }
 
-    .hero-note {
-      background: linear-gradient(135deg, rgba(14, 165, 233, 0.08), rgba(147, 51, 234, 0.08));
-      border-radius: 16px;
-      padding: 18px;
-      font-size: 13px;
-      color: var(--text-soft);
-      border: 1px solid var(--border);
-    }
-
     .section {
       margin-top: 48px;
     }
@@ -335,8 +326,6 @@
         </div>
       </div>
       <div class="nav-links">
-        <a class="nav-link" href="#features" data-i18n="nav.features">特性</a>
-        <a class="nav-link" href="#automation" data-i18n="nav.automation">自动助手</a>
         <a class="nav-link" href="#membership" data-lang-link-target="membership.html" data-i18n="nav.membership">会员</a>
         <a class="nav-link" href="trust-center.html" data-lang-link-target="trust-center.html" data-i18n="nav.trust">信任中心</a>
         <a class="nav-link" href="compliance.html" data-lang-link-target="compliance.html" data-i18n="nav.compliance">公平合规</a>
@@ -359,15 +348,8 @@
           并用授权驱动的自动化引擎提供持续搜索、定时抢座与在线预约能力。
         </p>
         <div class="hero-actions">
-          <a class="cta" data-lang-link-target="membership.html" data-i18n="hero.membership">查看会员方案</a>
-          <a href="README.md" data-i18n="hero.readme">阅读项目说明 →</a>
+        <a class="cta" data-lang-link-target="membership.html" data-i18n="hero.membership">查看会员方案</a>
         </div>
-      </div>
-      <div class="hero-note">
-        <p data-i18n="hero.note.search">• 持续搜索：Free 5 次 / Plus 150 次 / Pro 500 次（每月重置）</p>
-        <p data-i18n="hero.note.timed">• 定时抢座：配额同上，Pro 可后台运行</p>
-        <p data-i18n="hero.note.online">• 在线抢座：仅 Pro，剩余天数 = 总额度，10 次/日</p>
-        <p data-i18n-html="hero.note.storage">• 数据存储：全部落在 <code>~/.smartdesk</code></p>
       </div>
     </section>
 
@@ -495,7 +477,6 @@
     <footer>
       <p data-i18n="footer.text">© 2025 SmartDesk · 北京理工大学</p>
       <div class="footer-links">
-        <a href="README.md" data-i18n="footer.link.readme">README</a>
         <a data-lang-link-target="membership.html" data-i18n="footer.link.membership">会员方案</a>
         <a data-lang-link-target="trust-center.html" data-i18n="footer.link.trust">信任中心</a>
       </div>
@@ -525,10 +506,6 @@
           'hero.description': 'SmartDesk 将图书馆抢座、空教室、任务、笔记与 AI 助手整合在一个本地桌面应用中，并用授权驱动的自动化引擎提供持续搜索、定时抢座与在线预约能力。',
           'hero.membership': '查看会员方案',
           'hero.readme': '阅读项目说明 →',
-          'hero.note.search': '• 持续搜索：Free 5 次 / Plus 150 次 / Pro 500 次（每月重置）',
-          'hero.note.timed': '• 定时抢座：配额同上，Pro 可后台运行',
-          'hero.note.online': '• 在线抢座：仅 Pro，剩余天数 = 总额度，10 次/日',
-          'hero.note.storage': '• 数据存储：全部落在 <code>~/.smartdesk</code>',
           'section.capabilities.span': 'capabilities',
           'section.capabilities.title': '覆盖“预约 + 学习”全链路的桌面体验',
           'section.capabilities.description': '图书馆助手与学习工具共享统一界面和数据存储，全部功能默认离线可用，联网仅发生在必要的学校接口或你授权的 AI API。',
@@ -576,7 +553,6 @@
           'table.row.data.value': '所有数据均存储在 <code>~/.smartdesk</code>，卸载不会删除',
           'section.trust': '有授权或隐私问题？请查看 <a href="membership.html" data-lang-link-target="membership.html">会员方案详情</a>、<a href="compliance.html" data-lang-link-target="compliance.html">公平说明</a> 或 <a href="trust-center.html" data-lang-link-target="trust-center.html">信任中心</a>，了解授权流程、设备绑定、数据备份方法。',
           'footer.text': '© 2025 SmartDesk · 北京理工大学',
-          'footer.link.readme': 'README',
           'footer.link.membership': '会员方案',
           'footer.link.trust': '信任中心'
         },
@@ -595,10 +571,6 @@
           'hero.description': 'SmartDesk combines library seat grabs, classroom finder, tasks, notes and an AI assistant inside a local desktop app and powers continuous search, scheduled grabs and online reservations with an authorized automation engine.',
           'hero.membership': 'View membership tiers',
           'hero.readme': 'Read the project README →',
-          'hero.note.search': '• Smart search: Free 5 / Plus 150 / Pro 500 continuous attempts (monthly reset)',
-          'hero.note.timed': '• Scheduled grabs: same quotas, Pro can run headless',
-          'hero.note.online': '• Online grabs: only Pro, remaining days add to total quota, 10 tries/day',
-          'hero.note.storage': '• Data storage: everything under <code>~/.smartdesk</code>',
           'section.capabilities.span': 'capabilities',
           'section.capabilities.title': 'A desktop experience covering reservations + study workflows',
           'section.capabilities.description': 'Library assistant and learning tools share a unified UI and storage; everything works offline by default and only goes online for the campus APIs or AI services you authorize.',
@@ -646,7 +618,6 @@
           'table.row.data.value': 'All data stays under <code>~/.smartdesk</code>; uninstalling keeps it intact.',
           'section.trust': 'Questions about authorization or privacy? Visit the <a href="membership.html" data-lang-link-target="membership.html">membership details</a>, <a href="compliance.html" data-lang-link-target="compliance.html">compliance statement</a> or <a href="trust-center.html" data-lang-link-target="trust-center.html">Trust Center</a> for workflow, device and backup guidance.',
           'footer.text': '© 2025 SmartDesk · Beijing Institute of Technology',
-          'footer.link.readme': 'README',
           'footer.link.membership': 'Membership',
           'footer.link.trust': 'Trust Center'
         }
