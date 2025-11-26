@@ -1,10 +1,10 @@
-<!-- Improved Trust Center HTML will go here. -->
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
   <meta charset="UTF-8" />
   <title>SmartDesk 公平合规</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="说明 SmartDesk 如何保持公平、避免违规，并通过配额与授权保障校园资源。" />
   <style>
     :root {
       --bg: #f7f8fb;
@@ -18,7 +18,11 @@
       --shadow: 0 15px 40px rgba(15, 23, 42, 0.08);
     }
 
-    * { box-sizing: border-box; margin: 0; padding: 0; }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
 
     body {
       font-family: "Inter", "Segoe UI", -apple-system, BlinkMacSystemFont, sans-serif;
@@ -27,47 +31,67 @@
       min-height: 100vh;
     }
 
-    a { color: var(--primary); }
-    a:hover { text-decoration: none; }
-
     .page {
       max-width: 1080px;
       margin: 0 auto;
-      padding: 40px 16px 72px;
+      padding: 32px 16px 80px;
     }
 
-    header {
-      text-align: center;
+    h1 {
+      margin-top: 16px;
+      font-size: clamp(28px, 4vw, 38px);
+      color: var(--text-strong);
+    }
+
+    .page-header {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      align-items: flex-start;
+      flex-wrap: wrap;
       margin-bottom: 32px;
     }
 
-    .badge {
+    .kicker {
       display: inline-flex;
       padding: 6px 16px;
       border-radius: 999px;
       border: 1px solid var(--border);
       background: #fff;
+      letter-spacing: 0.12em;
       color: var(--primary);
       font-size: 12px;
-      letter-spacing: 0.12em;
     }
 
-    h1 {
-      margin-top: 18px;
-      font-size: clamp(28px, 4vw, 38px);
-      color: var(--text-strong);
-    }
-
-    header p {
+    .hero p {
       margin-top: 10px;
       color: var(--text-soft);
       line-height: 1.8;
     }
 
+    .page-controls {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      align-items: flex-start;
+    }
+
+    .return-home {
+      padding: 10px 18px;
+      border-radius: 999px;
+      border: none;
+      background: var(--primary);
+      color: #fff;
+      font-size: 13px;
+      font-weight: 600;
+      text-decoration: none;
+    }
+
     .grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
       gap: 18px;
+      margin-top: 28px;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
     }
 
     .card {
@@ -86,15 +110,19 @@
       margin-bottom: 10px;
     }
 
-    .card ul {
-      list-style: none;
-      color: var(--text);
+    code {
+      color: var(--primary);
+      font-size: 12px;
     }
 
-    .card ul li + li { margin-top: 8px; }
+    .section p {
+      color: var(--text-soft);
+      line-height: 1.7;
+      margin-top: 10px;
+    }
 
     .callout {
-      margin-top: 30px;
+      margin-top: 32px;
       padding: 18px;
       border-radius: var(--radius);
       border: 1px solid rgba(14, 165, 233, 0.3);
@@ -187,189 +215,420 @@
       cursor: pointer;
       color: var(--text-soft);
     }
+
+    .footer {
+      margin-top: 32px;
+      text-align: center;
+      font-size: 12px;
+      color: var(--text-soft);
+    }
   </style>
 </head>
 <body>
   <div class="page">
-    <header>
-      <div class="badge">Fair · Transparent · Auditable</div>
-      <h1>SmartDesk 公平性与合规说明</h1>
-      <p>SmartDesk 仅在本地执行自动化逻辑，通过配额、授权与日志控制确保使用公平且可追溯。以下内容说明我们如何保护校园资源与用户数据。</p>
+    <header class="page-header">
+      <div class="hero">
+        <div class="kicker" data-i18n="hero.kicker">Fair · Transparent · Auditable</div>
+        <h1 data-i18n="hero.title">SmartDesk 公平性与合规说明</h1>
+        <p data-i18n="hero.subtitle">SmartDesk 仅在本地执行自动化逻辑，通过配额、授权与日志控制确保使用公平且可追溯。以下内容说明我们如何保护校园资源与用户数据。</p>
+      </div>
+      <div class="page-controls">
+        <a class="return-home" data-lang-link-target="index.html" data-i18n="return.home">返回首页</a>
+      </div>
     </header>
 
-    <section class="grid" style="grid-template-columns: 1fr 1fr;">
-      <article class="card" style="grid-column: span 2;">
-        <h2>SmartDesk 是怎么工作的？（用人话解释）</h2>
-        <p>一句话版本：<strong>SmartDesk = 我帮你点，但我不会偷、不会记、不会乱来。</strong></p>
-        <p>再加一句话：<em>“SmartDesk 比官方系统靠谱一点点（但别指望它有魔法）。”</em></p>
-        <ul>
-          <li>不记录密码，不上传密码。</li>
-          <li>所有自动化逻辑都在你自己的电脑里跑。</li>
-          <li>访问的只有学校官方 API，没有奇怪的第三方。</li>
-        </ul><p style="margin-top:10px; font-size:13px; color:var(--text-soft);"><strong>特别说明：</strong>只有 <strong>Pro 用户</strong> 在提交“定时在线预约”任务时，请求才会上传到服务器，由服务器替你在目标时刻帮你点。普通免费用户和 Plus 用户不会上传任何东西，都是在本地完成，不触及服务器。</p></article>
-
+    <section class="grid">
       <article class="card">
-        <h2>密码真的安全吗？</h2>
-        <p>放心，SmartDesk 看到你密码的概率 ≈ i北理课表切换周次一秒内加载成功的概率：非常低。</p>
-        <ul>
-          <li>登录框是学校 CAS，SmartDesk 连碰都碰不到。</li>
-          <li>不会存、不上传、不缓存，连“看一眼”权限都没有。</li>
-          <li>Pro 在线任务需要加密传输密码 → 服务器只会瞬间解密用一下 → 用完立刻扔掉。</li>
-        </ul>
-        <p style="color:var(--text-soft); font-size:12px;">（放心吧，我们既吃不下、也留不住你的密码。）</p>
+        <h2 data-i18n="card1.title">SmartDesk 是怎么工作的？（用人话解释）</h2>
+        <p data-i18n-html="card1.body">一句话版本：<strong>SmartDesk = 我帮你点，但我不会偷、不会记、不会乱来。</strong></p>
+        <p data-i18n-html="card1.extra">再加一句话：<em>“SmartDesk 比官方系统靠谱一点点（但别指望它有魔法）。”</em></p>
       </article>
-
       <article class="card">
-        <h2>SmartDesk 不会上传什么？</h2>
+        <h2 data-i18n="card2.title">密码真的安全吗？</h2>
+        <p data-i18n-html="card2.body">放心，SmartDesk 看到你密码的概率 ≈ i北理课表切换周次一秒内加载成功的概率：非常低。</p>
         <ul>
-          <li>不会上传你的密码。</li>
-          <li>不会上传你的课表（我们知道官方的课表也加载不出来）。</li>
-          <li>不会上传你的学习行为、浏览记录、成绩、奇怪的隐私。</li>
+          <li data-i18n="card2.list1">登录框是学校 CAS，SmartDesk 连碰都碰不到。</li>
+          <li data-i18n="card2.list2">不会存、不上传、不缓存，连“看一眼”权限都没有。</li>
+          <li data-i18n="card2.list3">Pro 在线任务需要加密传输密码 → 服务器只会瞬间解密用一下 → 用完立刻扔掉。</li>
         </ul>
-        <p>只有 <strong>Pro 的定时在线抢座</strong> 会上传任务请求，其余免费/Plus 全部本地完成。</p>
-        <p style="color:var(--text-soft); font-size:12px;">（说白了：大部分人连“上传”资格都没有。）</p>
+        <p data-i18n="card2.foot">（放心吧，我们既吃不下、也留不住你的密码。）</p>
       </article>
-
-      <article class="card" style="grid-column: span 2;">
-        <h2>请不要手欠改会员文件 🙏（否则后果自负）</h2>
-        <p>SmartDesk 的会员、配额、日志全都老老实实放在你的电脑本地。</p>
-        <p><strong>但是拜托，真的不要手欠！</strong> 例如：</p>
+      <article class="card">
+        <h2 data-i18n="card3.title">SmartDesk 不会上传什么？</h2>
         <ul>
-          <li><code>membership-state.json</code>（会员状态）</li>
-          <li><code>premium-usage.json</code>（Pro 配额）</li>
-          <li><code>online-seat-usage.json</code>（在线任务记录）</li>
+          <li data-i18n="card3.list1">不会上传你的密码。</li>
+          <li data-i18n="card3.list2">不会上传你的课表（我们知道官方的课表也加载不出来）。</li>
+          <li data-i18n="card3.list3">不会上传你的学习行为、浏览记录、成绩、奇怪的隐私。</li>
         </ul>
-        <p>你一改，SmartDesk 会想：</p>
-        <p><em>“哎哟，这位同学要单挑系统？那我只能按规矩来了。”</em></p>
-        <p>结果？程序可能会：</p>
+        <p data-i18n="card3.body">只有 <strong>Pro 的定时在线抢座</strong> 会上传任务请求，其余免费/Plus 全部本地完成。</p>
+        <p data-i18n="card3.foot">（说白了：大部分人连“上传”资格都没有。）</p>
+      </article>
+      <article class="card">
+        <h2 data-i18n="card4.title">请不要手欠改会员文件 🙏（否则后果自负）</h2>
+        <p data-i18n="card4.body">SmartDesk 的会员、配额、日志全都老老实实放在你的电脑本地。</p>
+        <p data-i18n="card4.sub"><strong>但是拜托，真的不要手欠！</strong> 例如：</p>
         <ul>
-          <li>把你当成“黑客同学”</li>
-          <li>自动收走会员权限</li>
-          <li>让高级功能一键蒸发</li>
+          <li data-i18n-html="card4.list1"></li>
+          <li data-i18n-html="card4.list2"></li>
+          <li data-i18n-html="card4.list3"></li>
         </ul>
-        <p><strong>而且我们不会补发会员。</strong>你把文件改坏 → 你自己重买，互不相欠。</p>
-        <p style="color:var(--text-soft); font-size:12px;">（那些“我们不能明说的机制”，正常使用永远不会触发。）</p>
+        <p data-i18n="card4.consequence">你一改，SmartDesk 会想：</p>
+        <p data-i18n="card4.emotion"><em>“哎哟，这位同学要单挑系统？那我只能按规矩来了。”</em></p>
+        <p data-i18n="card4.result">结果？程序可能会：</p>
+        <ul>
+          <li data-i18n="card4.result1">把你当成“黑客同学”</li>
+          <li data-i18n="card4.result2">自动收走会员权限</li>
+          <li data-i18n="card4.result3">让高级功能一键蒸发</li>
+        </ul>
+        <p data-i18n="card4.final">而且我们不会补发会员。你把文件改坏 → 你自己重买，互不相欠。</p>
+        <p data-i18n="card4.end">（那些“我们不能明说的机制”，正常使用永远不会触发。）</p>
       </article>
     </section>
 
-    <div class="callout">
-      更多隐私、授权和数据问题，请访问 <a href="trust-center.html">SmartDesk 信任中心</a>；若需了解会员权益，请查看 <a href="membership.html">会员方案</a>。
-    </div>
+    <div class="callout" data-i18n-html="callout.text"></div>
 
     <div class="feedback-row">
-      <button type="button" class="feedback-button" data-target="student">我是学生，我不满 😡</button>
-      <button type="button" class="feedback-button" data-target="it">我是学校 IT，我不满 🤨</button>
-      <button type="button" class="feedback-button" data-target="admin">我是管理员，我不满 😐</button>
+      <button type="button" class="feedback-button" data-target="student" data-i18n="feedback.student">我是学生，我不满 😡</button>
+      <button type="button" class="feedback-button" data-target="it" data-i18n="feedback.it">我是学校 IT，我不满 🤨</button>
+      <button type="button" class="feedback-button" data-target="admin" data-i18n="feedback.admin">我是管理员，我不满 😐</button>
     </div>
 
-    <div id="feedback-modal" class="feedback-modal" aria-hidden="true">
-      <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="modal-title">
-        <button class="modal-close" aria-label="关闭">×</button>
-        <h3 id="modal-title" class="modal-title"></h3>
-        <div class="modal-body"></div>
-      </div>
+    <div class="footer" data-i18n-html="footer.text"></div>
+  </div>
+
+  <div id="feedback-modal" class="feedback-modal" aria-hidden="true">
+    <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+      <button class="modal-close" aria-label="关闭">×</button>
+      <h3 id="modal-title" class="modal-title"></h3>
+      <div class="modal-body"></div>
     </div>
   </div>
+
   <script>
     (function() {
-      const templates = {
-        student: {
-          title: "我是学生，我不满 😡",
-          body: `<p>😡 我也是学生，你凭什么收费？而且还闭源？</p>
-            <p><strong>首先说收费：</strong>SmartDesk 不是写完就能放着不管的小脚本，而是：</p>
-            <ul>
-              <li>需要云服务器（不是免费的）</li>
-              <li>要维护防刷机制、并发队列、故障恢复</li>
-              <li>学校系统哪天抽风，我这边就必须连夜修</li>
-            </ul>
-            <p>换句话说：</p>
-            <p>如果不收费，这个项目一周就烂掉；如果收费，才能稳定、能维护、不炸、不中断。</p>
-            <p><strong>然后说闭源：</strong>这个决定不是“神秘主义”，更不是“不给大家学习”。</p>
-            <p>是因为：</p>
-            <ul>
-              <li>一旦开源，会出现各种魔改版、违规版、暴力刷版</li>
-              <li>这些版本滥用接口 → 学校封端口 → 全体陪葬</li>
-              <li>开源意味着公开所有逻辑，包括安全验证、风控、请求模式</li>
-              <li>会给“代课代测、违规抢座”这些人提供现成漏洞</li>
-            </ul>
-            <p>你肯定也不希望有一天 SmartDesk 被别人改成：“代抢课程、批量占座、统一代测跑步”的神器，最后把大家都害惨。</p>
-            <p><strong>SmartDesk 闭源不是为了“神秘”，而是为了：</strong></p>
-            <p>不让任何人把你的校园账号拿去做危险操作。</p>
-            <p>最后重复一句：</p>
-            <p>你可以不用 SmartDesk，但它的成本和风险真实存在。收费和闭源，是为了把它做成“可用、稳定、不会坑你的东西”。</p>`
+      const DEFAULT_LANG = 'zh';
+      const LANG_PARAM = 'lang';
+      const STORAGE_KEY = 'smartdesk-site-lang';
+      const SUPPORTED_LANGS = ['zh', 'en'];
+
+      const modalTemplates = {
+        zh: {
+          student: {
+            title: '我是学生，我不满 😡',
+            body: `<p>😡 我也是学生，你凭什么收费？而且还闭源？</p>
+              <p><strong>首先说收费：</strong>SmartDesk 不是写完就能放着不管的小脚本，而是：</p>
+              <ul>
+                <li>需要云服务器（不是免费的）</li>
+                <li>要维护防刷机制、并发队列、故障恢复</li>
+                <li>学校系统哪天抽风，我这边就必须连夜修</li>
+              </ul>
+              <p>换句话说：</p>
+              <p>如果不收费，这个项目一周就烂掉；如果收费，才能稳定、能维护、不炸、不中断。</p>
+              <p><strong>然后说闭源：</strong>这个决定不是“神秘主义”，更不是“不给大家学习”。</p>
+              <p>是因为：</p>
+              <ul>
+                <li>一旦开源，会出现各种魔改版、违规版、暴力刷版</li>
+                <li>这些版本滥用接口 → 学校封端口 → 全体陪葬</li>
+                <li>开源意味着公开所有逻辑，包括安全验证、风控、请求模式</li>
+                <li>会给“代课代测、违规抢座”这些人提供现成漏洞</li>
+              </ul>
+              <p>你肯定也不希望有一天 SmartDesk 被别人改成：“批量占座”的神器，最后把大家都害惨。</p>
+              <p><strong>SmartDesk 闭源不是为了“神秘”，而是为了：</strong></p>
+              <p>不让任何人把你的校园账号拿去做危险操作。</p>
+              <p>最后重复一句：</p>
+              <p>你可以不用 SmartDesk，但它的成本和开源后的风险真实存在。收费和闭源，是为了把它做成“可用、稳定、不会坑你的东西”。</p>`
+          },
+          it: {
+            title: '我是学校 IT，我不满 🤨',
+            body: `<p>🤨 老师您好，我知道 SmartDesk 让您有点不舒服。</p>
+              <p>但先说一句公道话：SmartDesk 不是反学校系统，而是学生在被动经历过：</p>
+              <ul>
+                <li>年年物理实验抢课的“高并发灾难现场”</li>
+                <li>i北理切换课表一转就转半天</li>
+                <li>空闲教室查询入口像密室逃脱</li>
+                <li>图书馆昏暗区长期“不修不动”</li>
+              </ul>
+              <p>SmartDesk 不跳权限、不破坏系统、不做违规行为，只是在可用的范围里让流程顺一点。</p>
+              <p>如果学校系统变得足够稳定快速，SmartDesk 会自然失业——说实话，那是我会真心高兴的一天。</p>
+              <p>我们不是对抗 IT，我们只是学生体验的“体温计”。体温太高时，体温计不舒服，但它不是发烧的原因。</p>`
+          },
+          admin: {
+            title: '我是管理员，我不满 😐',
+            body: `<p>😐 管理员老师您好，这里是学生侧的一个吐槽窗口。</p>
+              <p>先说 SmartDesk：</p>
+              <ul>
+                <li>不越权、不刷席、不代课、不代测</li>
+                <li>合法登录、合法查询、合法预约</li>
+                <li>做的只是把“本来就允许的操作”变顺滑一点</li>
+              </ul>
+              <p>但如果要说“需要重点治理的对象”，SmartDesk 绝对排不上号。</p>
+              <p>校园里长期存在的真正风险是：</p>
+              <ul>
+                <li>代课、代签到：公开报价“45 分钟 18 元”</li>
+                <li>代体测、代跑步：微信小广告多到像一门正规生意</li>
+                <li>违规占座、批量占座：影响公共资源公平</li>
+              </ul>
+              <p>这些才是最该优先处理的问题，而不是一个只让学生自己使用、不会帮别人违规的小工具。</p>
+              <p>SmartDesk 的存在反而说明：学生愿意按规则做事，只是规则执行体验太差。</p>
+              <p>如果学校把官方系统做得更快、更稳、更好——你甚至不用下达“整改通知”，SmartDesk 会自动退休。</p>
+              <p>它并不是负担，它只是学生在说：“我们愿意遵守规则，只希望规则也对我们友好一点。”</p>`
+          }
         },
-        it: {
-          title: "我是学校 IT，我不满 🤨",
-          body: `<p>🤨 老师您好，我知道 SmartDesk 让您有点不舒服。</p>
-            <p>但先说一句公道话：SmartDesk 不是反学校系统，而是学生在被动经历过：</p>
-            <ul>
-              <li>年年物理实验抢课的“高并发灾难现场”</li>
-              <li>i北理切换课表一转就转半天</li>
-              <li>空闲教室查询入口像密室逃脱</li>
-              <li>图书馆昏暗区长期“不修不动”</li>
-            </ul>
-            <p>SmartDesk 不跳权限、不破坏系统、不做违规行为，只是在可用的范围里让流程顺一点。</p>
-            <p>如果学校系统变得足够稳定快速，SmartDesk 会自然失业——说实话，那是我会真心高兴的一天。</p>
-            <p>我们不是对抗 IT，我们只是学生体验的“体温计”。体温太高时，体温计不舒服，但它不是发烧的原因。</p>`
-        },
-        admin: {
-          title: "我是管理员，我不满 😐",
-          body: `<p>😐 管理员老师您好，这里是学生侧的一个吐槽窗口。</p>
-            <p>先说 SmartDesk：</p>
-            <ul>
-              <li>不越权、不刷席、不代课、不代测</li>
-              <li>合法登录、合法查询、合法预约</li>
-              <li>做的只是把“本来就允许的操作”变顺滑一点</li>
-            </ul>
-            <p>但如果要说“需要重点治理的对象”，SmartDesk 绝对排不上号。</p>
-            <p>校园里长期存在的真正风险是：</p>
-            <ul>
-              <li>代课、代签到：公开报价“45 分钟 18 元”</li>
-              <li>代体测、代跑步：微信小广告多到像一门正规生意</li>
-              <li>违规占座、批量占座：影响公共资源公平</li>
-            </ul>
-            <p>这些才是最该优先处理的问题，而不是一个只让学生自己使用、不会帮别人违规的小工具。</p>
-            <p>SmartDesk 的存在反而说明：学生愿意按规则做事，只是规则执行体验太差。</p>
-            <p>如果学校把官方系统做得更快、更稳、更好——你甚至不用下达“整改通知”，SmartDesk 会自动退休。</p>
-            <p>它并不是负担，它只是学生在说：“我们愿意遵守规则，只希望规则也对我们友好一点。”</p>`
+        en: {
+          student: {
+            title: 'I’m a student, I’m upset 😡',
+            body: `<p>😡 I’m also a student—why pay for this, and why is it closed-source?</p>
+              <p><strong>First, the fee:</strong> SmartDesk isn’t a one-off script; it requires:</p>
+              <ul>
+                <li>cloud servers (which cost money)</li>
+                <li>maintenance for anti-abuse, concurrency and failovers</li>
+                <li>night-time fixes whenever the school API misbehaves</li>
+              </ul>
+              <p>In other words: without charging, the project dies in days. Charging keeps it stable, maintainable and reliable.</p>
+              <p><strong>Why closed-source?</strong> Not secrecy—protection.</p>
+              <p>Because:</p>
+              <ul>
+                <li>open source breeds hacked, rule-breaking versions</li>
+                <li>those versions abuse the API → the school blocks the port → everyone suffers</li>
+                <li>publishing all the security details hands attackers the keys</li>
+                <li>it empowers services selling bulk seat grabbing</li>
+              </ul>
+              <p>No one wants SmartDesk to become a mass seat grabber that wrecks campus resources.</p>
+              <p><strong>Protecting your data is the goal:</strong></p>
+              <p>Keeping your campus account from being weaponized.</p>
+              <p>So again:</p>
+              <p>You can skip SmartDesk, but the cost and risk are real. Charging and closed-source keep it usable, stable and safe.</p>`
+          },
+          it: {
+            title: 'I’m campus IT, I’m worried 🤨',
+            body: `<p>🤨 Dear staff, I know SmartDesk might feel uncomfortable.</p>
+              <p>But honestly: SmartDesk isn’t an adversary. Students only cope with:</p>
+              <ul>
+                <li>yearly lab seat rush disasters</li>
+                <li>the schedule navigator that first loads forever</li>
+                <li>hidden classroom vacancy tools</li>
+                <li>library zones that never get fixed</li>
+              </ul>
+              <p>SmartDesk stays within permissions, doesn’t break rules, and just smooths allowed flows.</p>
+              <p>If the official system ever gets fast and stable, SmartDesk retires happily.</p>
+              <p>We’re not opposing IT; we’re the thermometer. When it reads hot, it’s a warning, not the fever.</p>`
+          },
+          admin: {
+            title: 'I’m an administrator, I’m concerned 😐',
+            body: `<p>😐 Admin, this is students’ feedback window.</p>
+              <p>First: SmartDesk</p>
+              <ul>
+                <li>never oversteps permissions or automates banned behaviors</li>
+                <li>logs in, queries and books legitimately</li>
+                <li>only smooths what’s already allowed</li>
+              </ul>
+              <p>If you’re chasing real problems, look at:</p>
+              <ul>
+                <li>paid services for fake attendance</li>
+                <li>WeChat ads offering test-taking help</li>
+                <li>unfair bulk seat grabbing</li>
+              </ul>
+              <p>Those deserve priority, not a private legal tool.</p>
+              <p>SmartDesk exists because students want to follow rules but find the experience unfriendly.</p>
+              <p>Make the official system faster and kinder—SmartDesk retires automatically.</p>`
+          }
         }
       };
 
-      const modal = document.getElementById("feedback-modal");
-      const titleEl = modal.querySelector(".modal-title");
-      const bodyEl = modal.querySelector(".modal-body");
-      const closeBtn = modal.querySelector(".modal-close");
-
-      const showModal = (key) => {
-        if (!templates[key]) return;
-        titleEl.textContent = templates[key].title;
-        bodyEl.innerHTML = templates[key].body;
-        modal.classList.add("is-visible");
-        modal.setAttribute("aria-hidden", "false");
+      const translations = {
+        zh: {
+          htmlLang: 'zh-CN',
+          title: 'SmartDesk 公平合规',
+          descriptionMeta: '说明 SmartDesk 如何保持公平、避免违规，并通过配额与授权保障校园资源。',
+          'hero.kicker': 'Fair · Transparent · Auditable',
+          'hero.title': 'SmartDesk 公平性与合规说明',
+          'hero.subtitle': 'SmartDesk 仅在本地执行自动化逻辑，通过配额、授权与日志控制确保使用公平且可追溯。以下内容说明我们如何保护校园资源与用户数据。',
+          'card1.title': 'SmartDesk 是怎么工作的？（用人话解释）',
+          'card1.body': '一句话版本：<strong>SmartDesk = 我帮你点，但我不会偷、不会记、不会乱来。</strong>',
+          'card1.extra': '再加一句话：<em>“SmartDesk 比官方系统靠谱一点点（但别指望它有魔法）。”</em>',
+          'card2.title': '密码真的安全吗？',
+          'card2.body': '放心，SmartDesk 看到你密码的概率 ≈ i北理课表切换周次一秒内加载成功的概率：非常低。',
+          'card2.list1': '登录框是学校 CAS，SmartDesk 连碰都碰不到。',
+          'card2.list2': '不会存、不上传、不缓存，连“看一眼”权限都没有。',
+          'card2.list3': 'Pro 在线任务需要加密传输密码 → 服务器只会瞬间解密用一下 → 用完立刻扔掉。',
+          'card2.foot': '（放心吧，我们既吃不下、也留不住你的密码。）',
+          'card3.title': 'SmartDesk 不会上传什么？',
+          'card3.list1': '不会上传你的密码。',
+          'card3.list2': '不会上传你的课表（我们知道官方的课表也加载不出来）。',
+          'card3.list3': '不会上传你的学习行为、浏览记录、成绩、奇怪的隐私。',
+          'card3.body': '只有 <strong>Pro 的定时在线抢座</strong> 会上传任务请求，其余免费/Plus 全部本地完成。',
+          'card3.foot': '（说白了：大部分人连“上传”资格都没有。）',
+          'card4.title': '请不要手欠改会员文件 🙏（否则后果自负）',
+          'card4.body': 'SmartDesk 的会员、配额、日志全都老老实实放在你的电脑本地。',
+          'card4.sub': '<strong>但是拜托，真的不要手欠！</strong> 例如：',
+          'card4.list1': '<code>membership-state.json</code>（会员状态）',
+          'card4.list2': '<code>premium-usage.json</code>（Pro 配额）',
+          'card4.list3': '<code>online-seat-usage.json</code>（在线任务记录）',
+          'card4.consequence': '你一改，SmartDesk 会想：',
+          'card4.emotion': '<em>“哎哟，这位同学要单挑系统？那我只能按规矩来了。”</em>',
+          'card4.result': '结果？程序可能会：',
+          'card4.result1': '把你当成“黑客同学”',
+          'card4.result2': '自动收走会员权限',
+          'card4.result3': '让高级功能一键蒸发',
+          'card4.final': '而且我们不会补发会员。你把文件改坏 → 你自己重买，互不相欠。',
+          'card4.end': '（那些“我们不能明说的机制”，正常使用永远不会触发。）',
+          'callout.text': '更多隐私、授权和数据问题，请访问 <a href="trust-center.html" data-lang-link-target="trust-center.html">SmartDesk 信任中心</a>；若需了解会员权益，请查看 <a href="membership.html" data-lang-link-target="membership.html">会员方案</a>。',
+          'feedback.student': '我是学生，我不满 😡',
+          'feedback.it': '我是学校 IT，我不满 🤨',
+          'feedback.admin': '我是管理员，我不满 😐',
+          'modal.closeLabel': '关闭',
+          'footer.text': '※ SmartDesk 不是官方服务，也不保证百分之百能约上座位 （但我们会尽力比官方稳定）。',
+          'return.home': '返回首页'
+        },
+        en: {
+          htmlLang: 'en',
+          title: 'SmartDesk Fairness & Compliance',
+          descriptionMeta: 'Explains how SmartDesk stays fair, avoids violations, and protects campus resources with quotas and authorization.',
+          'hero.kicker': 'Fair · Transparent · Auditable',
+          'hero.title': 'SmartDesk fairness & compliance statement',
+          'hero.subtitle': 'SmartDesk keeps automation local while quotas, authorization and logs ensure fair and auditable operation. The sections below describe how we safeguard campus resources and user data.',
+          'card1.title': 'How SmartDesk works (straight talk)',
+          'card1.body': 'In short: SmartDesk = I tap the buttons for you, but I never steal, log, or misbehave.',
+          'card1.extra': 'And: “SmartDesk is a bit more reliable than the official system—but don’t expect miracles.”',
+          'card2.title': 'Are passwords really safe?',
+          'card2.body': 'Relax, the chance SmartDesk sees your password is about as likely as the schedule tool switching week instantly.',
+          'card2.list1': 'The login box is CAS; SmartDesk never touches it.',
+          'card2.list2': 'It doesn’t store, upload, or cache passwords—not even peek permission.',
+          'card2.list3': 'Pro online tasks encrypt passwords, the server decrypts briefly and discards them immediately.',
+          'card2.foot': '(It can’t eat or keep your password.)',
+          'card3.title': 'What doesn’t SmartDesk upload?',
+          'card3.list1': 'Passwords? never.',
+          'card3.list2': 'Course schedules? also no.',
+          'card3.list3': 'Study behavior, browsing records, grades or strange privacy? Absolutely not.',
+          'card3.body': 'Only Pro scheduled online grabs upload tasks; Free and Plus stay fully local.',
+          'card3.foot': '(Most people don’t even qualify for uploads.)',
+          'card4.title': 'Please don’t mess with membership files 🙏',
+          'card4.body': 'Membership, quota and log data live honestly on your machine.',
+          'card4.sub': '<strong>But seriously, don’t tamper.</strong> For example:',
+          'card4.list1': '<code>membership-state.json</code> (membership state)',
+          'card4.list2': '<code>premium-usage.json</code> (Pro quota)',
+          'card4.list3': '<code>online-seat-usage.json</code> (online task log)',
+          'card4.consequence': 'If you edit them, SmartDesk thinks:',
+          'card4.emotion': '<em>“Oh boy, this peer wants to lock horns with the system.”</em>',
+          'card4.result': 'So the program may:',
+          'card4.result1': 'flag you as a hacker',
+          'card4.result2': 'revoke membership automatically',
+          'card4.result3': 'volatilize premium features in one click',
+          'card4.final': 'And we won’t reissue membership. You break it → you buy again.',
+          'card4.end': '(Those “things we can’t mention” never trigger during normal use.)',
+          'callout.text': 'For more privacy, authorization and data questions, visit the <a href="trust-center.html" data-lang-link-target="trust-center.html">Trust Center</a>; for membership rights, read the <a href="membership.html" data-lang-link-target="membership.html">membership page</a>.',
+          'feedback.student': 'I’m a student, I’m upset 😡',
+          'feedback.it': 'I’m campus IT, I’m worried 🤨',
+          'feedback.admin': 'I’m an administrator, I’m concerned 😐',
+          'modal.closeLabel': 'Close',
+          'footer.text': '※ SmartDesk isn’t an official service and doesn’t guarantee every seat, but we strive to stay more reliable than the official tools.',
+          'return.home': 'Return to homepage'
+        }
       };
 
-      const hideModal = () => {
-        modal.classList.remove("is-visible");
-        modal.setAttribute("aria-hidden", "true");
+      const modalData = {
+        zh: modalTemplates.zh,
+        en: modalTemplates.en
       };
 
-      document.querySelectorAll(".feedback-button").forEach((button) => {
-        button.addEventListener("click", () => showModal(button.getAttribute("data-target")));
+      let activeModals = modalData[DEFAULT_LANG];
+      const modal = document.getElementById('feedback-modal');
+      const modalTitle = modal.querySelector('.modal-title');
+      const modalBody = modal.querySelector('.modal-body');
+      const closeBtn = modal.querySelector('.modal-close');
+
+      function resolveLanguage() {
+        const param = new URLSearchParams(window.location.search).get(LANG_PARAM);
+        if (param && SUPPORTED_LANGS.includes(param.toLowerCase())) {
+          return param.toLowerCase();
+        }
+        const stored = localStorage.getItem(STORAGE_KEY);
+        if (stored && SUPPORTED_LANGS.includes(stored)) {
+          return stored;
+        }
+        return DEFAULT_LANG;
+      }
+
+      function applyLanguage(lang) {
+        if (!SUPPORTED_LANGS.includes(lang)) {
+          lang = DEFAULT_LANG;
+        }
+        const dictionary = translations[lang];
+        if (!dictionary) {
+          return;
+        }
+        document.documentElement.lang = dictionary.htmlLang || (lang === 'en' ? 'en' : 'zh-CN');
+        document.title = dictionary.title;
+        const descriptionMeta = document.querySelector('meta[name="description"]');
+        if (descriptionMeta && dictionary.descriptionMeta) {
+          descriptionMeta.setAttribute('content', dictionary.descriptionMeta);
+        }
+        document.querySelectorAll('[data-i18n]').forEach((node) => {
+          const key = node.getAttribute('data-i18n');
+          if (key && dictionary[key]) {
+            node.textContent = dictionary[key];
+          }
+        });
+        document.querySelectorAll('[data-i18n-html]').forEach((node) => {
+          const key = node.getAttribute('data-i18n-html');
+          if (key && dictionary[key]) {
+            node.innerHTML = dictionary[key];
+          }
+        });
+        document.querySelectorAll('[data-lang-link-target]').forEach((link) => {
+          const target = link.getAttribute('data-lang-link-target');
+          if (!target) {
+            return;
+          }
+          let cleanTarget = target;
+          if (cleanTarget.includes('?')) {
+            cleanTarget = cleanTarget.split('?')[0];
+          }
+          link.setAttribute('href', cleanTarget + '?lang=' + lang);
+        });
+        activeModals = modalData[lang];
+        closeBtn.setAttribute('aria-label', dictionary['modal.closeLabel'] || 'Close');
+        const url = new URL(window.location.href);
+        if (url.searchParams.get(LANG_PARAM) !== lang) {
+          url.searchParams.set(LANG_PARAM, lang);
+          window.history.replaceState(null, '', url.toString());
+        }
+        localStorage.setItem(STORAGE_KEY, lang);
+      }
+
+      function showModal(key) {
+        const template = activeModals && activeModals[key];
+        if (!template) {
+          return;
+        }
+        modalTitle.textContent = template.title;
+        modalBody.innerHTML = template.body;
+        modal.classList.add('is-visible');
+        modal.setAttribute('aria-hidden', 'false');
+      }
+
+      function hideModal() {
+        modal.classList.remove('is-visible');
+        modal.setAttribute('aria-hidden', 'true');
+      }
+
+      document.querySelectorAll('.feedback-button').forEach((button) => {
+        button.addEventListener('click', () => showModal(button.getAttribute('data-target')));
       });
-
-      closeBtn.addEventListener("click", hideModal);
-      modal.addEventListener("click", (event) => {
+      closeBtn.addEventListener('click', hideModal);
+      modal.addEventListener('click', (event) => {
         if (event.target === modal) {
           hideModal();
         }
       });
-
-      document.addEventListener("keydown", (event) => {
-        if (event.key === "Escape" && modal.classList.contains("is-visible")) {
+      document.addEventListener('keydown', (event) => {
+        if (event.key === 'Escape' && modal.classList.contains('is-visible')) {
           hideModal();
         }
       });
+
+      applyLanguage(resolveLanguage());
     })();
   </script>
-<p style="text-align:center; margin-top:32px; color:var(--text-soft); font-size:13px;">※ SmartDesk 不是官方服务，也不保证百分之百能约上座位 —— 但我们至少不会像物理实验选课那样“年年崩、年年抢、年年道歉、年年不改”。（但我们会尽力比官方稳定）。</p></body>
+</body>
 </html>

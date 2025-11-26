@@ -109,6 +109,35 @@
       color: var(--text-strong);
     }
 
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .language-switch {
+      display: inline-flex;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      overflow: hidden;
+      background: #fff;
+    }
+
+    .language-switch button {
+      border: 0;
+      background: transparent;
+      padding: 6px 14px;
+      font-size: 12px;
+      color: var(--text-soft);
+      cursor: pointer;
+      transition: background 0.2s ease, color 0.2s ease;
+    }
+
+    .language-switch button.is-active {
+      background: var(--primary);
+      color: #fff;
+    }
+
     .cta {
       padding: 10px 20px;
       border-radius: 999px;
@@ -285,6 +314,14 @@
       color: var(--text-soft);
       text-align: center;
     }
+
+    .footer-links {
+      margin-top: 4px;
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
   </style>
 </head>
 <body>
@@ -298,152 +335,391 @@
         </div>
       </div>
       <div class="nav-links">
-        <a class="nav-link" href="#features">特性</a>
-        <a class="nav-link" href="#automation">自动助手</a>
-        <a class="nav-link" href="#membership">会员</a>
-        <a class="nav-link" href="trust-center.html">信任中心</a>
-        <a class="nav-link" href="compliance.html">公平合规</a>
+        <a class="nav-link" href="#features" data-i18n="nav.features">特性</a>
+        <a class="nav-link" href="#automation" data-i18n="nav.automation">自动助手</a>
+        <a class="nav-link" href="#membership" data-lang-link-target="membership.html" data-i18n="nav.membership">会员</a>
+        <a class="nav-link" href="trust-center.html" data-lang-link-target="trust-center.html" data-i18n="nav.trust">信任中心</a>
+        <a class="nav-link" href="compliance.html" data-lang-link-target="compliance.html" data-i18n="nav.compliance">公平合规</a>
       </div>
-      <a class="cta" href="https://github.com/shuangboxu/SmartDesk/releases/download/v0.1.0/SmartDesk-0.1.0.exe">下载体验</a>
+      <div class="nav-actions">
+        <div class="language-switch" aria-label="Language switch">
+          <button type="button" data-lang-toggle="zh">中文</button>
+          <button type="button" data-lang-toggle="en">EN</button>
+        </div>
+        <a class="cta" href="https://github.com/shuangboxu/SmartDesk/releases/download/v0.1.0/SmartDesk-0.1.0.exe" data-i18n="cta.download">下载体验</a>
+      </div>
     </nav>
 
     <section class="hero">
       <div>
-        <p class="pill">北理工图书馆与学习空间助手</p>
-        <h1>更快找到座位，更沉浸地学习。</h1>
-        <p>
+        <p class="pill" data-i18n="hero.pill">北理工图书馆与学习空间助手</p>
+        <h1 data-i18n="hero.title">更快找到座位，更沉浸地学习。</h1>
+        <p data-i18n="hero.description">
           SmartDesk 将图书馆抢座、空教室、任务、笔记与 AI 助手整合在一个本地桌面应用中，
           并用授权驱动的自动化引擎提供持续搜索、定时抢座与在线预约能力。
         </p>
         <div class="hero-actions">
-          <a class="cta" href="membership.html" style="background: var(--primary);">查看会员方案</a>
-          <a href="README.md">阅读项目说明 →</a>
+          <a class="cta" data-lang-link-target="membership.html" data-i18n="hero.membership">查看会员方案</a>
+          <a href="README.md" data-i18n="hero.readme">阅读项目说明 →</a>
         </div>
       </div>
       <div class="hero-note">
-        • 持续搜索：Free 5 次 / Plus 150 次 / Pro 500 次（每月重置）<br />
-        • 定时抢座：配额同上，Pro 可后台运行<br />
-        • 在线抢座：仅 Pro，剩余天数 = 总额度，10 次/日<br />
-        • 数据存储：全部落在 <code>~/.smartdesk</code>
+        <p data-i18n="hero.note.search">• 持续搜索：Free 5 次 / Plus 150 次 / Pro 500 次（每月重置）</p>
+        <p data-i18n="hero.note.timed">• 定时抢座：配额同上，Pro 可后台运行</p>
+        <p data-i18n="hero.note.online">• 在线抢座：仅 Pro，剩余天数 = 总额度，10 次/日</p>
+        <p data-i18n-html="hero.note.storage">• 数据存储：全部落在 <code>~/.smartdesk</code></p>
       </div>
     </section>
 
     <section id="features" class="section">
       <div class="section-header">
-        <span>capabilities</span>
-        <h2>覆盖“预约 + 学习”全链路的桌面体验</h2>
-        <p>图书馆助手与学习工具共享统一界面和数据存储，全部功能默认离线可用，联网仅发生在必要的学校接口或你授权的 AI API。</p>
+        <span data-i18n="section.capabilities.span">capabilities</span>
+        <h2 data-i18n="section.capabilities.title">覆盖“预约 + 学习”全链路的桌面体验</h2>
+        <p data-i18n="section.capabilities.description">
+          图书馆助手与学习工具共享统一界面和数据存储，全部功能默认离线可用，联网仅发生在必要的学校接口或你授权的 AI API。
+        </p>
       </div>
       <div class="cards">
         <div class="card">
-          <h3>图书馆自动助手</h3>
-          <p>LibrarySeatView 提供持续搜索、定时任务、在线抢座与历史追踪；Free/Plus 需手动确认，Pro 可无人值守。</p>
+          <h3 data-i18n="feature.card.library.title">图书馆自动助手</h3>
+          <p data-i18n="feature.card.library.description">
+            LibrarySeatView 提供持续搜索、定时任务、在线抢座与历史追踪；Free/Plus 需手动确认，Pro 可无人值守。
+          </p>
         </div>
         <div class="card">
-          <h3>空教室与自习室</h3>
-          <p>FreeRoom 模块实时展示教学楼占用，为临时讨论或复习提供可视化参考。</p>
+          <h3 data-i18n="feature.card.room.title">空教室与自习室</h3>
+          <p data-i18n="feature.card.room.description">
+            FreeRoom 模块实时展示教学楼占用，为临时讨论或复习提供可视化参考。
+          </p>
         </div>
         <div class="card">
-          <h3>笔记 · 任务 · AI</h3>
-          <p>内置 SQLite 存储，支持任务提醒、笔记管理、聊天助理与文档总结，可选接入在线模型。</p>
+          <h3 data-i18n="feature.card.notes.title">笔记 · 任务 · AI</h3>
+          <p data-i18n="feature.card.notes.description">
+            内置 SQLite 存储，支持任务提醒、笔记管理、聊天助理与文档总结，可选接入在线模型。
+          </p>
         </div>
         <div class="card">
-          <h3>Home 视图</h3>
-          <p>Plus/Pro 可打开 Home 页面，展示提醒、状态与个性化启动模块。</p>
+          <h3 data-i18n="feature.card.home.title">Home 视图</h3>
+          <p data-i18n="feature.card.home.description">
+            Plus/Pro 可打开 Home 页面，展示提醒、状态与个性化启动模块。
+          </p>
         </div>
       </div>
     </section>
 
     <section id="automation" class="section">
       <div class="section-header">
-        <span>automation engine</span>
-        <h2>会员驱动的自动化与配额系统</h2>
-        <p>PremiumQuotaTracker、OnlineSeatUsageTracker 与 LicenseValidator 协同工作：记录配额、验证授权、限制在线抢座提交次数，确保公平与透明。</p>
+        <span data-i18n="section.automation.span">automation engine</span>
+        <h2 data-i18n="section.automation.title">会员驱动的自动化与配额系统</h2>
+        <p data-i18n="section.automation.description">
+          PremiumQuotaTracker、OnlineSeatUsageTracker 与 LicenseValidator 协同工作：记录配额、验证授权、限制在线抢座提交次数，确保公平与透明。
+        </p>
       </div>
       <div class="cards">
         <div class="card">
-          <h3>设备与学号绑定</h3>
-          <ul>
-            <li>license.json 绑定 deviceId + 统一身份认证学号。</li>
-            <li>RSA-SHA256 签名防篡改，时间源防回拨。</li>
-            <li>设置页可随时导入、禁用或切换模式。</li>
-          </ul>
+          <h3 data-i18n="automation.card.binding.title">设备与学号绑定</h3>
+          <p data-i18n="automation.card.binding.description">
+            license.json 绑定 deviceId + 统一身份认证学号。RSA-SHA256 签名防篡改，时间源防回拨。设置页可随时导入、禁用或切换模式。
+          </p>
         </div>
         <div class="card">
-          <h3>配额守护</h3>
-          <ul>
-            <li>Free/Plus/Pro 每月 5/150/500 次持续搜索与定时配额。</li>
-            <li>Pro 在线抢座：10 次/日 + 剩余天数总额度。</li>
-            <li>所有记录保存在 <code>premium-usage.json</code> 与 <code>online-seat-usage.json</code>。</li>
-          </ul>
+          <h3 data-i18n="automation.card.quota.title">配额守护</h3>
+          <p data-i18n="automation.card.quota.description">
+            Free/Plus/Pro 每月 5/150/500 次持续搜索与定时配额。Pro 在线抢座：10 次/日 + 授权天数总额度。所有记录保存在 <code>premium-usage.json</code> 与 <code>online-seat-usage.json</code>。
+          </p>
         </div>
         <div class="card">
-          <h3>数据透明</h3>
-          <ul>
-            <li>用户数据、授权状态、日志全部在本地 <code>~/.smartdesk</code>。</li>
-            <li>无云端收集，手动分享日志可定位问题。</li>
-            <li>详见 <a href="trust-center.html">信任中心</a> 与 <a href="compliance.html">公平说明</a>。</li>
-          </ul>
+          <h3 data-i18n="automation.card.transparency.title">数据透明</h3>
+          <p data-i18n-html="automation.card.transparency.description">
+            用户数据、授权状态、日志全部在本地 <code>~/.smartdesk</code>。无云端收集，手动分享日志可定位问题。详见 <a href="trust-center.html" data-lang-link-target="trust-center.html">信任中心</a> 与 <a href="compliance.html" data-lang-link-target="compliance.html">公平说明</a>。
+          </p>
         </div>
       </div>
     </section>
 
     <section id="membership" class="section">
       <div class="section-header">
-        <span>membership</span>
-        <h2>会员等级速览</h2>
-        <p>Free 默认启用；导入授权文件即可激活 Plus / Pro。授权保留在本地，可以随时禁用或迁移。</p>
+        <span data-i18n="section.membership.span">membership</span>
+        <h2 data-i18n="section.membership.title">会员等级速览</h2>
+        <p data-i18n="section.membership.description">
+          Free 默认启用；导入授权文件即可激活 Plus / Pro。授权保留在本地，可以随时禁用或迁移。
+        </p>
       </div>
       <div class="table-wrapper">
         <table>
           <thead>
             <tr>
-              <th>能力</th>
-              <th>Free</th>
-              <th>Plus</th>
-              <th>Pro</th>
+              <th data-i18n="table.header.capability">能力</th>
+              <th data-i18n="table.header.free">Free</th>
+              <th data-i18n="table.header.plus">Plus</th>
+              <th data-i18n="table.header.pro">Pro</th>
             </tr>
           </thead>
           <tbody>
             <tr>
-              <td>Home & 启动页</td>
-              <td>不可用</td>
-              <td>开启 Home</td>
-              <td>Home + 模块自定义</td>
+              <td data-i18n="table.row.home.title">Home & 启动页</td>
+              <td data-i18n="table.row.home.free">不可用</td>
+              <td data-i18n="table.row.home.plus">开启 Home</td>
+              <td data-i18n="table.row.home.pro">Home + 模块自定义</td>
             </tr>
             <tr>
-              <td>持续搜索配额 / 月</td>
-              <td>5 次 · 手动确认</td>
-              <td>150 次 · 手动确认</td>
-              <td>500 次 · 无人值守</td>
+              <td data-i18n="table.row.search.title">持续搜索配额 / 月</td>
+              <td data-i18n="table.row.search.free">5 次 · 手动确认</td>
+              <td data-i18n="table.row.search.plus">150 次 · 手动确认</td>
+              <td data-i18n="table.row.search.pro">500 次 · 无人值守</td>
             </tr>
             <tr>
-              <td>定时抢座配额 / 月</td>
-              <td>5 次 · 需在线守候</td>
-              <td>150 次 · 需在线守候</td>
-              <td>500 次 · 后台线程</td>
+              <td data-i18n="table.row.timed.title">定时抢座配额 / 月</td>
+              <td data-i18n="table.row.timed.free">5 次 · 需在线守候</td>
+              <td data-i18n="table.row.timed.plus">150 次 · 需在线守候</td>
+              <td data-i18n="table.row.timed.pro">500 次 · 后台线程</td>
             </tr>
             <tr>
-              <td>在线抢座</td>
-              <td>未开放</td>
-              <td>未开放</td>
-              <td>开放 · 10 次/日 + 授权天数总额</td>
+              <td data-i18n="table.row.online.title">在线抢座</td>
+              <td data-i18n="table.row.online.free">未开放</td>
+              <td data-i18n="table.row.online.plus">未开放</td>
+              <td data-i18n="table.row.online.pro">开放 · 10 次/日 + 授权天数总额</td>
             </tr>
             <tr>
-              <td>数据存储</td>
-              <td colspan="3">所有数据均存储在 <code>~/.smartdesk</code>，卸载不会删除</td>
+              <td data-i18n="table.row.data.title">数据存储</td>
+              <td colspan="3" data-i18n-html="table.row.data.value">所有数据均存储在 <code>~/.smartdesk</code>，卸载不会删除</td>
             </tr>
           </tbody>
         </table>
       </div>
-      <div class="trust">
-        有授权或隐私问题？请查看 <a href="membership.html">会员方案详情</a>、<a href="compliance.html">公平说明</a> 或 <a href="trust-center.html">信任中心</a>，了解授权流程、设备绑定、数据备份方法。
+      <div class="trust" data-i18n-html="section.trust">
+        有授权或隐私问题？请查看 <a href="membership.html" data-lang-link-target="membership.html">会员方案详情</a>、<a href="compliance.html" data-lang-link-target="compliance.html">公平说明</a> 或 <a href="trust-center.html" data-lang-link-target="trust-center.html">信任中心</a>，了解授权流程、设备绑定、数据备份方法。
       </div>
     </section>
 
     <footer>
-      © 2025 SmartDesk · 北京理工大学 | <a href="README.md">README</a> · <a href="membership.html">会员方案</a> · <a href="trust-center.html">信任中心</a>
+      <p data-i18n="footer.text">© 2025 SmartDesk · 北京理工大学</p>
+      <div class="footer-links">
+        <a href="README.md" data-i18n="footer.link.readme">README</a>
+        <a data-lang-link-target="membership.html" data-i18n="footer.link.membership">会员方案</a>
+        <a data-lang-link-target="trust-center.html" data-i18n="footer.link.trust">信任中心</a>
+      </div>
     </footer>
   </div>
+
+  <script>
+    (function() {
+      const DEFAULT_LANG = 'zh';
+      const LANG_PARAM = 'lang';
+      const STORAGE_KEY = 'smartdesk-site-lang';
+      const SUPPORTED_LANGS = ['zh', 'en'];
+
+      const translations = {
+        zh: {
+          htmlLang: 'zh-CN',
+          title: 'SmartDesk · 北理工智能座位与学习助理',
+          descriptionMeta: 'SmartDesk 提供图书馆抢座、空教室、任务、笔记、AI 助手与会员自动化能力。',
+          'nav.features': '特性',
+          'nav.automation': '自动助手',
+          'nav.membership': '会员',
+          'nav.trust': '信任中心',
+          'nav.compliance': '公平合规',
+          'cta.download': '下载体验',
+          'hero.pill': '北理工图书馆与学习空间助手',
+          'hero.title': '更快找到座位，更沉浸地学习。',
+          'hero.description': 'SmartDesk 将图书馆抢座、空教室、任务、笔记与 AI 助手整合在一个本地桌面应用中，并用授权驱动的自动化引擎提供持续搜索、定时抢座与在线预约能力。',
+          'hero.membership': '查看会员方案',
+          'hero.readme': '阅读项目说明 →',
+          'hero.note.search': '• 持续搜索：Free 5 次 / Plus 150 次 / Pro 500 次（每月重置）',
+          'hero.note.timed': '• 定时抢座：配额同上，Pro 可后台运行',
+          'hero.note.online': '• 在线抢座：仅 Pro，剩余天数 = 总额度，10 次/日',
+          'hero.note.storage': '• 数据存储：全部落在 <code>~/.smartdesk</code>',
+          'section.capabilities.span': 'capabilities',
+          'section.capabilities.title': '覆盖“预约 + 学习”全链路的桌面体验',
+          'section.capabilities.description': '图书馆助手与学习工具共享统一界面和数据存储，全部功能默认离线可用，联网仅发生在必要的学校接口或你授权的 AI API。',
+          'feature.card.library.title': '图书馆自动助手',
+          'feature.card.library.description': 'LibrarySeatView 提供持续搜索、定时任务、在线抢座与历史追踪；Free/Plus 需手动确认，Pro 可无人值守。',
+          'feature.card.room.title': '空教室与自习室',
+          'feature.card.room.description': 'FreeRoom 模块实时展示教学楼占用，为临时讨论或复习提供可视化参考。',
+          'feature.card.notes.title': '笔记 · 任务 · AI',
+          'feature.card.notes.description': '内置 SQLite 存储，支持任务提醒、笔记管理、聊天助理与文档总结，可选接入在线模型。',
+          'feature.card.home.title': 'Home 视图',
+          'feature.card.home.description': 'Plus/Pro 可打开 Home 页面，展示提醒、状态与个性化启动模块。',
+          'section.automation.span': 'automation engine',
+          'section.automation.title': '会员驱动的自动化与配额系统',
+          'section.automation.description': 'PremiumQuotaTracker、OnlineSeatUsageTracker 与 LicenseValidator 协同工作：记录配额、验证授权、限制在线抢座提交次数，确保公平与透明。',
+          'automation.card.binding.title': '设备与学号绑定',
+          'automation.card.binding.description': 'license.json 绑定 deviceId + 统一身份认证学号。RSA-SHA256 签名防篡改，时间源防回拨。设置页可随时导入、禁用或切换模式。',
+          'automation.card.quota.title': '配额守护',
+          'automation.card.quota.description': 'Free/Plus/Pro 每月 5/150/500 次持续搜索与定时配额。Pro 在线抢座：10 次/日 + 授权天数总额度。所有记录保存在 <code>premium-usage.json</code> 与 <code>online-seat-usage.json</code>。',
+          'automation.card.transparency.title': '数据透明',
+          'automation.card.transparency.description': '用户数据、授权状态、日志全部在本地 <code>~/.smartdesk</code>。无云端收集，手动分享日志可定位问题。详见 <a href="trust-center.html" data-lang-link-target="trust-center.html">信任中心</a> 与 <a href="compliance.html" data-lang-link-target="compliance.html">公平说明</a>。',
+          'section.membership.span': 'membership',
+          'section.membership.title': '会员等级速览',
+          'section.membership.description': 'Free 默认启用；导入授权文件即可激活 Plus / Pro。授权保留在本地，可以随时禁用或迁移。',
+          'table.header.capability': '能力',
+          'table.header.free': 'Free',
+          'table.header.plus': 'Plus',
+          'table.header.pro': 'Pro',
+          'table.row.home.title': 'Home & 启动页',
+          'table.row.home.free': '不可用',
+          'table.row.home.plus': '开启 Home',
+          'table.row.home.pro': 'Home + 模块自定义',
+          'table.row.search.title': '持续搜索配额 / 月',
+          'table.row.search.free': '5 次 · 手动确认',
+          'table.row.search.plus': '150 次 · 手动确认',
+          'table.row.search.pro': '500 次 · 无人值守',
+          'table.row.timed.title': '定时抢座配额 / 月',
+          'table.row.timed.free': '5 次 · 需在线守候',
+          'table.row.timed.plus': '150 次 · 需在线守候',
+          'table.row.timed.pro': '500 次 · 后台线程',
+          'table.row.online.title': '在线抢座',
+          'table.row.online.free': '未开放',
+          'table.row.online.plus': '未开放',
+          'table.row.online.pro': '开放 · 10 次/日 + 授权天数总额',
+          'table.row.data.title': '数据存储',
+          'table.row.data.value': '所有数据均存储在 <code>~/.smartdesk</code>，卸载不会删除',
+          'section.trust': '有授权或隐私问题？请查看 <a href="membership.html" data-lang-link-target="membership.html">会员方案详情</a>、<a href="compliance.html" data-lang-link-target="compliance.html">公平说明</a> 或 <a href="trust-center.html" data-lang-link-target="trust-center.html">信任中心</a>，了解授权流程、设备绑定、数据备份方法。',
+          'footer.text': '© 2025 SmartDesk · 北京理工大学',
+          'footer.link.readme': 'README',
+          'footer.link.membership': '会员方案',
+          'footer.link.trust': '信任中心'
+        },
+        en: {
+          htmlLang: 'en',
+          title: 'SmartDesk · BIT Intelligent Seat & Study Assistant',
+          descriptionMeta: 'SmartDesk bundles library seat grabs, vacant classroom data, tasks, notes and AI assistant into a local desktop automaton.',
+          'nav.features': 'Features',
+          'nav.automation': 'Automation',
+          'nav.membership': 'Membership',
+          'nav.trust': 'Trust Center',
+          'nav.compliance': 'Compliance',
+          'cta.download': 'Download',
+          'hero.pill': 'BIT Library & Study Space Copilot',
+          'hero.title': 'Find seats faster, study more deeply.',
+          'hero.description': 'SmartDesk combines library seat grabs, classroom finder, tasks, notes and an AI assistant inside a local desktop app and powers continuous search, scheduled grabs and online reservations with an authorized automation engine.',
+          'hero.membership': 'View membership tiers',
+          'hero.readme': 'Read the project README →',
+          'hero.note.search': '• Smart search: Free 5 / Plus 150 / Pro 500 continuous attempts (monthly reset)',
+          'hero.note.timed': '• Scheduled grabs: same quotas, Pro can run headless',
+          'hero.note.online': '• Online grabs: only Pro, remaining days add to total quota, 10 tries/day',
+          'hero.note.storage': '• Data storage: everything under <code>~/.smartdesk</code>',
+          'section.capabilities.span': 'capabilities',
+          'section.capabilities.title': 'A desktop experience covering reservations + study workflows',
+          'section.capabilities.description': 'Library assistant and learning tools share a unified UI and storage; everything works offline by default and only goes online for the campus APIs or AI services you authorize.',
+          'feature.card.library.title': 'Library automation',
+          'feature.card.library.description': 'LibrarySeatView delivers continuous search, scheduled tasks, online grabs and history tracking. Free/Plus need manual confirmation; Pro runs unattended.',
+          'feature.card.room.title': 'Vacant classrooms & study halls',
+          'feature.card.room.description': 'The FreeRoom module shows building occupancy in real time, helping you spot spaces for quick discussions or study pods.',
+          'feature.card.notes.title': 'Notes, tasks & AI',
+          'feature.card.notes.description': 'Built-in SQLite storage powers task reminders, notes, chats and document summaries, with optional online models.',
+          'feature.card.home.title': 'Home view',
+          'feature.card.home.description': 'Plus/Pro unlock the Home dashboard to surface reminders, status and personalized launch modules.',
+          'section.automation.span': 'automation engine',
+          'section.automation.title': 'Quota-aware automation driven by membership',
+          'section.automation.description': 'PremiumQuotaTracker, OnlineSeatUsageTracker and LicenseValidator work together to track quotas, validate authorization and limit online bookings so everything stays fair and transparent.',
+          'automation.card.binding.title': 'Device & ID binding',
+          'automation.card.binding.description': 'license.json links your deviceId with the campus account. RSA-SHA256 signatures prevent tampering and time checks block rollbacks. Settings lets you import, disable or switch modes anytime.',
+          'automation.card.quota.title': 'Quota guard',
+          'automation.card.quota.description': 'Free/Plus/Pro get 5/150/500 monthly slots for continuous search and scheduled grabs. Pro online bookings allow 10 tries/day with remaining days counting toward total quota. Records live in premium-usage.json and online-seat-usage.json.',
+          'automation.card.transparency.title': 'Data transparency',
+          'automation.card.transparency.description': 'User data, auth state and logs stay under <code>~/.smartdesk</code>. No cloud collection; share logs manually when troubleshooting. See the <a href="trust-center.html" data-lang-link-target="trust-center.html">Trust Center</a> and <a href="compliance.html" data-lang-link-target="compliance.html">Compliance</a> pages for all the details.',
+          'section.membership.span': 'membership',
+          'section.membership.title': 'Membership tiers at a glance',
+          'section.membership.description': 'Free is enabled by default; importing an authorization file activates Plus/Pro. Licenses stay local and can be disabled or moved anytime.',
+          'table.header.capability': 'Capability',
+          'table.header.free': 'Free',
+          'table.header.plus': 'Plus',
+          'table.header.pro': 'Pro',
+          'table.row.home.title': 'Home & launch view',
+          'table.row.home.free': 'Unavailable',
+          'table.row.home.plus': 'Home enabled',
+          'table.row.home.pro': 'Home + customizable modules',
+          'table.row.search.title': 'Continuous search quota / month',
+          'table.row.search.free': '5 attempts · manual confirm',
+          'table.row.search.plus': '150 attempts · manual confirm',
+          'table.row.search.pro': '500 attempts · unattended',
+          'table.row.timed.title': 'Scheduled grab quota / month',
+          'table.row.timed.free': '5 schedules · must stay online',
+          'table.row.timed.plus': '150 schedules · must stay online',
+          'table.row.timed.pro': '500 schedules · background thread',
+          'table.row.online.title': 'Online grabs',
+          'table.row.online.free': 'Not available',
+          'table.row.online.plus': 'Not available',
+          'table.row.online.pro': 'Available · 10/day + remaining days total',
+          'table.row.data.title': 'Data storage',
+          'table.row.data.value': 'All data stays under <code>~/.smartdesk</code>; uninstalling keeps it intact.',
+          'section.trust': 'Questions about authorization or privacy? Visit the <a href="membership.html" data-lang-link-target="membership.html">membership details</a>, <a href="compliance.html" data-lang-link-target="compliance.html">compliance statement</a> or <a href="trust-center.html" data-lang-link-target="trust-center.html">Trust Center</a> for workflow, device and backup guidance.',
+          'footer.text': '© 2025 SmartDesk · Beijing Institute of Technology',
+          'footer.link.readme': 'README',
+          'footer.link.membership': 'Membership',
+          'footer.link.trust': 'Trust Center'
+        }
+      };
+
+      function resolveLanguage() {
+        const param = new URLSearchParams(window.location.search).get(LANG_PARAM);
+        if (param && SUPPORTED_LANGS.includes(param.toLowerCase())) {
+          return param.toLowerCase();
+        }
+        const stored = localStorage.getItem(STORAGE_KEY);
+        if (stored && SUPPORTED_LANGS.includes(stored)) {
+          return stored;
+        }
+        return DEFAULT_LANG;
+      }
+
+      function setLanguage(lang) {
+        if (!SUPPORTED_LANGS.includes(lang)) {
+          lang = DEFAULT_LANG;
+        }
+        const dictionary = translations[lang];
+        if (!dictionary) {
+          return;
+        }
+        document.documentElement.lang = dictionary.htmlLang || (lang === 'en' ? 'en' : 'zh-CN');
+        document.title = dictionary.title;
+        const descriptionMeta = document.querySelector('meta[name="description"]');
+        if (descriptionMeta && dictionary.descriptionMeta) {
+          descriptionMeta.setAttribute('content', dictionary.descriptionMeta);
+        }
+        document.querySelectorAll('[data-i18n]').forEach((node) => {
+          const key = node.getAttribute('data-i18n');
+          if (key && dictionary[key]) {
+            node.textContent = dictionary[key];
+          }
+        });
+        document.querySelectorAll('[data-i18n-html]').forEach((node) => {
+          const key = node.getAttribute('data-i18n-html');
+          if (key && dictionary[key]) {
+            node.innerHTML = dictionary[key];
+          }
+        });
+        document.querySelectorAll('[data-lang-toggle]').forEach((button) => {
+          button.classList.toggle('is-active', button.getAttribute('data-lang-toggle') === lang);
+        });
+        document.querySelectorAll('[data-lang-link-target]').forEach((link) => {
+          const target = link.getAttribute('data-lang-link-target');
+          if (!target) return;
+          let cleanTarget = target;
+          if (cleanTarget.includes('?')) {
+            cleanTarget = cleanTarget.split('?')[0];
+          }
+          link.setAttribute('href', cleanTarget + '?lang=' + lang);
+        });
+        const url = new URL(window.location.href);
+        if (url.searchParams.get(LANG_PARAM) !== lang) {
+          url.searchParams.set(LANG_PARAM, lang);
+          window.history.replaceState(null, '', url.toString());
+        }
+        localStorage.setItem(STORAGE_KEY, lang);
+      }
+
+      document.querySelectorAll('[data-lang-toggle]').forEach((button) => {
+        button.addEventListener('click', () => {
+          const chosen = button.getAttribute('data-lang-toggle');
+          if (!chosen) return;
+          setLanguage(chosen);
+        });
+      });
+
+      setLanguage(resolveLanguage());
+    })();
+  </script>
 </body>
 </html>

@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <title>SmartDesk 信任中心</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="聚焦数据落地、联网行为与授权安全的信任中心，答案均来源于当前 SmartDesk 源码。" />
   <style>
     :root {
       --bg: #f7f8fb;
@@ -13,12 +14,15 @@
       --text-soft: #64748b;
       --border: #e2e8f0;
       --primary: #0ea5e9;
-      --accent: #9333ea;
       --radius: 22px;
       --shadow: 0 15px 40px rgba(15, 23, 42, 0.08);
     }
 
-    * { box-sizing: border-box; margin: 0; padding: 0; }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
 
     body {
       font-family: "Inter", "Segoe UI", -apple-system, BlinkMacSystemFont, sans-serif;
@@ -27,13 +31,28 @@
       min-height: 100vh;
     }
 
+    a {
+      color: var(--primary);
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
     .page {
       max-width: 1080px;
       margin: 0 auto;
-      padding: 40px 16px 80px;
+      padding: 32px 16px 80px;
     }
 
-    .hero { text-align: center; margin-bottom: 32px; }
+    .page-header {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      align-items: flex-start;
+      flex-wrap: wrap;
+      margin-bottom: 32px;
+    }
 
     .kicker {
       display: inline-flex;
@@ -46,7 +65,11 @@
       font-size: 12px;
     }
 
-    h1 { margin-top: 16px; font-size: clamp(30px, 4vw, 40px); color: var(--text-strong); }
+    h1 {
+      margin-top: 16px;
+      font-size: clamp(30px, 4vw, 40px);
+      color: var(--text-strong);
+    }
 
     .hero p {
       margin-top: 10px;
@@ -54,10 +77,29 @@
       line-height: 1.8;
     }
 
+    .page-controls {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      align-items: flex-start;
+    }
+
+    .return-home {
+      padding: 10px 18px;
+      border-radius: 999px;
+      border: none;
+      background: var(--primary);
+      color: #fff;
+      font-size: 13px;
+      font-weight: 600;
+      text-decoration: none;
+    }
+
     .grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
       gap: 18px;
+      margin-top: 16px;
     }
 
     .card {
@@ -76,7 +118,10 @@
       margin-bottom: 8px;
     }
 
-    code { color: var(--primary); font-size: 12px; }
+    code {
+      color: var(--primary);
+      font-size: 12px;
+    }
 
     .faq {
       margin-top: 36px;
@@ -87,75 +132,495 @@
       padding: 24px;
     }
 
-    .faq h3 { font-size: 20px; margin-bottom: 16px; color: var(--text-strong); }
+    .faq h3 {
+      font-size: 20px;
+      margin-bottom: 16px;
+      color: var(--text-strong);
+    }
 
-    .faq-item + .faq-item { margin-top: 18px; }
+    .faq-item + .faq-item {
+      margin-top: 18px;
+    }
 
-    .faq-item strong { display: block; margin-bottom: 6px; color: var(--text-strong); }
+    .faq-item strong {
+      display: block;
+      margin-bottom: 6px;
+      color: var(--text-strong);
+    }
 
-    .footer { margin-top: 32px; text-align: center; font-size: 12px; color: var(--text-soft); }
+    .faq-item p {
+      line-height: 1.7;
+      color: var(--text);
+    }
 
-    a { color: var(--primary); }
+    .feedback-row {
+      margin-top: 22px;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 12px;
+    }
+
+    .feedback-button {
+      border: 0;
+      padding: 12px 18px;
+      border-radius: 999px;
+      background: #0ea5e9;
+      color: #fff;
+      font-weight: 600;
+      font-size: 14px;
+      cursor: pointer;
+      box-shadow: 0 10px 20px rgba(14, 165, 233, 0.25);
+      transition: transform .2s ease, box-shadow .2s ease;
+    }
+
+    .feedback-button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 14px 24px rgba(14, 165, 233, 0.35);
+    }
+
+    .feedback-modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.6);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .2s ease;
+      z-index: 40;
+    }
+
+    .feedback-modal.is-visible {
+      opacity: 1;
+      pointer-events: all;
+    }
+
+    .modal-card {
+      width: min(560px, 100%);
+      background: var(--surface);
+      border-radius: var(--radius);
+      padding: 28px;
+      position: relative;
+      box-shadow: 0 25px 40px rgba(15, 23, 42, 0.25);
+      max-height: 80vh;
+      overflow-y: auto;
+      line-height: 1.8;
+      font-size: 15px;
+    }
+
+    .modal-title {
+      margin-bottom: 12px;
+      font-size: 20px;
+      color: var(--text-strong);
+    }
+
+    .modal-body p {
+      margin-bottom: 12px;
+    }
+
+    .modal-body ul {
+      margin-bottom: 12px;
+      padding-left: 20px;
+    }
+
+    .modal-close {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      border: none;
+      background: transparent;
+      font-size: 24px;
+      cursor: pointer;
+      color: var(--text-soft);
+    }
+
+    .footer {
+      margin-top: 32px;
+      text-align: center;
+      font-size: 12px;
+      color: var(--text-soft);
+    }
   </style>
 </head>
 <body>
   <div class="page">
-    <section class="hero">
-      <div class="kicker">Trust · Privacy · Transparency</div>
-      <h1>SmartDesk 信任中心</h1>
-      <p>聚焦“用户关系”三大主题：数据落地、联网行为与授权安全。答案均来源于当前 SmartDesk 源码（LicenseValidator、MembershipService、OnlineSeatUsageTracker 等）。</p>
-    </section>
+    <header class="page-header">
+      <div class="hero">
+        <div class="kicker" data-i18n="hero.kicker">Trust · Privacy · Transparency</div>
+        <h1 data-i18n="hero.title">SmartDesk 信任中心</h1>
+        <p data-i18n="hero.subtitle">聚焦“用户关系”三大主题：数据落地、联网行为与授权安全。答案均来源于当前 SmartDesk 源码（LicenseValidator、MembershipService、OnlineSeatUsageTracker 等）。</p>
+      </div>
+      <div class="page-controls">
+        <a class="return-home" data-lang-link-target="index.html" data-i18n="return.home">返回首页</a>
+      </div>
+    </header>
 
     <section class="grid">
       <article class="card">
-        <h2>数据落地策略</h2>
-        <p>所有业务数据、授权状态、配额与日志均保存在 <code>~/.smartdesk</code>：SQLite DB、membership-state.json、premium-usage.json、online-seat-usage.json 等，均可自行备份或删除。</p>
+        <h2 data-i18n="card1.title">数据落地策略</h2>
+        <p data-i18n-html="card1.body">所有业务数据、授权状态、配额与日志均保存在 <code>~/.smartdesk</code>：SQLite DB、membership-state.json、premium-usage.json、online-seat-usage.json 等，均可自行备份或删除。</p>
       </article>
       <article class="card">
-        <h2>联网与本地平衡</h2>
-        <p>默认离线运行，仅在以下情形联网：1) 获取图书馆/空教室数据；2) 在线抢座提交（Pro）；3) 授权时间校验；4) 你主动启用的 AI API。其它逻辑在本地线程完成。</p>
+        <h2 data-i18n="card2.title">联网与本地平衡</h2>
+        <p data-i18n-html="card2.body">默认离线运行，仅在以下情形联网：1) 获取图书馆/空教室数据；2) 在线抢座提交（Pro）；3) 授权时间校验；4) 你主动启用的 AI API。其它逻辑在本地线程完成。</p>
       </article>
       <article class="card">
-        <h2>授权文件原理</h2>
-        <p>license.json 含 deviceId、学号、过期时间与 tier，附带 RSA-SHA256 签名。LicenseValidator 校验设备、学号、签名、剩余天数，任何字段不符即视为无效。</p>
+        <h2 data-i18n="card3.title">授权文件原理</h2>
+        <p data-i18n-html="card3.body">license.json 含 deviceId、学号、过期时间与 tier，附带 RSA-SHA256 签名。LicenseValidator 校验设备、学号、签名、剩余天数，任何字段不符即视为无效。</p>
       </article>
       <article class="card">
-        <h2>隐私承诺</h2>
-        <p>SmartDesk 不内置登录或云端账号，不收集真实姓名/学号以外的敏感信息。deviceId 在本地生成，仅用于授权校验。日志不会自动上传。</p>
+        <h2 data-i18n="card4.title">隐私承诺</h2>
+        <p data-i18n-html="card4.body">SmartDesk 不内置登录或云端账号，不收集真实姓名/学号以外的敏感信息。deviceId 在本地生成，仅用于授权校验。日志不会自动上传。</p>
       </article>
       <article class="card">
-        <h2>撤销与自助</h2>
-        <p>删除 <code>license.json</code> 即回到 Free；可在设置页点击“禁用会员”临时关闭高级功能；需要重置数据时，删除整个 <code>~/.smartdesk</code> 目录即可。</p>
+        <h2 data-i18n="card5.title">撤销与自助</h2>
+        <p data-i18n-html="card5.body">删除 <code>license.json</code> 即回到 Free；可在设置页点击“禁用会员”临时关闭高级功能；需要重置数据时，删除整个 <code>~/.smartdesk</code> 目录即可。</p>
       </article>
       <article class="card">
-        <h2>防止走捷径</h2>
-        <p>授权绑定设备 + 学号，配额即便手动修改 JSON 也会按硬上限（5/150/500/10）重新计算。若发现异常使用，将吊销证书并拒绝更新。</p>
+        <h2 data-i18n="card6.title">防止走捷径</h2>
+        <p data-i18n-html="card6.body">授权绑定设备 + 学号，配额即便手动修改 JSON 也会按硬上限（5/150/500/10）重新计算。若发现异常使用，将吊销证书并拒绝更新。</p>
       </article>
     </section>
 
     <section class="faq">
-      <h3>常见问题</h3>
+      <h3 data-i18n="faq.title">常见问题</h3>
       <div class="faq-item">
-        <strong>Q：如何验证 license.json 真伪？</strong>
-        A：可使用 SmartDesk 附带的 LicenseGeneratorUI 或任何 RSA 验签工具，配合 README 中的公钥验证签名。
+        <strong data-i18n="faq.q1">Q：如何验证 license.json 真伪？</strong>
+        <p data-i18n-html="faq.a1">A：可使用 SmartDesk 附带的 LicenseGeneratorUI 或任何 RSA 验签工具，配合 README 中的公钥验证签名。</p>
       </div>
       <div class="faq-item">
-        <strong>Q：迁移设备需要做什么？</strong>
-        A：在新电脑安装 SmartDesk，复制新的 deviceId，与旧授权信息一起联系作者重新生成 license，新旧设备互不干扰。
+        <strong data-i18n="faq.q2">Q：迁移设备需要做什么？</strong>
+        <p data-i18n-html="faq.a2">A：在新电脑安装 SmartDesk，复制新的 deviceId，与旧授权信息一起联系作者重新生成 license，新旧设备互不干扰。</p>
       </div>
       <div class="faq-item">
-        <strong>Q：AI 模块会上传我的数据吗？</strong>
-        A：只有在你主动填写 API Key 并点击发送时才会调用在线模型，未开启时聊天助手保持离线，全部数据存本地。
+        <strong data-i18n="faq.q3">Q：AI 模块会上传我的数据吗？</strong>
+        <p data-i18n-html="faq.a3">A：只有在你主动填写 API Key 并点击发送时才会调用在线模型，未开启时聊天助手保持离线，全部数据存本地。</p>
       </div>
       <div class="faq-item">
-        <strong>Q：误删数据如何恢复？</strong>
-        A：提前备份 <code>~/.smartdesk</code> 目录即可快速恢复。建议定期打包该目录到网盘或移动硬盘。
+        <strong data-i18n="faq.q4">Q：误删数据如何恢复？</strong>
+        <p data-i18n-html="faq.a4">A：提前备份 <code>~/.smartdesk</code> 目录即可快速恢复。建议定期打包该目录到网盘或移动硬盘。</p>
       </div>
     </section>
 
-    <div class="footer">
-      查看 <a href="membership.html">会员方案</a> · <a href="compliance.html">公平说明</a> · <a href="index.html">返回首页</a>
+    <div class="feedback-row">
+      <button type="button" class="feedback-button" data-target="student" data-i18n="feedback.student">我是学生，我不满 😡</button>
+      <button type="button" class="feedback-button" data-target="it" data-i18n="feedback.it">我是学校 IT，我不满 🤨</button>
+      <button type="button" class="feedback-button" data-target="admin" data-i18n="feedback.admin">我是管理员，我不满 😐</button>
+    </div>
+
+    <div class="footer" data-i18n-html="footer.text"></div>
+  </div>
+
+  <div id="feedback-modal" class="feedback-modal" aria-hidden="true">
+    <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+      <button class="modal-close" aria-label="关闭">×</button>
+      <h3 id="modal-title" class="modal-title"></h3>
+      <div class="modal-body"></div>
     </div>
   </div>
+
+  <script>
+    (function() {
+      const DEFAULT_LANG = 'zh';
+      const LANG_PARAM = 'lang';
+      const STORAGE_KEY = 'smartdesk-site-lang';
+      const SUPPORTED_LANGS = ['zh', 'en'];
+
+      const translations = {
+        zh: {
+          htmlLang: 'zh-CN',
+          title: 'SmartDesk 信任中心',
+          descriptionMeta: '聚焦数据落地、联网行为与授权安全的信任中心，答案均来源于当前 SmartDesk 源码。',
+          'hero.kicker': 'Trust · Privacy · Transparency',
+          'hero.title': 'SmartDesk 信任中心',
+          'hero.subtitle': '聚焦“用户关系”三大主题：数据落地、联网行为与授权安全。答案均来源于当前 SmartDesk 源码（LicenseValidator、MembershipService、OnlineSeatUsageTracker 等）。',
+          'card1.title': '数据落地策略',
+          'card1.body': '所有业务数据、授权状态、配额与日志均保存在 <code>~/.smartdesk</code>：SQLite DB、membership-state.json、premium-usage.json、online-seat-usage.json 等，均可自行备份或删除。',
+          'card2.title': '联网与本地平衡',
+          'card2.body': '默认离线运行，仅在以下情形联网：1) 获取图书馆/空教室数据；2) 在线抢座提交（Pro）；3) 授权时间校验；4) 你主动启用的 AI API。其它逻辑在本地线程完成。',
+          'card3.title': '授权文件原理',
+          'card3.body': 'license.json 含 deviceId、学号、过期时间与 tier，附带 RSA-SHA256 签名。LicenseValidator 校验设备、学号、签名、剩余天数，任何字段不符即视为无效。',
+          'card4.title': '隐私承诺',
+          'card4.body': 'SmartDesk 不内置登录或云端账号，不收集真实姓名/学号以外的敏感信息。deviceId 在本地生成，仅用于授权校验。日志不会自动上传。',
+          'card5.title': '撤销与自助',
+          'card5.body': '删除 <code>license.json</code> 即回到 Free；可在设置页点击“禁用会员”临时关闭高级功能；需要重置数据时，删除整个 <code>~/.smartdesk</code> 目录即可。',
+          'card6.title': '防止走捷径',
+          'card6.body': '授权绑定设备 + 学号，配额即便手动修改 JSON 也会按硬上限（5/150/500/10）重新计算。若发现异常使用，将吊销证书并拒绝更新。',
+          'faq.title': '常见问题',
+          'faq.q1': 'Q：如何验证 license.json 真伪？',
+          'faq.a1': 'A：可使用 SmartDesk 附带的 LicenseGeneratorUI 或任何 RSA 验签工具，配合 README 中的公钥验证签名。',
+          'faq.q2': 'Q：迁移设备需要做什么？',
+          'faq.a2': 'A：在新电脑安装 SmartDesk，复制新的 deviceId，与旧授权信息一起联系作者重新生成 license，新旧设备互不干扰。',
+          'faq.q3': 'Q：AI 模块会上传我的数据吗？',
+          'faq.a3': 'A：只有在你主动填写 API Key 并点击发送时才会调用在线模型，未开启时聊天助手保持离线，全部数据存本地。',
+          'faq.q4': 'Q：误删数据如何恢复？',
+          'faq.a4': 'A：提前备份 <code>~/.smartdesk</code> 目录即可快速恢复。建议定期打包该目录到网盘或移动硬盘。',
+          'feedback.student': '我是学生，我不满 😡',
+          'feedback.it': '我是学校 IT，我不满 🤨',
+          'feedback.admin': '我是管理员，我不满 😐',
+          'modal.closeLabel': '关闭',
+          'return.home': '返回首页',
+          'footer.text': '查看 <a href="membership.html" data-lang-link-target="membership.html">会员方案</a> · <a href="compliance.html" data-lang-link-target="compliance.html">公平说明</a> · <a href="index.html" data-lang-link-target="index.html">返回首页</a>',
+          'modals': {
+            student: {
+              title: '我是学生，我不满 😡',
+              body: `<p>😡 我也是学生，你凭什么收费？而且还闭源？</p>
+                <p><strong>首先说收费：</strong>SmartDesk 不是写完就能放着不管的小脚本，而是：</p>
+                <ul>
+                  <li>需要云服务器（不是免费的）</li>
+                  <li>要维护防刷机制、并发队列、故障恢复</li>
+                  <li>学校系统哪天抽风，我这边就必须连夜修</li>
+                </ul>
+                <p>换句话说：</p>
+                <p>如果不收费，这个项目一周就烂掉；如果收费，才能稳定、能维护、不炸、不中断。</p>
+                <p><strong>然后说闭源：</strong>这个决定不是“神秘主义”，更不是“不给大家学习”。</p>
+                <p>是因为：</p>
+                <ul>
+                  <li>一旦开源，会出现各种魔改版、违规版、暴力刷版</li>
+                  <li>这些版本滥用接口 → 学校封端口 → 全体陪葬</li>
+                  <li>开源意味着公开所有逻辑，包括安全验证、风控、请求模式</li>
+                  <li>会给“代课代测、违规抢座”这些人提供现成漏洞</li>
+                </ul>
+                <p>你肯定也不希望有一天 SmartDesk 被别人改成：“批量占座”的神器，最后把大家都害惨。</p>
+                <p><strong>SmartDesk 闭源不是为了“神秘”，而是为了：</strong></p>
+                <p>不让任何人把你的校园账号拿去做危险操作。</p>
+                <p>最后重复一句：</p>
+                <p>你可以不用 SmartDesk，但它的成本和开源后的风险真实存在。收费和闭源，是为了把它做成“可用、稳定、不会坑你的东西”。</p>`
+            },
+            it: {
+              title: '我是学校 IT，我不满 🤨',
+              body: `<p>🤨 老师您好，我知道 SmartDesk 让您有点不舒服。</p>
+                <p>但先说一句公道话：SmartDesk 不是反学校系统，而是学生在被动经历过：</p>
+                <ul>
+                  <li>年年物理实验抢课的“高并发灾难现场”</li>
+                  <li>i北理切换课表一转就转半天</li>
+                  <li>空闲教室查询入口像密室逃脱</li>
+                  <li>图书馆昏暗区长期“不修不动”</li>
+                </ul>
+                <p>SmartDesk 不跳权限、不破坏系统、不做违规行为，只是在可用的范围里让流程顺一点。</p>
+                <p>如果学校系统变得足够稳定快速，SmartDesk 会自然失业——说实话，那是我会真心高兴的一天。</p>
+                <p>我们不是对抗 IT，我们只是学生体验的“体温计”。体温太高时，体温计不舒服，但它不是发烧的原因。</p>`
+            },
+            admin: {
+              title: '我是管理员，我不满 😐',
+              body: `<p>😐 管理员老师您好，这里是学生侧的一个吐槽窗口。</p>
+                <p>先说 SmartDesk：</p>
+                <ul>
+                  <li>不越权、不刷席、不代课、不代测</li>
+                  <li>合法登录、合法查询、合法预约</li>
+                  <li>做的只是把“本来就允许的操作”变顺滑一点</li>
+                </ul>
+                <p>但如果要说“需要重点治理的对象”，SmartDesk 绝对排不上号。</p>
+                <p>校园里长期存在的真正风险是：</p>
+                <ul>
+                  <li>代课、代签到：公开报价“45 分钟 18 元”</li>
+                  <li>代体测、代跑步：微信小广告多到像一门正规生意</li>
+                  <li>违规占座、批量占座：影响公共资源公平</li>
+                </ul>
+                <p>这些才是最该优先处理的问题，而不是一个只让学生自己使用、不会帮别人违规的小工具。</p>
+                <p>SmartDesk 的存在反而说明：学生愿意按规则做事，只是规则执行体验太差。</p>
+                <p>如果学校把官方系统做得更快、更稳、更好——你甚至不用下达“整改通知”，SmartDesk 会自动退休。</p>
+                <p>它并不是负担，它只是学生在说：“我们愿意遵守规则，只希望规则也对我们友好一点。”</p>`
+            }
+          }
+        },
+        en: {
+          htmlLang: 'en',
+          title: 'SmartDesk Trust Center',
+          descriptionMeta: 'Trust Center focused on data residency, behavior and authorization security, all grounded in the current SmartDesk source code.',
+          'hero.kicker': 'Trust · Privacy · Transparency',
+          'hero.title': 'SmartDesk Trust Center',
+          'hero.subtitle': 'We focus on data residency, online behavior and authorization security. The answers follow the current SmartDesk source (LicenseValidator, MembershipService, OnlineSeatUsageTracker, etc.).',
+          'card1.title': 'Data residency strategy',
+          'card1.body': 'All business data, authorization state, quotas and logs stay under <code>~/.smartdesk</code>: SQLite DB, membership-state.json, premium-usage.json, online-seat-usage.json and more can all be backed up or deleted manually.',
+          'card2.title': 'Online vs local balance',
+          'card2.body': 'SmartDesk runs offline by default and only touches the network when: 1) fetching library or classroom data; 2) submitting a Pro online grab; 3) validating license time; 4) you enable an AI API. Everything else runs locally.',
+          'card3.title': 'License file principle',
+          'card3.body': 'license.json contains deviceId, student ID, expiry and tier plus an RSA-SHA256 signature. LicenseValidator checks device, student ID, signature and remaining days—any mismatch renders the license invalid.',
+          'card4.title': 'Privacy promise',
+          'card4.body': 'SmartDesk ships without login or cloud account, and it never collects sensitive data beyond the student ID. deviceId is generated locally and only used for authorization. Logs never upload automatically.',
+          'card5.title': 'Revocation & self-service',
+          'card5.body': 'Deleting license.json reverts to Free; use the settings toggle to temporarily disable premium features. To reset everything, delete the ~/.smartdesk directory.',
+          'card6.title': 'Anti-tampering',
+          'card6.body': 'Authorizations tie a device to a student ID. Even if someone edits the JSON files, quotas recalculate to the hard caps (5/150/500/10). Abnormal usage leads to revoking the certificate and refusing updates.',
+          'faq.title': 'Frequently asked questions',
+          'faq.q1': 'Q: How do I verify a license.json file?',
+          'faq.a1': 'A: Use the bundled LicenseGeneratorUI or any RSA signature tool with the README public key to verify the signature.',
+          'faq.q2': 'Q: What should I do when migrating devices?',
+          'faq.a2': 'A: Install SmartDesk on the new machine, copy the new deviceId, and ask the author to reissue a license with the old and new info. The two devices do not interfere.',
+          'faq.q3': 'Q: Does the AI module upload my data?',
+          'faq.a3': 'A: Only when you enter an API key and click send does it call an online model. Chat stays offline otherwise, and everything saves locally.',
+          'faq.q4': 'Q: How can I recover accidentally deleted data?',
+          'faq.a4': 'A: Back up the <code>~/.smartdesk</code> directory regularly. Restoring that directory brings you back instantly.',
+          'feedback.student': 'I’m a student, I’m upset 😡',
+          'feedback.it': 'I’m campus IT, I’m worried 🤨',
+          'feedback.admin': 'I’m an administrator, I’m concerned 😐',
+          'modal.closeLabel': 'Close',
+          'return.home': 'Return to homepage',
+          'footer.text': 'See the <a href="membership.html" data-lang-link-target="membership.html">membership</a> · <a href="compliance.html" data-lang-link-target="compliance.html">compliance</a> pages · <a href="index.html" data-lang-link-target="index.html">home</a>',
+          'modals': {
+            student: {
+              title: 'I’m a student, I’m upset 😡',
+              body: `<p>😡 I’m also a student—why pay, and why close-source?</p>
+                <p><strong>Let’s talk price:</strong> SmartDesk isn’t a throwaway script; it requires:</p>
+                <ul>
+                  <li>cloud servers (which cost money)</li>
+                  <li>ongoing maintenance for anti-abuse, concurrency and fallbacks</li>
+                  <li>night shifts every time the school API misbehaves</li>
+                </ul>
+                <p>In short: without revenue, the project collapses in days. Charging keeps it stable, maintainable and reliable.</p>
+                <p><strong>Why closed-source?</strong> Not mysticism, not gatekeeping.</p>
+                <p>Because:</p>
+                <ul>
+                  <li>open-sourcing spawns hacked, rule-breaking versions</li>
+                  <li>those versions abuse the interfaces → school bans the ports → everyone loses</li>
+                  <li>publishing every security measure hands attackers the keys</li>
+                  <li>it empowers services that sell mass seat grabbing</li>
+                </ul>
+                <p>We don’t want SmartDesk to turn into a “mass seat grabber” and wreck it for everyone.</p>
+                <p><strong>Closed-source isn’t secrecy; it’s:</strong></p>
+                <p>protecting your campus account from being weaponized.</p>
+                <p>So to repeat:</p>
+                <p>You can skip SmartDesk, but the cost and the post-open-source risk are real. Charging and closed-source keep it usable, stable and safe.</p>`
+            },
+            it: {
+              title: 'I’m campus IT, I’m worried 🤨',
+              body: `<p>🤨 Dear staff, I know SmartDesk might feel uncomfortable.</p>
+                <p>But honestly: SmartDesk isn’t an adversary. Students are simply coping with:</p>
+                <ul>
+                  <li>yearly rush for lab seats</li>
+                  <li>the school schedule navigator that lags forever</li>
+                  <li>classroom vacancy tools that hide behind puzzles</li>
+                  <li>library zones that never get fixed</li>
+                </ul>
+                <p>SmartDesk stays within permitted scopes, doesn’t break rules, and only smooths allowed processes.</p>
+                <p>If the official systems ever become fast and stable, SmartDesk retires happily.</p>
+                <p>We’re not fighting IT; we’re the thermometer. When it reads hot, that’s a warning, not the fever.</p>`
+            },
+            admin: {
+              title: 'I’m an administrator, I’m concerned 😐',
+              body: `<p>😐 Admin, this is students’ feedback window.</p>
+                <p>First: SmartDesk</p>
+                <ul>
+                  <li>never oversteps permissions or automates banned behaviors</li>
+                  <li>logs in, queries and books legitimately</li>
+                  <li>only smooths what is already allowed</li>
+                </ul>
+                <p>If you’re looking for real problems, consider:</p>
+                <ul>
+                  <li>paid services for fake attendance</li>
+                  <li>WeChat ads promising test-taking help</li>
+                  <li>unfair bulk seat grabbing</li>
+                </ul>
+                <p>Those deserve priority, not a tool that students use privately and legally.</p>
+                <p>SmartDesk exists because students want to follow rules but find the experience unfriendly.</p>
+                <p>Make the official system faster and kinder—SmartDesk will retire without a notice.</p>`
+            }
+          }
+        }
+      };
+
+      let activeModals = translations[DEFAULT_LANG].modals;
+      const modal = document.getElementById('feedback-modal');
+      const modalTitle = modal.querySelector('.modal-title');
+      const modalBody = modal.querySelector('.modal-body');
+      const closeBtn = modal.querySelector('.modal-close');
+
+      function resolveLanguage() {
+        const param = new URLSearchParams(window.location.search).get(LANG_PARAM);
+        if (param && SUPPORTED_LANGS.includes(param.toLowerCase())) {
+          return param.toLowerCase();
+        }
+        const stored = localStorage.getItem(STORAGE_KEY);
+        if (stored && SUPPORTED_LANGS.includes(stored)) {
+          return stored;
+        }
+        return DEFAULT_LANG;
+      }
+
+      function applyLanguage(lang) {
+        if (!SUPPORTED_LANGS.includes(lang)) {
+          lang = DEFAULT_LANG;
+        }
+        const dictionary = translations[lang];
+        if (!dictionary) {
+          return;
+        }
+        document.documentElement.lang = dictionary.htmlLang || (lang === 'en' ? 'en' : 'zh-CN');
+        document.title = dictionary.title;
+        const descriptionMeta = document.querySelector('meta[name="description"]');
+        if (descriptionMeta && dictionary.descriptionMeta) {
+          descriptionMeta.setAttribute('content', dictionary.descriptionMeta);
+        }
+        document.querySelectorAll('[data-i18n]').forEach((node) => {
+          const key = node.getAttribute('data-i18n');
+          if (key && dictionary[key]) {
+            node.textContent = dictionary[key];
+          }
+        });
+        document.querySelectorAll('[data-i18n-html]').forEach((node) => {
+          const key = node.getAttribute('data-i18n-html');
+          if (key && dictionary[key]) {
+            node.innerHTML = dictionary[key];
+          }
+        });
+        document.querySelectorAll('[data-lang-link-target]').forEach((link) => {
+          const target = link.getAttribute('data-lang-link-target');
+          if (!target) {
+            return;
+          }
+          let cleanTarget = target;
+          if (cleanTarget.includes('?')) {
+            cleanTarget = cleanTarget.split('?')[0];
+          }
+          link.setAttribute('href', cleanTarget + '?lang=' + lang);
+        });
+        activeModals = dictionary.modals;
+        closeBtn.setAttribute('aria-label', dictionary['modal.closeLabel'] || 'Close');
+        const url = new URL(window.location.href);
+        if (url.searchParams.get(LANG_PARAM) !== lang) {
+          url.searchParams.set(LANG_PARAM, lang);
+          window.history.replaceState(null, '', url.toString());
+        }
+        localStorage.setItem(STORAGE_KEY, lang);
+      }
+
+      function showModal(key) {
+        const template = activeModals && activeModals[key];
+        if (!template) {
+          return;
+        }
+        modalTitle.textContent = template.title;
+        modalBody.innerHTML = template.body;
+        modal.classList.add('is-visible');
+        modal.setAttribute('aria-hidden', 'false');
+      }
+
+      function hideModal() {
+        modal.classList.remove('is-visible');
+        modal.setAttribute('aria-hidden', 'true');
+      }
+
+      document.querySelectorAll('.feedback-button').forEach((button) => {
+        button.addEventListener('click', () => showModal(button.getAttribute('data-target')));
+      });
+      closeBtn.addEventListener('click', hideModal);
+      modal.addEventListener('click', (event) => {
+        if (event.target === modal) {
+          hideModal();
+        }
+      });
+      document.addEventListener('keydown', (event) => {
+        if (event.key === 'Escape' && modal.classList.contains('is-visible')) {
+          hideModal();
+        }
+      });
+
+      applyLanguage(resolveLanguage());
+    })();
+  </script>
 </body>
 </html>
