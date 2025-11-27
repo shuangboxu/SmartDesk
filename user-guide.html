@@ -1,0 +1,1406 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <title>SmartDesk 用户指导手册（面向同学版）</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="SmartDesk 用户指南，涵盖首页、课表、空闲教室、图书馆座位与 AI 助手使用方法。" />
+  <style>
+    :root {
+      --bg: #f7f8fb;
+      --surface: #ffffff;
+      --text: #1f2937;
+      --text-soft: #475569;
+      --border: #e2e8f0;
+      --primary: #0ea5e9;
+      --primary-dark: #0284c7;
+      --radius-lg: 24px;
+      --shadow: 0 20px 60px rgba(15, 23, 42, 0.12);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: "Inter", "Segoe UI", -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    a {
+      color: var(--primary-dark);
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    .page {
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 24px 16px 64px;
+    }
+
+    /* 顶部导航 */
+    .nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 0 20px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .logo {
+      width: 40px;
+      height: 40px;
+      border-radius: 14px;
+      overflow: hidden;
+      box-shadow: 0 10px 30px rgba(14, 165, 233, 0.35);
+    }
+
+    .logo img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .brand-text {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .brand-text strong {
+      font-size: 16px;
+      color: var(--text);
+    }
+
+    .brand-text span {
+      font-size: 12px;
+      color: var(--text-soft);
+    }
+
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .return-link {
+      padding: 8px 16px;
+      border-radius: 999px;
+      border: 1px solid rgba(14,165,233,0.4);
+      color: var(--primary-dark);
+      font-size: 13px;
+      font-weight: 600;
+      background: #fff;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+      transition: background 0.16s ease, box-shadow 0.16s ease, transform 0.1s ease;
+    }
+
+    .return-link:hover {
+      background: rgba(14,165,233,0.08);
+      text-decoration: none;
+      box-shadow: 0 8px 24px rgba(15,23,42,0.08);
+      transform: translateY(-0.5px);
+    }
+
+    /* Hero */
+    .hero {
+      margin-top: 8px;
+      background: var(--surface);
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border);
+      padding: 28px 24px 24px;
+      box-shadow: var(--shadow);
+    }
+
+    .hero-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      padding: 4px 10px;
+      border-radius: 999px;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      background: rgba(14,165,233,0.08);
+      color: var(--primary-dark);
+      border: 1px solid rgba(14,165,233,0.25);
+      margin-bottom: 10px;
+    }
+
+    .hero-title {
+      font-size: clamp(26px, 4vw, 32px);
+      font-weight: 700;
+      margin-bottom: 10px;
+      color: var(--text);
+    }
+
+    .hero-desc {
+      font-size: 14px;
+      line-height: 1.8;
+      color: var(--text-soft);
+      max-width: 640px;
+    }
+
+    .hero-meta {
+      margin-top: 14px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      font-size: 12px;
+      color: var(--text-soft);
+    }
+
+    .hero-meta span {
+      padding: 4px 10px;
+      border-radius: 999px;
+      border: 1px dashed rgba(148,163,184,0.7);
+      background: rgba(248,250,252,0.75);
+    }
+
+    /* 主体布局：顶部导航 + 内容 */
+    .layout {
+      margin-top: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    /* 右侧目录卡片 */
+    .toc-card {
+      background: var(--surface);
+      border-radius: 20px;
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow);
+      padding: 18px 18px 16px;
+    }
+
+    .toc-title {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 6px;
+    }
+
+    .toc-subtitle {
+      font-size: 12px;
+      color: var(--text-soft);
+      margin-bottom: 10px;
+    }
+
+    .toc-list {
+      list-style: none;
+      padding-left: 0;
+      margin: 0;
+      font-size: 13px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .toc-list li a {
+      display: block;
+      padding: 6px 8px;
+      border-radius: 10px;
+      color: var(--text-soft);
+      border: 1px solid transparent;
+      transition: background 0.12s ease, border-color 0.12s ease, color 0.12s ease;
+    }
+
+    .toc-list li a:hover {
+      background: rgba(248,250,252,0.9);
+      border-color: rgba(148,163,184,0.6);
+      color: var(--primary-dark);
+      text-decoration: none;
+    }
+
+    /* 章节通用样式 */
+    .section {
+      margin-bottom: 24px;
+    }
+
+    .section-header {
+      margin-bottom: 10px;
+    }
+
+    .section-kicker {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      color: var(--primary-dark);
+      margin-bottom: 4px;
+    }
+
+    .section-title {
+      font-size: 20px;
+      font-weight: 650;
+      color: var(--text);
+      margin-bottom: 2px;
+    }
+
+    .section-sub {
+      font-size: 13px;
+      color: var(--text-soft);
+      line-height: 1.6;
+    }
+
+    .section-card {
+      margin-top: 10px;
+      background: var(--surface);
+      border-radius: 18px;
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow);
+      padding: 18px 18px 16px;
+      font-size: 14px;
+      line-height: 1.8;
+      color: var(--text);
+    }
+
+    .section-card + .section-card {
+      margin-top: 10px;
+    }
+
+    .section-card h3 {
+      font-size: 15px;
+      font-weight: 600;
+      margin-bottom: 6px;
+      color: var(--text);
+    }
+
+    .section-card p + p {
+      margin-top: 4px;
+    }
+
+    .section-card ul,
+    .section-card ol {
+      margin-top: 6px;
+      padding-left: 18px;
+    }
+
+    .section-card li {
+      margin-bottom: 4px;
+    }
+
+    .section-card strong {
+      font-weight: 600;
+    }
+
+    .note {
+      margin-top: 8px;
+      padding: 10px 12px;
+      border-radius: 14px;
+      background: rgba(14,165,233,0.06);
+      border: 1px solid rgba(14,165,233,0.25);
+      font-size: 13px;
+      color: var(--text-soft);
+    }
+
+    .note > strong {
+      color: var(--primary-dark);
+      font-weight: 600;
+    }
+
+    .hint {
+      font-size: 13px;
+      color: var(--text-soft);
+      margin-top: 6px;
+    }
+
+    .divider {
+      margin: 18px 0 10px;
+      height: 1px;
+      border: 0;
+      background: linear-gradient(to right, rgba(148,163,184,0.4), rgba(226,232,240,0.3), rgba(148,163,184,0.1));
+    }
+
+    code {
+      font-family: Menlo, Monaco, Consolas, "SF Mono", monospace;
+      font-size: 12px;
+      background: rgba(15,23,42,0.04);
+      padding: 1px 4px;
+      border-radius: 4px;
+    }
+
+    footer {
+      margin-top: 40px;
+      font-size: 12px;
+      color: var(--text-soft);
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <!-- 顶部导航 -->
+    <nav class="nav">
+      <div class="brand">
+        <div class="logo"><img src="images/logo.png" alt="SmartDesk logo" /></div>
+        <div class="brand-text">
+          <strong>SmartDesk</strong>
+          <span>Learning Copilot</span>
+        </div>
+      </div>
+      <div class="nav-actions">
+        <a class="return-link" href="index.html" data-lang-link-target="index.html">
+          <span data-lang="zh">← 返回首页</span>
+          <span data-lang="en" hidden>← Back to Home</span>
+        </a>
+      </div>
+    </nav>
+
+    <!-- 顶部 Hero -->
+    <section class="hero">
+      <div class="hero-top">
+        <div data-lang="zh">
+          <span class="pill">SmartDesk 用户指南</span>
+          <h1 class="hero-title">SmartDesk 用户指导手册（面向同学版）</h1>
+          <p class="hero-desc">
+            这份手册面向北京理工大学在校同学，介绍如何用 SmartDesk 一站式完成
+            <strong>看课表、管任务、找教室、抢图书馆座位和使用 AI 助手</strong>，并给出推荐的日常使用节奏。
+          </p>
+          <div class="hero-meta">
+            <span>本地运行 · 学习数据保存在你自己的电脑里</span>
+            <span>只在访问学校系统和你授权的 AI 服务时联网</span>
+          </div>
+        </div>
+        <div data-lang="en" hidden>
+          <span class="pill">SmartDesk User Guide</span>
+          <h1 class="hero-title">SmartDesk Student Playbook</h1>
+          <p class="hero-desc">
+            This guide is written for students at Beijing Institute of Technology. It explains how to use SmartDesk to
+            <strong>check your schedule, track tasks, find classrooms, reserve library seats, and chat with AI</strong>
+            plus a recommended daily rhythm.
+          </p>
+          <div class="hero-meta">
+            <span>Runs locally · All study data stays on your computer</span>
+            <span>Connects only when calling campus systems or AI services you approve</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 主体布局 -->
+    <div class="layout">
+      <!-- 内容导航 -->
+      <nav class="toc-card" aria-label="页面导航">
+        <div class="toc-title">
+          <span data-lang="zh">快速跳转</span>
+          <span data-lang="en" hidden>Quick Jump</span>
+        </div>
+        <div class="toc-subtitle">
+          <span data-lang="zh">根据需要选择你想了解的部分。</span>
+          <span data-lang="en" hidden>Jump straight to the part you need.</span>
+        </div>
+        <ul class="toc-list">
+          <li>
+            <a href="#section1">
+              <span data-lang="zh">1. SmartDesk 是什么？</span>
+              <span data-lang="en" hidden>1. What is SmartDesk?</span>
+            </a>
+          </li>
+          <li>
+            <a href="#section2">
+              <span data-lang="zh">2. 第一次使用：安装与准备</span>
+              <span data-lang="en" hidden>2. First Use: Install & Prepare</span>
+            </a>
+          </li>
+          <li>
+            <a href="#section3">
+              <span data-lang="zh">3. 获取会员</span>
+              <span data-lang="en" hidden>3. Get Membership</span>
+            </a>
+          </li>
+          <li>
+            <a href="#section4">
+              <span data-lang="zh">4. 工作台首页</span>
+              <span data-lang="en" hidden>4. Home Dashboard</span>
+            </a>
+          </li>
+          <li>
+            <a href="#section5">
+              <span data-lang="zh">5. 课表与任务</span>
+              <span data-lang="en" hidden>5. Schedule & Tasks</span>
+            </a>
+          </li>
+          <li>
+            <a href="#section6">
+              <span data-lang="zh">6. 聊天</span>
+              <span data-lang="en" hidden>6. Chat</span>
+            </a>
+          </li>
+          <li>
+            <a href="#section7">
+              <span data-lang="zh">7. 图书馆座位助手</span>
+              <span data-lang="en" hidden>7. Library Seat Assistant</span>
+            </a>
+          </li>
+          <li>
+            <a href="#section8">
+              <span data-lang="zh">8. 日常使用节奏</span>
+              <span data-lang="en" hidden>8. Daily Rhythm</span>
+            </a>
+          </li>
+        </ul>
+      </nav>
+
+      <!-- 主体内容 -->
+      <main>
+        <!-- 1. SmartDesk 是什么 -->
+        <section id="section1" class="section">
+          <div class="section-header">
+            <div class="section-kicker">PART 1</div>
+            <h2 class="section-title">
+              <span data-lang="zh">SmartDesk 是什么？</span>
+              <span data-lang="en" hidden>What is SmartDesk?</span>
+            </h2>
+            <p class="section-sub">
+              <span data-lang="zh">一款专为北理工同学设计的桌面学习工作台。</span>
+              <span data-lang="en" hidden>A desktop cockpit designed specifically for BIT students.</span>
+            </p>
+          </div>
+
+          <div class="section-card" data-lang="zh">
+            <p>
+              SmartDesk 是一款专为 <strong>北理工同学</strong> 设计的桌面应用，把这些事情集中在一个界面里完成：
+            </p>
+            <ul>
+              <li>查看今日课表、任务和作业 Deadline</li>
+              <li>查询空闲教室、自习室</li>
+              <li>自动或半自动抢图书馆座位（Pro 会员支持在线抢座）</li>
+              <li>管理笔记和待办事项</li>
+              <li>使用 AI 助手提问、改代码、写总结</li>
+            </ul>
+            <div class="note">
+              <strong>数据存储说明：</strong>
+              软件默认在本地运行，学习数据保存在你自己的电脑里，只在需要访问学校系统或你授权的 AI 服务时联网。
+            </div>
+          </div>
+
+          <div class="section-card" data-lang="en" hidden>
+            <p>
+              SmartDesk is a desktop app tailored for <strong>BIT students</strong>. It combines all of these workflows in one place:
+            </p>
+            <ul>
+              <li>Review today’s classes, tasks, and assignment deadlines</li>
+              <li>Find empty classrooms and study rooms</li>
+              <li>Reserve or auto-grab library seats (online grabbing is a Pro perk)</li>
+              <li>Manage notes and to-dos</li>
+              <li>Ask the AI assistant questions, debug code, or draft summaries</li>
+            </ul>
+            <div class="note">
+              <strong>Data policy:</strong>
+              SmartDesk runs locally. Your study data stays on your computer and only goes online when talking to campus systems or AI services you approve.
+            </div>
+          </div>
+        </section>
+
+        <hr class="divider" />
+
+        <!-- 2. 第一次使用 -->
+        <section id="section2" class="section">
+          <div class="section-header">
+            <div class="section-kicker">PART 2</div>
+            <h2 class="section-title">
+              <span data-lang="zh">第一次使用：安装与准备</span>
+              <span data-lang="en" hidden>First Use: Install & Prepare</span>
+            </h2>
+            <p class="section-sub">
+              <span data-lang="zh">建议按顺序完成安装、填写个人信息、配置偏好以及（可选）AI Key 设置。</span>
+              <span data-lang="en" hidden>Follow these steps to install, fill in your profile, set preferences, and (optionally) add an AI key.</span>
+            </p>
+          </div>
+
+          <div class="section-card" data-lang="zh">
+            <h3>2.1 安装与启动</h3>
+            <ol>
+              <li>运行安装包，按向导完成安装；桌面或开始菜单会出现 “SmartDesk” 图标。</li>
+              <li>双击图标，进入名为 <strong>“SmartDesk 工作台”</strong> 的主界面。</li>
+            </ol>
+            <div class="note">
+              <strong>提示：</strong>Free 模式默认已启用，无需额外注册即可体验大部分学习功能。
+            </div>
+          </div>
+
+          <div class="section-card" data-lang="en" hidden>
+            <h3>2.1 Install & launch</h3>
+            <ol>
+              <li>Run the installer and follow the wizard. A “SmartDesk” shortcut appears on the desktop/start menu.</li>
+              <li>Double-click it to open the <strong>SmartDesk Workbench</strong> main window.</li>
+            </ol>
+            <div class="note">
+              <strong>Tip:</strong> Free mode is turned on by default, so you can try most study features without any signup.
+            </div>
+          </div>
+
+          <div class="section-card" data-lang="zh">
+            <h3>2.2 填写个人信息与偏好（推荐）</h3>
+            <ol>
+              <li>点击右上角橙色的 <strong>“打开设置”</strong> 按钮，弹出系统设置窗口。</li>
+              <li>
+                左侧选择 <strong>“个人信息”</strong>，填写：
+                <ul>
+                  <li>统一身份认证学号</li>
+                  <li>统一身份认证密码（用于访问图书馆、课表等学校系统）</li>
+                </ul>
+              </li>
+              <li>
+                在与 <strong>图书馆座位 / 空闲教室</strong> 相关的设置中，按提示完成：
+                <ul>
+                  <li>图书馆座位偏好（偏好阅览室、是否靠窗/靠墙、优先级范围等）</li>
+                  <li>空闲教室偏好（校区、教学楼范围、连续空闲节次数等）</li>
+                </ul>
+              </li>
+            </ol>
+            <p class="hint">
+              完善这些信息后，首页推荐、图书馆快速预约和空闲教室推荐才能发挥最佳效果。
+            </p>
+          </div>
+
+          <div class="section-card" data-lang="en" hidden>
+            <h3>2.2 Complete your profile & preferences (recommended)</h3>
+            <ol>
+              <li>Click the orange <strong>Open Settings</strong> button in the top-right corner.</li>
+              <li>
+                Under <strong>Profile</strong> enter:
+                <ul>
+                  <li>Your unified authentication student ID</li>
+                  <li>Your password (used to access the library, schedule, and other campus systems)</li>
+                </ul>
+              </li>
+              <li>
+                In the <strong>Library Seats / Free Rooms</strong> sections, set up:
+                <ul>
+                  <li>Seat preferences (reading rooms, window/wall preference, priority tiers, etc.)</li>
+                  <li>Free-room preferences (campus, buildings, continuous free slots)</li>
+                </ul>
+              </li>
+            </ol>
+            <p class="hint">
+              Completing these fields makes homepage suggestions, quick seat booking, and free-room recommendations much more accurate.
+            </p>
+          </div>
+
+          <div class="section-card" data-lang="zh">
+            <h3>2.3 配置 AI Key（可选）</h3>
+            <ol>
+              <li>在设置窗口中选择 <strong>“AI 聊天设置”</strong>。</li>
+              <li>
+                根据自己使用的服务填写 <code>OpenAI API Key</code> 或
+                <code>DeepSeek API Key</code>：
+                <ul>
+                  <li>OpenAI：<code>https://platform.openai.com</code></li>
+                  <li>DeepSeek：<code>https://platform.deepseek.com</code></li>
+                </ul>
+              </li>
+              <li>不配置 API Key 也能使用本地/基础模式，但无法使用部分在线大模型能力。</li>
+            </ol>
+          </div>
+
+          <div class="section-card" data-lang="en" hidden>
+            <h3>2.3 Add an AI API key (optional)</h3>
+            <ol>
+              <li>In Settings, open <strong>AI Chat Settings</strong>.</li>
+              <li>
+                Enter the <code>OpenAI API Key</code> or <code>DeepSeek API Key</code> you already own:
+                <ul>
+                  <li>OpenAI: <code>https://platform.openai.com</code></li>
+                  <li>DeepSeek: <code>https://platform.deepseek.com</code></li>
+                </ul>
+              </li>
+              <li>You can use the local/basic mode without any key, but online model capabilities will be limited.</li>
+            </ol>
+          </div>
+        </section>
+
+        <hr class="divider" />
+
+        <!-- 3. 获取会员 -->
+        <section id="section3" class="section">
+          <div class="section-header">
+            <div class="section-kicker">PART 3</div>
+            <h2 class="section-title">
+              <span data-lang="zh">获取会员：解锁更多自动化能力</span>
+              <span data-lang="en" hidden>Get membership: unlock automation perks</span>
+            </h2>
+            <p class="section-sub">
+              <span data-lang="zh">需要 Plus / Pro 会员才能使用定时抢座、在线抢座等高级功能，具体流程请以官网为准。</span>
+              <span data-lang="en" hidden>Features like scheduled grabs or online seats live behind the Plus/Pro membership tiers—always check the website for the latest process.</span>
+            </p>
+          </div>
+
+          <div class="section-card" data-lang="zh">
+            <p>
+              获取方式会不定期调整，因此不在手册里展开。请点击下方按钮或直接打开
+              <a href="membership.html" data-lang-link-target="membership.html">membership.html</a> 查看最新的会员方案、权益和授权说明。
+            </p>
+            <p class="hint">
+              导入授权文件后，SmartDesk 右上角会自动显示会员状态与剩余天数。
+            </p>
+            <a class="return-link" href="membership.html" data-lang-link-target="membership.html" style="margin-top:10px;">
+              打开 Membership 页面 →
+            </a>
+          </div>
+
+          <div class="section-card" data-lang="en" hidden>
+            <p>
+              The enrollment process changes from time to time, so we keep it off the PDF. Click below or open
+              <a href="membership.html" data-lang-link-target="membership.html">membership.html</a> for the latest tiers, benefits, and license instructions.
+            </p>
+            <p class="hint">
+              After you import the license file, SmartDesk shows your membership tier and remaining days in the top-right corner automatically.
+            </p>
+            <a class="return-link" href="membership.html" data-lang-link-target="membership.html" style="margin-top:10px;">
+              Go to the Membership page →
+            </a>
+          </div>
+        </section>
+
+        <hr class="divider" />
+
+        <!-- 4. 工作台首页 -->
+        <section id="section4" class="section">
+          <div class="section-header">
+            <div class="section-kicker">PART 4</div>
+            <h2 class="section-title">
+              <span data-lang="zh">工作台首页：一眼看到今天要做什么</span>
+              <span data-lang="en" hidden>Home dashboard: know what to do today</span>
+            </h2>
+            <p class="section-sub">
+              <span data-lang="zh">首页主要面向 Plus / Pro 用户开放，Free 用户可以直接从对应模块进入。</span>
+              <span data-lang="en" hidden>The dashboard is a Plus/Pro feature, but Free users can open each module directly.</span>
+            </p>
+          </div>
+
+          <div class="section-card" data-lang="zh">
+            <div class="note">
+              <strong>说明：</strong>
+              首页功能主要面向 Plus / Pro 用户开放；Free 用户可以直接从课表、空闲教室或图书馆模块进入。
+            </div>
+            <p style="margin-top:8px;">
+              点击顶部导航中的 <strong>“首页”</strong> 标签，可以看到一个汇总今日学习状态的总览页面，主要包含四个区域。
+            </p>
+          </div>
+
+          <div class="section-card" data-lang="en" hidden>
+            <div class="note">
+              <strong>Heads up:</strong>
+              The Home dashboard unlocks with Plus/Pro. Free users can open Schedule, Free Rooms, or Library modules directly.
+            </div>
+            <p style="margin-top:8px;">
+              Open the <strong>Home</strong> tab to see a single-page summary of today’s status built around four widgets.
+            </p>
+          </div>
+
+          <div class="section-card" data-lang="zh">
+            <h3>4.1 今日课表总览</h3>
+            <ul>
+              <li>显示 <strong>当前日期、教学周</strong> 和今天的全部课程。</li>
+              <li>
+                中央的 “下一节课” 卡片会突出显示最近的一节课，包括：
+                <ul>
+                  <li>课程名称（例如：大学物理 II（全英文））；</li>
+                  <li>周次、第几节课；</li>
+                  <li>上课时间与教室。</li>
+                </ul>
+              </li>
+              <li>卡片下方会给出简单建议，例如上一节在哪、下一节在哪个教室自习更方便。</li>
+              <li>点击 <strong>“查看当前课程详情”</strong> 可以查看更完整的课程信息。</li>
+            </ul>
+          </div>
+
+          <div class="section-card" data-lang="en" hidden>
+            <h3>4.1 Today’s schedule overview</h3>
+            <ul>
+              <li>Shows the <strong>current date, teaching week</strong>, and all classes for today.</li>
+              <li>
+                The “next class” card highlights your upcoming class with:
+                <ul>
+                  <li>Course title</li>
+                  <li>Week/day/slot</li>
+                  <li>Time and room</li>
+                </ul>
+              </li>
+              <li>A tip below the card suggests where you just were and where to study next.</li>
+              <li>Click <strong>View course details</strong> for the full record.</li>
+            </ul>
+          </div>
+
+          <div class="section-card" data-lang="zh">
+            <h3>4.2 任务提醒</h3>
+            <ul>
+              <li>右侧展示最近一条或几条即将到期的任务，例如：“第九周作业 到期”。</li>
+              <li>列出截止时间（如 11-28 23:30）和简要说明。</li>
+              <li>点击 <strong>“查看当前任务详情”</strong> 会跳转到任务模块查看详情或直接勾选完成。</li>
+            </ul>
+          </div>
+
+          <div class="section-card" data-lang="en" hidden>
+            <h3>4.2 Task reminders</h3>
+            <ul>
+              <li>The panel lists one or more tasks that are close to their deadline, e.g., “Week 9 assignment”.</li>
+              <li>Each entry shows the due time and a short description.</li>
+              <li>Click <strong>View task</strong> to jump into the Tasks module and mark it done.</li>
+            </ul>
+          </div>
+
+          <div class="section-card" data-lang="zh">
+            <h3>4.3 图书馆偏好推荐</h3>
+            <ul>
+              <li>根据你在图书馆模块中设置的 <strong>偏好座位</strong>，系统每天会推荐一批适合当前时段的座位。</li>
+              <li>
+                每张卡片显示：
+                <ul>
+                  <li>阅览室名称（如：视听学习空间 09X）；</li>
+                  <li>座位号和可用时间段。</li>
+                </ul>
+              </li>
+              <li>点击卡片下方 <strong>“预约”</strong> 按钮，即可按偏好顺序快速尝试预约。</li>
+              <li>底部还有 <strong>“刷新推荐”</strong>、<strong>“打开图书馆快速预约”</strong> 等按钮，方便进入更详细的预约界面。</li>
+            </ul>
+          </div>
+
+          <div class="section-card" data-lang="en" hidden>
+            <h3>4.3 Library seat suggestions</h3>
+            <ul>
+              <li>Uses your <strong>seat preferences</strong> to recommend rooms and seats that match the current time.</li>
+              <li>
+                Each card shows:
+                <ul>
+                  <li>Reading room name</li>
+                  <li>Seat number and available time slots</li>
+                </ul>
+              </li>
+              <li>Click <strong>Reserve</strong> to attempt seats in your priority order.</li>
+              <li>Use <strong>Refresh suggestions</strong> or <strong>Open quick booking</strong> for the detailed seat view.</li>
+            </ul>
+          </div>
+
+          <div class="section-card" data-lang="zh">
+            <h3>4.4 空闲教室推荐</h3>
+            <ul>
+              <li>系统会根据当前时间和课表占用情况，自动筛选附近适合自习或讨论的空教室。</li>
+              <li>
+                你可以在偏好设置中指定：
+                <ul>
+                  <li>校区 / 教学楼或教学楼组；</li>
+                  <li>从现在起希望连续空闲的节次数（如希望连续空闲 2–3 节）。</li>
+                </ul>
+              </li>
+              <li>首页卡片会展示若干推荐教室，点击 <strong>“查看详情 / 查看空闲教室”</strong> 跳转到空闲教室模块查看完整列表。</li>
+            </ul>
+            <div class="note">
+              <strong>小建议：</strong>
+              每天打开电脑后先看一眼首页——今天上什么课、有哪些作业、去哪里学习，一目了然。
+            </div>
+          </div>
+
+          <div class="section-card" data-lang="en" hidden>
+            <h3>4.4 Free classroom picks</h3>
+            <ul>
+              <li>The system filters nearby classrooms that are free for self-study or group work based on the current time.</li>
+              <li>
+                In Preferences you can define:
+                <ul>
+                  <li>Campus / building / building groups</li>
+                  <li>How many consecutive slots you need (e.g., 2–3 periods)</li>
+                </ul>
+              </li>
+              <li>The card lists a few rooms; click <strong>View details</strong> to jump to the complete free-room list.</li>
+            </ul>
+            <div class="note">
+              <strong>Daily habit:</strong>
+              Start your day by checking Home—classes, tasks, and study spots become obvious in seconds.
+            </div>
+          </div>
+        </section>
+
+        <hr class="divider" />
+
+        <!-- 5. 课表与任务 -->
+        <section id="section5" class="section">
+          <div class="section-header">
+            <div class="section-kicker">PART 5</div>
+            <h2 class="section-title">
+              <span data-lang="zh">课表与任务：按周掌控所有安排</span>
+              <span data-lang="en" hidden>Schedule & tasks: control everything by week</span>
+            </h2>
+            <p class="section-sub">
+              <span data-lang="zh">通过一个日历视图集中查看课程、Deadline 与个人事件，并把任务列表与之同步。</span>
+              <span data-lang="en" hidden>Use a calendar view to see classes, deadlines, and personal events, then sync tasks onto the same timeline.</span>
+            </p>
+          </div>
+
+          <div class="section-card" data-lang="zh">
+            <h3>5.1 课表视图与日期</h3>
+            <ul>
+              <li>左上角可以切换 <strong>日 / 周 / 月</strong> 视图；</li>
+              <li>中间显示当前日期和第几教学周；</li>
+              <li>点击 <strong>“今天”</strong> 按钮，会自动跳回当日位置。</li>
+            </ul>
+          </div>
+
+          <div class="section-card" data-lang="en" hidden>
+            <h3>5.1 Calendar view & timeline</h3>
+            <ul>
+              <li>Switch between <strong>Day / Week / Month</strong> views in the top-left corner.</li>
+              <li>The center shows the current date and teaching week.</li>
+              <li>Click <strong>Today</strong> to jump back instantly.</li>
+            </ul>
+          </div>
+
+          <div class="section-card" data-lang="zh">
+            <h3>5.2 与学校系统同步</h3>
+            <ul>
+              <li><strong>“拉取乐学任务”</strong>：从乐学/在线教学平台同步作业与课程任务，自动标记为 Deadline 或待办；</li>
+              <li><strong>“拉取课表”</strong>：从教务系统获取最新课表，避免自己手动录入和遗漏变更。</li>
+            </ul>
+            <p>
+              同步后，课程和任务会以不同颜色块显示在时间轴上，鼠标悬停或点击即可查看详情。
+            </p>
+          </div>
+
+          <div class="section-card" data-lang="en" hidden>
+            <h3>5.2 Sync with campus systems</h3>
+            <ul>
+              <li><strong>Fetch LeXue tasks</strong> to pull assignments from the online learning platform.</li>
+              <li><strong>Fetch schedule</strong> to refresh the official timetable.</li>
+            </ul>
+            <p>
+              Synced courses and tasks appear as colored blocks on the timeline; hover or click for details.
+            </p>
+          </div>
+
+          <div class="section-card" data-lang="zh">
+            <h3>5.3 事件类型筛选</h3>
+            <p>你可以通过勾选/取消勾选来控制显示内容，例如：</p>
+            <ul>
+              <li>课表安排；</li>
+              <li>作业 Deadline；</li>
+              <li>个人事件或纪念日；</li>
+              <li>课表变更提醒。</li>
+            </ul>
+            <p class="hint">
+              在复习周或考试周，只保留 “Deadline + 考试” 类型，可以更专注于关键事项。
+            </p>
+          </div>
+
+          <div class="section-card" data-lang="en" hidden>
+            <h3>5.3 Filter event types</h3>
+            <p>Toggle which layers appear—examples:</p>
+            <ul>
+              <li>Classes</li>
+              <li>Assignment deadlines</li>
+              <li>Personal events / reminders</li>
+              <li>Schedule change notices</li>
+            </ul>
+            <p class="hint">
+              During exam weeks, keep only “deadlines + exams” to stay focused.</p>
+          </div>
+
+          <div class="section-card" data-lang="zh">
+            <h3>5.4 任务管理</h3>
+            <ul>
+              <li>顶部切换到 <strong>“任务”</strong> 标签，可以新建任务、设置截止时间并添加备注；</li>
+              <li>随时标记任务完成，保持首页提醒与课表视图同步；</li>
+              <li>勾选 <strong>“将任务同步到课表视图”</strong>，就能在日历中与课程一起查看。</li>
+            </ul>
+            <p>
+              配合 <strong>“拉取乐学任务”</strong> 使用，可将线上作业自动导入任务列表，减少遗漏。
+            </p>
+          </div>
+
+          <div class="section-card" data-lang="en" hidden>
+            <h3>5.4 Task management</h3>
+            <ul>
+              <li>Under the <strong>Tasks</strong> tab, create tasks, due dates, and notes.</li>
+              <li>Check items off any time so the dashboard stays in sync.</li>
+              <li>Enable <strong>Sync tasks to calendar</strong> to show them next to classes.</li>
+            </ul>
+            <p>
+              Combined with <strong>Fetch LeXue tasks</strong>, online assignments land in your list automatically.</p>
+          </div>
+        </section>
+
+        <hr class="divider" />
+
+        <!-- 6. 聊天 -->
+        <section id="section6" class="section">
+          <div class="section-header">
+            <div class="section-kicker">PART 6</div>
+            <h2 class="section-title">
+              <span data-lang="zh">聊天：用 AI 助手答疑与写作</span>
+              <span data-lang="en" hidden>Chat: ask AI for help & writing</span>
+            </h2>
+            <p class="section-sub">
+              <span data-lang="zh">配置 API Key（详见 2.3）后，就能在 SmartDesk 中直接与模型交流、整理代码与生成学习计划。</span>
+              <span data-lang="en" hidden>Add an API key (section 2.3) to chat with models, debug code, and draft study plans inside SmartDesk.</span>
+            </p>
+          </div>
+
+          <div class="section-card" data-lang="zh">
+            <h3>6.1 聊天（AI 助手）</h3>
+            <div class="note">
+              <strong>使用前：</strong>
+              需要购买并配置可用的 API Key，详见上文 2.3。
+            </div>
+            <p style="margin-top:8px;">
+              点击 <strong>“聊天”</strong> 标签，会看到：
+            </p>
+            <ul>
+              <li>左侧：对话历史列表，可按话题分组、折叠不同会话；</li>
+              <li>中间：支持代码块和长文本排版的对话窗口；</li>
+              <li>下方：输入框与 <strong>“发送”</strong> 按钮，支持 <code>Ctrl + Enter</code> 快速发送。</li>
+            </ul>
+            <p>常见用法：</p>
+            <ul>
+              <li>让 AI 解释课程难点、作业题或实验步骤；</li>
+              <li>粘贴报错日志，请它给出修改建议或优化方案；</li>
+              <li>根据课表和 Deadline 生成复习节奏或时间管理建议。</li>
+            </ul>
+            <p>界面底部还提供了一些实用功能：</p>
+            <ul>
+              <li>
+                <strong>“隐藏隐私内容”</strong>：折叠敏感信息，便于录屏或分享；
+              </li>
+              <li>
+                <strong>“插入素材 / 插入块料”</strong>：把笔记、任务等选中文本快速加入对话；
+              </li>
+              <li>
+                <strong>“上传文件”</strong>：直接把代码或作业文件交给 AI 分析。
+              </li>
+            </ul>
+            <p class="hint">
+              不同模型对文件/图片的支持不同。暂不支持的格式，SmartDesk 会仅发送必要的文字描述，避免泄露多余信息。
+            </p>
+          </div>
+
+          <div class="section-card" data-lang="en" hidden>
+            <h3>6.1 Chat (AI assistant)</h3>
+            <div class="note">
+              <strong>Before using:</strong>
+              add a valid API key—see section 2.3.
+            </div>
+            <p style="margin-top:8px;">
+              Inside the <strong>Chat</strong> tab you’ll find:
+            </p>
+            <ul>
+              <li>Left: a conversation list organized by topic</li>
+              <li>Center: a rich conversation pane with code blocks and long-form formatting</li>
+              <li>Bottom: input box + <strong>Send</strong> button (<code>Ctrl + Enter</code> shortcut)</li>
+            </ul>
+            <p>Typical use cases:</p>
+            <ul>
+              <li>Ask AI to explain tricky course content or assignment prompts</li>
+              <li>Paste error logs for debugging tips</li>
+              <li>Generate study rhythms or plans based on your schedule</li>
+            </ul>
+            <p>Handy tools at the bottom:</p>
+            <ul>
+              <li><strong>Hide sensitive content</strong> for clean recordings or sharing</li>
+              <li><strong>Insert snippet</strong> to pull selected notes/tasks straight into the chat</li>
+              <li><strong>Upload file</strong> to send homework or code directly</li>
+            </ul>
+            <p class="hint">
+              Model support for files/images varies. When a format isn’t supported, SmartDesk only sends necessary text so your data stays safe.</p>
+          </div>
+        </section>
+
+        <hr class="divider" />
+
+        <!-- 7. 图书馆座位助手 -->
+        <section id="section7" class="section">
+          <div class="section-header">
+            <div class="section-kicker">PART 7</div>
+            <h2 class="section-title">
+              <span data-lang="zh">图书馆座位助手：预约、持续搜索与抢座</span>
+              <span data-lang="en" hidden>Library seat assistant: reserve, monitor, auto-grab</span>
+            </h2>
+            <p class="section-sub">
+              <span data-lang="zh">把“刷 i 北理 抢座位”这一件事，交给 SmartDesk 帮你盯着。</span>
+              <span data-lang="en" hidden>Let SmartDesk watch iBiti and handle reservations for you.</span>
+            </p>
+          </div>
+
+          <div class="section-card" data-lang="zh">
+            <h3>7.1 刷新状态与当前预约</h3>
+            <ol>
+              <li>
+                点击顶部醒目的 <strong>“刷新状态”</strong> 按钮：
+                <ul>
+                  <li>检查你是否已通过统一身份认证登录；</li>
+                  <li>读取当前已有的预约和在用座位。</li>
+                </ul>
+              </li>
+              <li>
+                中间 <strong>“预约状态”</strong> 表格会显示：
+                <ul>
+                  <li>阅览室、座位号、预约开始/结束时间；</li>
+                  <li>当前状态（使用中 / 已完成 / 等待生效等）。</li>
+                </ul>
+              </li>
+              <li>
+                表格下方常见操作按钮：
+                <ul>
+                  <li><strong>“签离”</strong>：使用结束后主动签离座位；</li>
+                  <li><strong>“取消预约”</strong>：不再需要时释放座位；</li>
+                  <li><strong>“临时离开”</strong>：短暂离开座位但希望保留。</li>
+                </ul>
+              </li>
+            </ol>
+          </div>
+
+          <div class="section-card" data-lang="en" hidden>
+            <h3>7.1 Refresh status & current reservations</h3>
+            <ol>
+              <li>
+                Hit <strong>Refresh status</strong> to:
+                <ul>
+                  <li>Confirm you’re logged in via unified authentication</li>
+                  <li>Load ongoing and upcoming reservations</li>
+                </ul>
+              </li>
+              <li>
+                The <strong>Reservation status</strong> table shows room, seat, start/end time, and current state.</li>
+              <li>
+                Actions underneath include <strong>Sign out</strong>, <strong>Cancel</strong>, and <strong>Temporary leave</strong>.</li>
+            </ol>
+          </div>
+
+          <div class="section-card" data-lang="zh">
+            <h3>7.2 快速预约</h3>
+            <p>右侧的 <strong>“快速预约”</strong> 区块适合你已经配置好偏好时使用：</p>
+            <ul>
+              <li>选择预约日期（通常是当天或次日）；</li>
+              <li>根据需要微调优先级和日期范围；</li>
+              <li>点击 <strong>“立即预约合适座位”</strong>，系统会按偏好顺序依次尝试预约。</li>
+            </ul>
+            <p>
+              如果预约失败，失败原因会显示在上方状态区域，例如配额不足、座位已被占用、网络异常等。
+            </p>
+          </div>
+
+          <div class="section-card" data-lang="en" hidden>
+            <h3>7.2 Quick reservation</h3>
+            <p>Use the <strong>Quick reservation</strong> block after you’ve set seat preferences:</p>
+            <ul>
+              <li>Pick a booking date (today or tomorrow)</li>
+              <li>Adjust priority tiers/date range if needed</li>
+              <li>Click <strong>Reserve suitable seats</strong> to try seats in priority order</li>
+            </ul>
+            <p>Failures (quota, occupied seats, network errors) appear in the status area.</p>
+          </div>
+
+          <div class="section-card" data-lang="zh">
+            <h3>7.3 持续搜索：帮你盯着空位</h3>
+            <div class="note">
+              <strong>适用场景：</strong>
+              热门时段、你仍在电脑前但不想频繁刷新页面。
+            </div>
+            <ol style="margin-top:8px;">
+              <li>
+                在 <strong>“持续搜索”</strong> 区域设置：
+                <ul>
+                  <li>预约日期（如今天）；</li>
+                  <li>可接受的 <strong>优先级下限/上限</strong>（例如 Tier 0–2）；</li>
+                  <li>刷新间隔（例如每 5 秒或 10 秒）。</li>
+                </ul>
+              </li>
+              <li>
+                点击 <strong>“开始持续搜索”</strong>：
+                <ul>
+                  <li>SmartDesk 会定期查询符合条件的座位；</li>
+                  <li>一旦出现空位，即自动提交预约请求。</li>
+                </ul>
+              </li>
+              <li>随时可以点击 <strong>“停止”</strong> 结束搜索。</li>
+            </ol>
+            <p>不同会员等级的典型使用方式（仅示意，具体以软件内说明为准）：</p>
+            <ul>
+              <li><strong>Free</strong>：每月约 5 次，需要在电脑前手动确认关键操作；</li>
+              <li><strong>Plus</strong>：每月约 150 次，同样需要手动确认，适合高频使用但愿意自己盯状态；</li>
+              <li><strong>Pro</strong>：每月约 500 次，更适合复习季长期开启，但仍建议合理使用以避免滥用。</li>
+            </ul>
+          </div>
+
+          <div class="section-card" data-lang="en" hidden>
+            <h3>7.3 Continuous search</h3>
+            <div class="note">
+              <strong>Best for:</strong>
+              peak hours when you’re at the computer but don’t want to refresh constantly.
+            </div>
+            <ol style="margin-top:8px;">
+              <li>
+                Configure <strong>Continuous search</strong> with date, priority range, and refresh interval.</li>
+              <li>
+                Click <strong>Start</strong> so SmartDesk polls seats and auto-submits when one appears.</li>
+              <li>Stop anytime.</li>
+            </ol>
+            <p>Typical quotas:</p>
+            <ul>
+              <li><strong>Free</strong>: ~5/month with manual confirmation</li>
+              <li><strong>Plus</strong>: ~150/month, still manual confirmation</li>
+              <li><strong>Pro</strong>: ~500/month, ideal for exam seasons (use responsibly)</li>
+            </ul>
+          </div>
+
+          <div class="section-card" data-lang="zh">
+            <h3>7.4 定时抢座：在关键时间点自动出手</h3>
+            <div class="note">
+              <strong>适用场景：</strong>
+              图书馆清晨放座位（如早上 6 点）等固定放号时间。
+            </div>
+            <ol style="margin-top:8px;">
+              <li>
+                在 <strong>“定时抢座”</strong> 区域选择：
+                <ul>
+                  <li>预约日期（想去的那天）；</li>
+                  <li>抢座开始时间（例如 06:00）；</li>
+                  <li>优先级下限/上限；</li>
+                  <li>抢座持续时长（例如 5 分钟）。</li>
+                </ul>
+              </li>
+              <li>
+                点击 <strong>“开启定时抢座”</strong>：
+                <ul>
+                  <li>系统会在设定时间自动开始尝试预约；</li>
+                  <li>在设定的时长内不断重试，直到成功或达到时间上限。</li>
+                </ul>
+              </li>
+            </ol>
+            <p>使用时需要注意：</p>
+            <ul>
+              <li>Free / Plus：电脑必须保持开机且 SmartDesk 正在运行，并在关键步骤进行 <strong>手动确认</strong>；</li>
+              <li>Pro：同样需要电脑在线和程序运行，但不再需要手动确认，更适合睡觉或上课不方便看电脑时使用。</li>
+            </ul>
+          </div>
+
+          <div class="section-card" data-lang="en" hidden>
+            <h3>7.4 Scheduled grabs</h3>
+            <div class="note">
+              <strong>Best for:</strong>
+              fixed release times (e.g., 6:00 a.m.).
+            </div>
+            <ol style="margin-top:8px;">
+              <li>Choose booking date, start time, priority range, and duration.</li>
+              <li>Click <strong>Start scheduled grab</strong>. SmartDesk submits attempts during that window.</li>
+            </ol>
+            <p>Requirements:</p>
+            <ul>
+              <li>Free/Plus: keep the computer on with SmartDesk running; confirm key actions manually.</li>
+              <li>Pro: still requires the computer online, but manual confirmation is waived—great for early mornings.</li>
+            </ul>
+          </div>
+
+          <div class="section-card" data-lang="zh">
+            <h3>7.5 在线抢座（Pro 专属）</h3>
+            <p>
+              在图书馆页面的子标签中切换到 <strong>“在线抢座”</strong>，可以看到一个专为 Pro
+              设计的自动化页面：
+            </p>
+            <ul>
+              <li>顶部橙色提示条会说明该功能为 <strong>Pro 专属</strong>，并显示本月剩余在线抢座次数；</li>
+              <li>
+                可设置：
+                <ul>
+                  <li>预约日期（实际使用座位的日期）；</li>
+                  <li>执行日期和执行时间（开始为你抢座的时间点）；</li>
+                  <li>优先级下限/上限；</li>
+                  <li>是否启用 <strong>持续搜索</strong>（部分高峰时段会限制持续搜索，尤其是早上 6–7 点）；</li>
+                  <li>持续时长（启用持续搜索时生效）。</li>
+                </ul>
+              </li>
+              <li>
+                点击 <strong>“提交在线抢座”</strong> 后：
+                <ul>
+                  <li>任务会出现在 “待执行在线任务” 表格中；</li>
+                  <li>执行结果会记录在 “最近在线抢座记录” 区域，包括时间、座位信息和成功/失败原因。</li>
+                </ul>
+              </li>
+            </ul>
+            <p>典型场景：</p>
+            <ul>
+              <li>清晨放号时间想多睡一会儿，不方便守在电脑前；</li>
+              <li>上课过程中无法频繁打开电脑或手机刷新偏好座位，但又不想错过好位置。</li>
+            </ul>
+            <p>使用提醒：</p>
+            <ul>
+              <li>在线持续搜索期间，如果你在手机上通过 “i 北理” 登录图书馆页面，或在电脑浏览器中手动刷新官网，有可能打断服务器端任务；</li>
+              <li>一旦通过在线任务成功抢到座位，桌面端会弹出提示并自动刷新状态；</li>
+              <li>Pro 用户的图书馆偏好中，默认会在持续搜索时跳过自动刷新，建议保持默认设置以减少干扰。</li>
+            </ul>
+          </div>
+
+          <div class="section-card" data-lang="en" hidden>
+            <h3>7.5 Online grabs (Pro only)</h3>
+            <p>
+              Switch to the <strong>Online grabs</strong> tab for a fully automated page designed for Pro members.
+            </p>
+            <ul>
+              <li>An orange banner reminds you of remaining online attempts this month.</li>
+              <li>
+                Configure booking date, execution date/time, priority range, whether to enable continuous search (some hours block it), and duration.
+              </li>
+              <li>
+                After submitting, tasks appear in <strong>Upcoming online jobs</strong>, with results logged in <strong>Recent online grabs</strong>.
+              </li>
+            </ul>
+            <p>Typical scenarios:</p>
+            <ul>
+              <li>Early-morning releases when you’d rather keep sleeping</li>
+              <li>Classes where you can’t keep checking seats</li>
+            </ul>
+            <p>Reminders:</p>
+            <ul>
+              <li>Manual visits to iBiti during an online search can interrupt the server job.</li>
+              <li>Once a seat is grabbed, the desktop app notifies you and refreshes status automatically.</li>
+              <li>The default Pro preference skips auto-refresh during continuous search—keep it that way to avoid conflicts.</li>
+            </ul>
+          </div>
+        </section>
+
+        <hr class="divider" />
+
+        <!-- 8. 推荐日常节奏（简要） -->
+        <section id="section8" class="section">
+          <div class="section-header">
+            <div class="section-kicker">PART 8</div>
+            <h2 class="section-title">
+              <span data-lang="zh">推荐的日常使用节奏（简要版）</span>
+              <span data-lang="en" hidden>Suggested daily rhythm</span>
+            </h2>
+          </div>
+          <div class="section-card" data-lang="zh">
+            <ol>
+              <li>早上打开电脑，先看 <strong>首页</strong>：确认今天的课表和待办任务。</li>
+              <li>根据当天安排，在 <strong>空闲教室 / 图书馆</strong> 模块锁定学习地点，必要时开启持续搜索或定时抢座。</li>
+              <li>学习过程中遇到难题，随时在 <strong>聊天</strong> 模块向 AI 提问。</li>
+              <li>下课或自习结束后，把重点整理到 <strong>笔记</strong>，并在 <strong>任务</strong> 中勾掉已完成内容。</li>
+              <li>每周末在 <strong>课表</strong> 页检查下一周课程，提前规划去图书馆或自习的时间段。</li>
+            </ol>
+            <div class="note">
+              <strong>习惯养成：</strong>
+              坚持使用一段时间后，你会发现 SmartDesk 不只是帮你抢座，而是同时在照看你的
+              <strong>时间（课表与 Deadline）</strong>、<strong>空间（教室与座位）</strong> 和
+              <strong>内容（笔记与任务）</strong>。
+            </div>
+          </div>
+
+          <div class="section-card" data-lang="en" hidden>
+            <ol>
+              <li>Start the morning on <strong>Home</strong> to see classes and tasks.</li>
+              <li>Pick a study spot via <strong>Free Rooms / Library</strong>; enable continuous or scheduled seats if needed.</li>
+              <li>Ask the <strong>Chat</strong> assistant whenever you hit questions.</li>
+              <li>After class, capture highlights in <strong>Notes</strong> and tick tasks off.</li>
+              <li>On weekends, review next week in <strong>Schedule</strong> and plan seat reservations early.</li>
+            </ol>
+            <div class="note">
+              <strong>Build the habit:</strong>
+              Over time SmartDesk watches your <strong>time (schedule)</strong>, <strong>space (rooms & seats)</strong>, and
+              <strong>content (notes & tasks)</strong>—not just seats.
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <footer>
+      © 2025 SmartDesk
+    </footer>
+  </div>
+  <script>
+    (() => {
+      const SUPPORTED_LANGS = ['zh', 'en'];
+      const DEFAULT_LANG = 'zh';
+      const LANG_PARAM = 'lang';
+      const STORAGE_KEY = 'smartdesk-lang';
+      const translations = {
+        zh: {
+          title: 'SmartDesk 用户指导手册（面向同学版）',
+          description: 'SmartDesk 用户指南，涵盖首页、课表、空闲教室、图书馆座位与 AI 助手等使用方法。',
+          htmlLang: 'zh-CN'
+        },
+        en: {
+          title: 'SmartDesk Student Playbook',
+          description: 'SmartDesk user guide for BIT students covering the home dashboard, schedule, free rooms, library seats, and AI chat.',
+          htmlLang: 'en'
+        }
+      };
+
+      function resolveLanguage() {
+        const param = new URLSearchParams(window.location.search).get(LANG_PARAM);
+        if (param && SUPPORTED_LANGS.includes(param.toLowerCase())) {
+          return param.toLowerCase();
+        }
+        const stored = localStorage.getItem(STORAGE_KEY);
+        if (stored && SUPPORTED_LANGS.includes(stored)) {
+          return stored;
+        }
+        return DEFAULT_LANG;
+      }
+
+      function setLanguage(lang) {
+        if (!SUPPORTED_LANGS.includes(lang)) {
+          lang = DEFAULT_LANG;
+        }
+        const dictionary = translations[lang] || translations[DEFAULT_LANG];
+        if (dictionary.htmlLang) {
+          document.documentElement.lang = dictionary.htmlLang;
+        }
+        if (dictionary.title) {
+          document.title = dictionary.title;
+        }
+        const descMeta = document.querySelector('meta[name="description"]');
+        if (descMeta && dictionary.description) {
+          descMeta.setAttribute('content', dictionary.description);
+        }
+        document.querySelectorAll('[data-lang]').forEach((node) => {
+          const nodeLang = node.getAttribute('data-lang');
+          if (!nodeLang) return;
+          node.hidden = nodeLang !== lang;
+        });
+        document.querySelectorAll('[data-lang-link-target]').forEach((link) => {
+          const target = link.getAttribute('data-lang-link-target');
+          if (!target) return;
+          let cleanTarget = target;
+          if (cleanTarget.includes('?')) {
+            cleanTarget = cleanTarget.split('?')[0];
+          }
+          link.setAttribute('href', cleanTarget + '?lang=' + lang);
+        });
+        const url = new URL(window.location.href);
+        if (url.searchParams.get(LANG_PARAM) !== lang) {
+          url.searchParams.set(LANG_PARAM, lang);
+          window.history.replaceState(null, '', url.toString());
+        }
+        localStorage.setItem(STORAGE_KEY, lang);
+      }
+
+      setLanguage(resolveLanguage());
+    })();
+  </script>
+</body>
+</html>

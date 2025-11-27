@@ -66,14 +66,15 @@
       width: 42px;
       height: 42px;
       border-radius: 12px;
-      background: linear-gradient(135deg, #0ea5e9, #9333ea);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: 600;
-      color: #fff;
-      letter-spacing: 0.05em;
+      overflow: hidden;
       box-shadow: 0 10px 30px rgba(14, 165, 233, 0.35);
+    }
+
+    .logo img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
     }
 
     .brand-text {
@@ -178,6 +179,17 @@
       gap: 14px;
       flex-wrap: wrap;
       font-size: 14px;
+    }
+
+    .cta.secondary {
+      background: #fff;
+      color: var(--primary);
+      border: 1px solid rgba(14, 165, 233, 0.4);
+    }
+
+    .cta.secondary:hover {
+      background: rgba(14, 165, 233, 0.12);
+      color: var(--primary-dark);
     }
 
     .section {
@@ -319,7 +331,7 @@
   <div class="page">
     <nav class="nav">
       <div class="brand">
-        <div class="logo">SD</div>
+        <div class="logo"><img src="images/logo.png" alt="SmartDesk logo" /></div>
         <div class="brand-text">
           <strong>SmartDesk</strong>
           <span>Learning Copilot</span>
@@ -349,6 +361,7 @@
         </p>
         <div class="hero-actions">
         <a class="cta" data-lang-link-target="membership.html" data-i18n="hero.membership">查看会员方案</a>
+        <a class="cta secondary" data-lang-link-target="user-guide.html" data-i18n="hero.guide">查看用户指南</a>
         </div>
       </div>
     </section>
@@ -475,7 +488,7 @@
     </section>
 
     <footer>
-      <p data-i18n="footer.text">© 2025 SmartDesk · 北京理工大学</p>
+      <p data-i18n="footer.text">© 2025 SmartDesk</p>
       <div class="footer-links">
         <a data-lang-link-target="membership.html" data-i18n="footer.link.membership">会员方案</a>
         <a data-lang-link-target="trust-center.html" data-i18n="footer.link.trust">信任中心</a>
@@ -505,6 +518,7 @@
           'hero.title': '更快找到座位，更沉浸地学习。',
           'hero.description': 'SmartDesk 将图书馆抢座、空教室、任务、笔记与 AI 助手整合在一个本地桌面应用中，并用授权驱动的自动化引擎提供持续搜索、定时抢座与在线预约能力。',
           'hero.membership': '查看会员方案',
+          'hero.guide': '查看用户指南',
           'hero.readme': '阅读项目说明 →',
           'section.capabilities.span': 'capabilities',
           'section.capabilities.title': '覆盖“预约 + 学习”全链路的桌面体验',
@@ -552,7 +566,7 @@
           'table.row.data.title': '数据存储',
           'table.row.data.value': '所有数据均存储在 <code>~/.smartdesk</code>，卸载不会删除',
           'section.trust': '有授权或隐私问题？请查看 <a href="membership.html" data-lang-link-target="membership.html">会员方案详情</a>、<a href="compliance.html" data-lang-link-target="compliance.html">公平说明</a> 或 <a href="trust-center.html" data-lang-link-target="trust-center.html">信任中心</a>，了解授权流程、设备绑定、数据备份方法。',
-          'footer.text': '© 2025 SmartDesk · 北京理工大学',
+          'footer.text': '© 2025 SmartDesk',
           'footer.link.membership': '会员方案',
           'footer.link.trust': '信任中心'
         },
@@ -570,6 +584,7 @@
           'hero.title': 'Find seats faster, study more deeply.',
           'hero.description': 'SmartDesk combines library seat grabs, classroom finder, tasks, notes and an AI assistant inside a local desktop app and powers continuous search, scheduled grabs and online reservations with an authorized automation engine.',
           'hero.membership': 'View membership tiers',
+          'hero.guide': 'User guide',
           'hero.readme': 'Read the project README →',
           'section.capabilities.span': 'capabilities',
           'section.capabilities.title': 'A desktop experience covering reservations + study workflows',
@@ -617,7 +632,7 @@
           'table.row.data.title': 'Data storage',
           'table.row.data.value': 'All data stays under <code>~/.smartdesk</code>; uninstalling keeps it intact.',
           'section.trust': 'Questions about authorization or privacy? Visit the <a href="membership.html" data-lang-link-target="membership.html">membership details</a>, <a href="compliance.html" data-lang-link-target="compliance.html">compliance statement</a> or <a href="trust-center.html" data-lang-link-target="trust-center.html">Trust Center</a> for workflow, device and backup guidance.',
-          'footer.text': '© 2025 SmartDesk · Beijing Institute of Technology',
+          'footer.text': '© 2025 SmartDesk',
           'footer.link.membership': 'Membership',
           'footer.link.trust': 'Trust Center'
         }

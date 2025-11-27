@@ -37,6 +37,77 @@
       padding: 32px 16px 80px;
     }
 
+    .nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 0 20px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .logo {
+      width: 42px;
+      height: 42px;
+      border-radius: 14px;
+      overflow: hidden;
+      box-shadow: 0 10px 30px rgba(14, 165, 233, 0.35);
+    }
+
+    .logo img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .brand-text {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .brand-text strong {
+      color: var(--text-strong);
+      font-size: 15px;
+    }
+
+    .brand-text span {
+      color: var(--text-soft);
+      font-size: 12px;
+    }
+
+    .nav-actions {
+      display: flex;
+      align-items: center;
+    }
+
+    .return-link {
+      padding: 10px 18px;
+      border-radius: 999px;
+      border: 1px solid rgba(14,165,233,0.4);
+      background: #fff;
+      color: var(--primary);
+      font-size: 13px;
+      font-weight: 600;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: background 0.16s ease, box-shadow 0.16s ease, transform 0.1s ease;
+    }
+
+    .return-link:hover {
+      background: rgba(14,165,233,0.08);
+      text-decoration: none;
+      box-shadow: 0 8px 24px rgba(15,23,42,0.08);
+      transform: translateY(-0.5px);
+    }
+
     h1 {
       margin-top: 16px;
       font-size: clamp(28px, 4vw, 38px);
@@ -67,24 +138,6 @@
       margin-top: 10px;
       color: var(--text-soft);
       line-height: 1.8;
-    }
-
-    .page-controls {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-      align-items: flex-start;
-    }
-
-    .return-home {
-      padding: 10px 18px;
-      border-radius: 999px;
-      border: none;
-      background: var(--primary);
-      color: #fff;
-      font-size: 13px;
-      font-weight: 600;
-      text-decoration: none;
     }
 
     .grid {
@@ -226,14 +279,24 @@
 </head>
 <body>
   <div class="page">
+    <nav class="nav">
+      <div class="brand">
+        <div class="logo"><img src="images/logo.png" alt="SmartDesk logo" /></div>
+        <div class="brand-text">
+          <strong>SmartDesk</strong>
+          <span>Learning Copilot</span>
+        </div>
+      </div>
+      <div class="nav-actions">
+        <a class="return-link" href="index.html" data-lang-link-target="index.html" data-i18n="return.home">返回首页</a>
+      </div>
+    </nav>
+
     <header class="page-header">
       <div class="hero">
         <div class="kicker" data-i18n="hero.kicker">Fair · Transparent · Auditable</div>
         <h1 data-i18n="hero.title">SmartDesk 公平性与合规说明</h1>
         <p data-i18n="hero.subtitle">SmartDesk 仅在本地执行自动化逻辑，通过配额、授权与日志控制确保使用公平且可追溯。以下内容说明我们如何保护校园资源与用户数据。</p>
-      </div>
-      <div class="page-controls">
-        <a class="return-home" data-lang-link-target="index.html" data-i18n="return.home">返回首页</a>
       </div>
     </header>
 
@@ -477,7 +540,7 @@
           'feedback.it': '我是学校 IT，我不满 🤨',
           'feedback.admin': '我是管理员，我不满 😐',
           'modal.closeLabel': '关闭',
-          'footer.text': '※ SmartDesk 不是官方服务，也不保证百分之百能约上座位 （但我们会尽力比官方稳定）。',
+          'footer.text': '© 2025 SmartDesk',
           'return.home': '返回首页'
         },
         en: {
@@ -521,7 +584,7 @@
           'feedback.it': 'I’m campus IT, I’m worried 🤨',
           'feedback.admin': 'I’m an administrator, I’m concerned 😐',
           'modal.closeLabel': 'Close',
-          'footer.text': '※ SmartDesk isn’t an official service and doesn’t guarantee every seat, but we strive to stay more reliable than the official tools.',
+          'footer.text': '© 2025 SmartDesk',
           'return.home': 'Return to homepage'
         }
       };

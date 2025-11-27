@@ -47,6 +47,77 @@
       padding: 32px 16px 72px;
     }
 
+    .nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 0 20px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .logo {
+      width: 42px;
+      height: 42px;
+      border-radius: 14px;
+      overflow: hidden;
+      box-shadow: 0 10px 30px rgba(14, 165, 233, 0.35);
+    }
+
+    .logo img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .brand-text {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .brand-text strong {
+      color: var(--text-strong);
+      font-size: 15px;
+    }
+
+    .brand-text span {
+      color: var(--text-soft);
+      font-size: 12px;
+    }
+
+    .nav-actions {
+      display: flex;
+      align-items: center;
+    }
+
+    .return-link {
+      padding: 10px 18px;
+      border-radius: 999px;
+      border: 1px solid rgba(14,165,233,0.4);
+      background: #fff;
+      color: var(--primary-dark);
+      font-size: 13px;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      text-decoration: none;
+      transition: background 0.16s ease, box-shadow 0.16s ease, transform 0.1s ease;
+    }
+
+    .return-link:hover {
+      background: rgba(14,165,233,0.08);
+      text-decoration: none;
+      box-shadow: 0 8px 24px rgba(15,23,42,0.08);
+      transform: translateY(-0.5px);
+    }
+
     .page-header {
       display: flex;
       justify-content: space-between;
@@ -81,24 +152,6 @@
       line-height: 1.8;
       color: var(--text-soft);
       font-size: 15px;
-    }
-
-    .page-controls {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-      align-items: flex-start;
-    }
-
-    .return-home {
-      padding: 10px 18px;
-      border-radius: 999px;
-      border: none;
-      background: var(--primary);
-      color: #fff;
-      font-size: 13px;
-      font-weight: 600;
-      text-decoration: none;
     }
 
     .plans {
@@ -234,14 +287,24 @@
 </head>
 <body>
   <div class="page">
+    <nav class="nav">
+      <div class="brand">
+        <div class="logo"><img src="images/logo.png" alt="SmartDesk logo" /></div>
+        <div class="brand-text">
+          <strong>SmartDesk</strong>
+          <span>Learning Copilot</span>
+        </div>
+      </div>
+      <div class="nav-actions">
+        <a class="return-link" href="index.html" data-lang-link-target="index.html" data-i18n="return.home">回到首页</a>
+      </div>
+    </nav>
+
     <header class="page-header">
       <div>
         <div class="badge" data-i18n="badge.text">deviceId × 学号 × RSA 签名三重校验</div>
         <h1 data-i18n="page.title">SmartDesk 会员体系</h1>
         <p class="subtitle" data-i18n="page.subtitle">Free 默认启用；导入 license.json 即可激活 Plus 或 Pro。你可以在 SmartDesk 设置页随时启用、禁用或切换模式，下述权益均基于 PremiumQuotaTracker、OnlineSeatUsageTracker 与 LicenseValidator 的最新实现。</p>
-      </div>
-      <div class="page-controls">
-        <a class="return-home" data-lang-link-target="index.html" data-i18n="return.home">回到首页</a>
       </div>
     </header>
 
@@ -423,7 +486,7 @@
           'info.wechat.title': '加入微信群咨询',
           'info.wechat.detail': '保存下方二维码后用微信扫一扫即可加入微信群，群内可直接问作者关于会员权益、配额与授权的任何问题。',
           'info.wechat.alt': '扫码加入 SmartDesk 会员咨询微信群',
-          'footer.text': '© 2025 SmartDesk · 北京理工大学 | <a href="index.html" data-lang-link-target="index.html">返回首页</a>'
+          'footer.text': '© 2025 SmartDesk'
         },
         en: {
           htmlLang: 'en',
@@ -488,7 +551,7 @@
           'info.wechat.title': 'Join the WeChat group',
           'info.wechat.detail': 'Save the QR code below and scan it through WeChat to join the group; you can ask the author about memberships, quotas, or authorization anytime.',
           'info.wechat.alt': 'Scan to join SmartDesk membership WeChat group',
-          'footer.text': '© 2025 SmartDesk · Beijing Institute of Technology | <a href="index.html" data-lang-link-target="index.html">Return to homepage</a>'
+          'footer.text': '© 2025 SmartDesk'
         }
       };
 
