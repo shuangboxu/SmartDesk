@@ -4,462 +4,11 @@
   <meta charset="UTF-8" />
   <title>SmartDesk · 北理工智能座位与学习助理</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="description" content="SmartDesk 提供图书馆抢座、空教室、任务、笔记、AI 助手与会员自动化能力。" />
-  <style>
-    :root {
-      --bg: #f7f8fb;
-      --surface: #ffffff;
-      --text-strong: #0f172a;
-      --text: #1f2937;
-      --text-soft: #64748b;
-      --border: #e2e8f0;
-      --primary: #0ea5e9;
-      --primary-dark: #0284c7;
-      --accent: #9333ea;
-      --radius-lg: 20px;
-      --shadow: 0 15px 40px rgba(15, 23, 42, 0.08);
-    }
-
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-
-    body {
-      font-family: "Inter", "Segoe UI", -apple-system, BlinkMacSystemFont, sans-serif;
-      background: var(--bg);
-      color: var(--text);
-      min-height: 100vh;
-    }
-
-    a {
-      color: var(--primary-dark);
-      text-decoration: none;
-    }
-
-    a:hover {
-      text-decoration: underline;
-    }
-
-    .page {
-      max-width: 1080px;
-      margin: 0 auto;
-      padding: 32px 16px 64px;
-    }
-
-    .nav {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 16px;
-      padding: 20px 0 16px;
-    }
-
-    .brand {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-
-    .logo {
-      width: 42px;
-      height: 42px;
-      border-radius: 12px;
-      overflow: hidden;
-      box-shadow: 0 10px 30px rgba(14, 165, 233, 0.35);
-    }
-
-    .logo img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      display: block;
-    }
-
-    .brand-text {
-      display: flex;
-      flex-direction: column;
-    }
-
-    .brand-text strong {
-      color: var(--text-strong);
-      font-size: 15px;
-    }
-
-    .brand-text span {
-      color: var(--text-soft);
-      font-size: 12px;
-    }
-
-    .nav-links {
-      display: flex;
-      gap: 14px;
-      font-size: 14px;
-      color: var(--text-soft);
-    }
-
-    .nav-link {
-      padding: 8px 12px;
-      border-radius: 999px;
-      transition: background 0.2s ease;
-    }
-
-    .nav-link:hover {
-      background: rgba(14, 165, 233, 0.08);
-      color: var(--text-strong);
-    }
-
-    .nav-actions {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-
-    .language-switch {
-      display: inline-flex;
-      border: 1px solid var(--border);
-      border-radius: 999px;
-      overflow: hidden;
-      background: #fff;
-    }
-
-    .language-switch button {
-      border: 0;
-      background: transparent;
-      padding: 6px 14px;
-      font-size: 12px;
-      color: var(--text-soft);
-      cursor: pointer;
-      transition: background 0.2s ease, color 0.2s ease;
-    }
-
-    .language-switch button.is-active {
-      background: var(--primary);
-      color: #fff;
-    }
-
-    .cta {
-      padding: 10px 20px;
-      border-radius: 999px;
-      background: var(--text-strong);
-      color: #fff;
-      font-size: 13px;
-      font-weight: 600;
-      border: none;
-    }
-
-    .hero {
-      margin-top: 24px;
-      background: var(--surface);
-      border-radius: var(--radius-lg);
-      border: 1px solid var(--border);
-      padding: 42px;
-      box-shadow: var(--shadow);
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 28px;
-    }
-
-    .hero h1 {
-      font-size: clamp(34px, 5vw, 48px);
-      color: var(--text-strong);
-      margin-bottom: 18px;
-    }
-
-    .hero p {
-      font-size: 16px;
-      color: var(--text);
-      line-height: 1.7;
-      margin-bottom: 24px;
-    }
-
-    .hero-actions {
-      display: flex;
-      gap: 14px;
-      flex-wrap: wrap;
-      font-size: 14px;
-    }
-
-    .cta.secondary {
-      background: #fff;
-      color: var(--primary);
-      border: 1px solid rgba(14, 165, 233, 0.4);
-    }
-
-    .cta.secondary:hover {
-      background: rgba(14, 165, 233, 0.12);
-      color: var(--primary-dark);
-    }
-
-    .section {
-      margin-top: 48px;
-    }
-
-    .space-entry {
-      margin-top: 24px;
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-lg);
-      padding: 28px;
-      box-shadow: var(--shadow);
-      display: flex;
-      flex-direction: column;
-      gap: 24px;
-    }
-
-    .space-preview {
-      display: block;
-    }
-
-    .space-meta {
-      min-width: auto;
-    }
-
-    .space-date-row {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-      flex-wrap: wrap;
-      margin-bottom: 12px;
-    }
-
-    .space-date-row .space-tags {
-      order: 1;
-    }
-
-    .space-date {
-      order: 2;
-      font-size: 20px;
-      color: var(--text-strong);
-      margin-bottom: 0;
-    }
-
-    .space-tags {
-      display: flex;
-      gap: 8px;
-      margin-bottom: 12px;
-      flex-wrap: wrap;
-    }
-
-    .space-tag {
-      font-size: 12px;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      border-radius: 999px;
-      padding: 5px 14px;
-      border: 1px solid rgba(14, 165, 233, 0.4);
-      background: rgba(14, 165, 233, 0.08);
-      color: var(--text-strong);
-      font-weight: 600;
-    }
-
-    .space-preview p {
-      font-size: 13px;
-      color: var(--text-soft);
-      line-height: 1.7;
-    }
-
-    .space-cards-grid {
-      flex: 2;
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 14px;
-    }
-
-    @media (max-width: 900px) {
-      .space-cards-grid {
-        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      }
-    }
-
-    .space-card {
-      background: var(--bg);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-lg);
-      padding: 18px;
-      min-height: 170px;
-    }
-
-    .space-card h3 {
-      font-size: 16px;
-      margin-bottom: 10px;
-      color: var(--text-strong);
-    }
-
-    .space-card p {
-      font-size: 13px;
-      color: var(--text-soft);
-      margin-bottom: 10px;
-    }
-
-    .space-card ul {
-      list-style: none;
-      padding-left: 0;
-      color: var(--text);
-      font-size: 13px;
-    }
-
-    .space-card ul li + li {
-      margin-top: 6px;
-    }
-
-    .space-customization {
-      border-top: 1px dashed var(--border);
-      padding-top: 16px;
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-    }
-
-    .space-customization ul {
-      list-style: none;
-      padding-left: 0;
-      margin: 0;
-      display: flex;
-      flex-wrap: wrap;
-      gap: 12px;
-    }
-
-    .space-customization li {
-      background: rgba(147, 51, 234, 0.08);
-      color: var(--text);
-      padding: 6px 10px;
-      border-radius: 999px;
-      font-size: 12px;
-    }
-
-    .section-header {
-      margin-bottom: 20px;
-    }
-
-    .section-header span {
-      text-transform: uppercase;
-      letter-spacing: 0.14em;
-      font-size: 12px;
-      color: var(--primary-dark);
-    }
-
-    .section-header h2 {
-      font-size: 26px;
-      color: var(--text-strong);
-      margin-top: 10px;
-    }
-
-    .section-header p {
-      font-size: 14px;
-      color: var(--text-soft);
-      margin-top: 10px;
-      max-width: 640px;
-      line-height: 1.7;
-    }
-
-    .cards {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-      gap: 18px;
-    }
-
-    .card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-lg);
-      padding: 20px;
-      box-shadow: var(--shadow);
-      font-size: 14px;
-      line-height: 1.6;
-      color: var(--text);
-    }
-
-    .card h3 {
-      font-size: 18px;
-      margin-bottom: 8px;
-      color: var(--text-strong);
-    }
-
-    .card p {
-      color: var(--text-soft);
-      font-size: 13px;
-      line-height: 1.7;
-    }
-
-    .card ul {
-      list-style: none;
-      margin-top: 10px;
-      color: var(--text);
-    }
-
-    .card ul li + li {
-      margin-top: 6px;
-    }
-
-    .pill {
-      display: inline-block;
-      margin-top: 12px;
-      padding: 4px 10px;
-      border-radius: 999px;
-      font-size: 12px;
-      color: var(--primary-dark);
-      background: rgba(14, 165, 233, 0.12);
-    }
-
-    .table-wrapper {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-lg);
-      box-shadow: var(--shadow);
-      padding: 20px;
-      overflow-x: auto;
-    }
-
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      font-size: 13px;
-    }
-
-    th, td {
-      padding: 12px 10px;
-      border-bottom: 1px solid var(--border);
-      text-align: left;
-      color: var(--text);
-    }
-
-    th {
-      color: var(--text-soft);
-      font-size: 12px;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-    }
-
-    tbody tr:last-child td {
-      border-bottom: none;
-    }
-
-    .trust {
-      background: linear-gradient(135deg, #f0f9ff, #f8f5ff);
-      border: 1px solid rgba(14, 165, 233, 0.15);
-      border-radius: var(--radius-lg);
-      padding: 28px;
-      margin-top: 32px;
-    }
-
-    footer {
-      margin-top: 48px;
-      font-size: 12px;
-      color: var(--text-soft);
-      text-align: center;
-    }
-
-    .footer-links {
-      margin-top: 4px;
-      display: flex;
-      justify-content: center;
-      gap: 8px;
-      flex-wrap: wrap;
-    }
-  </style>
+  <meta
+    name="description"
+    content="SmartDesk 帮你在北理工更轻松地抢座、自习和管理学习任务：图书馆预约、空教室查看、任务与笔记、AI 助手，以及 B 站 / YouTube 视频下载等功能，全部集中在一个本地桌面应用中。"
+  />
+  <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
   <div class="page">
@@ -488,125 +37,192 @@
     <section class="hero">
       <div>
         <p class="pill" data-i18n="hero.pill">北理工图书馆与学习空间助手</p>
-        <h1 data-i18n="hero.title">更快找到座位，更沉浸地学习。</h1>
+        <h1 data-i18n="hero.title">更快坐下来，更专心学进去。</h1>
         <p data-i18n="hero.description">
-          SmartDesk 将图书馆抢座、空教室、任务、笔记与 AI 助手整合在一个本地桌面应用中，
-          并用授权驱动的自动化引擎提供持续搜索、定时抢座与在线预约能力。
+          SmartDesk 把图书馆预约、空教室、课表任务、笔记和 AI 助手装进一个简单的桌面应用里，
+          帮你少刷网页、多专心学习。会员模式支持持续搜索、定时抢座和在线预约。
         </p>
         <div class="hero-actions">
-        <a class="cta" data-lang-link-target="membership.html" data-i18n="hero.membership">查看会员方案</a>
-        <a class="cta secondary" data-lang-link-target="user-guide.html" data-i18n="hero.guide">查看用户指南</a>
+          <a class="cta" data-lang-link-target="membership.html" data-i18n="hero.membership">查看会员方案</a>
+          <a class="cta secondary" data-lang-link-target="user-guide.html" data-i18n="hero.guide">查看用户指南</a>
         </div>
       </div>
     </section>
 
+    <!-- spaces 区域：学 / 工 / 乐，无图片 -->
     <section id="spaces" class="section">
       <div class="section-header">
         <span data-i18n="section.spaces.span">spaces</span>
-        <h2 data-i18n="section.spaces.title">“学 / 工 / 乐”空间入口，保持卡片与导航的一致性</h2>
+        <h2 data-i18n="section.spaces.title">“学 / 工 / 乐” 三个空间，一键切换学习状态</h2>
         <p data-i18n="section.spaces.description">
-          SmartDesk 在保持界面简洁的导航与卡片式布局基础上，在日期左侧新增 “学（Learn）”、“工（Work）”、“乐（Fun）” 的极简标签，
-          切换时仅替换当前场景的卡片组合，不更改导航结构或引入新层级。
+          SmartDesk 用“学（Learn）”、“工（Work）”、“乐（Fun）”三个标签，把常用功能按场景分组。
+          你看到的还是同一套界面和卡片布局，只是换一批卡片，不会再多出一堆复杂菜单。
         </p>
       </div>
       <div class="space-entry">
         <div class="space-preview">
-        <div class="space-meta">
-          <div class="space-date-row">
-            <div class="space-tags">
-              <span class="space-tag">学 · Learn</span>
-              <span class="space-tag">工 · Work</span>
-              <span class="space-tag">乐 · Fun</span>
+          <div class="space-meta">
+            <div class="space-date-row">
+              <div class="space-tags">
+                <span class="space-tag">学 · Learn</span>
+                <span class="space-tag">工 · Work</span>
+                <span class="space-tag">乐 · Fun</span>
+              </div>
             </div>
           </div>
-        </div>
+
           <div class="space-cards-grid">
             <div class="space-card">
               <h3 data-i18n="space.card.learn.title">学习空间 · Learn</h3>
               <p data-i18n="space.card.learn.description">
-                将主页、笔记、任务与课表、空教室、图书馆座位与聊天等模块按学习场景排列，按需展现。
+                把主页、课表任务、笔记、空教室、图书馆座位和聊天助手放在一起，打开电脑就是学习主场。
               </p>
               <ul>
-                <li data-i18n="space.card.learn.item.home">Home 启动页（Free 不可用，Plus/Pro 可打开）</li>
-                <li data-i18n="space.card.learn.item.notes">笔记、任务与课表联动提醒，聊天助手随时记录</li>
-                <li data-i18n="space.card.learn.item.rooms">空教室与图书馆座位数据实时可视</li>
-                <li data-i18n="space.card.learn.item.chat">聊天区与 AI 助手保持学习语境</li>
+                <li data-i18n="space.card.learn.item.home">Home 启动页可以集中展示近期任务、课表和预约情况</li>
+                <li data-i18n="space.card.learn.item.notes">任务与笔记统一管理，方便自己安排学习节奏</li>
+                <li data-i18n="space.card.learn.item.rooms">在 Home 页面可以快速查看空教室与图书馆座位概况</li>
+                <li data-i18n="space.card.learn.item.chat">聊天区内置 AI 助手，保持学习语境</li>
               </ul>
             </div>
+
             <div class="space-card">
-              <h3 data-i18n="space.card.work.title">工作空间 · Work</h3>
+              <h3 data-i18n="space.card.work.title">工作空间 · Work（开发中）</h3>
               <p data-i18n="space.card.work.description">
-                图片、幻灯片与文件工具以卡片形式加入，提高学习计划外的文档效率，卡片仅在对应空间出现。
+                工作空间正在开发中，未来会集中处理文档、PPT 和小工具，让写报告、做课设更顺手。
               </p>
               <ul>
-                <li data-i18n="space.card.work.item.image">图片格式转换（正在开发）</li>
-                <li data-i18n="space.card.work.item.ppt">PPT 备注与文字提取工具（待完成）</li>
-                <li data-i18n="space.card.work.item.file">文件工具：压缩、查看与轻量共享入口</li>
+                <li data-i18n="space.card.work.item.image">计划提供：图片格式转换与简单编辑</li>
+                <li data-i18n="space.card.work.item.ppt">计划提供：PPT 备注与文字一键提取</li>
+                <li data-i18n="space.card.work.item.file">计划提供：文件压缩、预览与轻量分享入口</li>
               </ul>
             </div>
+
             <div class="space-card">
               <h3 data-i18n="space.card.fun.title">娱乐空间 · Fun</h3>
               <p data-i18n="space.card.fun.description">
-                听歌与视频下载等轻量功能在娱乐空间以卡片或入口方式存在，保持主界面清爽。
+                学累了可以换到娱乐空间，轻松管理 B 站、YouTube 视频下载，主界面依然保持干净简洁。
               </p>
               <ul>
-                <li data-i18n="space.card.fun.item.video">B 站与 YouTube 视频下载（尚未完成）</li>
+                <li data-i18n="space.card.fun.item.video">支持 B 站与 YouTube 视频下载</li>
               </ul>
             </div>
           </div>
         </div>
+
         <div class="space-customization">
           <p data-i18n="space.customization.description">
-            设置页支持任意空间任意功能做启动页、隐藏不想要的模块、同空间左右排序，甚至跨空间共享卡片（如听歌同时出现在学习与娱乐模块）。
+            设置页支持把任意空间的任意功能设为启动页，隐藏不想用的卡片，在设置中调整卡片顺序，
+            也可以让同一张卡片出现在多个空间（例如视频下载卡片同时出现在学习与娱乐）。
           </p>
           <ul>
             <li data-i18n="space.customization.item.startpage">自定义启动页：任意空间 + 任意功能</li>
             <li data-i18n="space.customization.item.hide">隐藏不需要的功能卡片</li>
-            <li data-i18n="space.customization.item.sort">同一空间内左右排序功能卡片</li>
-            <li data-i18n="space.customization.item.cross">跨空间复用模块（听歌可呈现在学习与娱乐）</li>
+            <li data-i18n="space.customization.item.sort">在设置中调整同一空间内卡片顺序</li>
+            <li data-i18n="space.customization.item.cross">跨空间复用模块（例如视频下载卡片出现在学 / 乐两个空间）</li>
           </ul>
         </div>
       </div>
     </section>
 
+    <!-- 从“抢到座”到“学得好”的一整套体验：7 个小方框 + 7 张图 -->
     <section id="features" class="section">
       <div class="section-header">
         <span data-i18n="section.capabilities.span">capabilities</span>
-        <h2 data-i18n="section.capabilities.title">覆盖“预约 + 学习”全链路的桌面体验</h2>
+        <h2 data-i18n="section.capabilities.title">从“抢到座”到“学得好”的一整套体验</h2>
         <p data-i18n="section.capabilities.description">
-          图书馆助手与学习工具共享统一界面和数据存储，全部功能默认离线可用，联网仅发生在必要的学校接口或你授权的 AI API。
+          图书馆助手和学习工具共用同一套界面和本地数据存储。默认离线可用，只有在访问学校接口或你授权的 AI 服务时才联网，学习节奏不被打扰。
         </p>
       </div>
       <div class="cards">
+        <!-- Home -->
         <div class="card">
-          <h3 data-i18n="feature.card.library.title">图书馆自动助手</h3>
-          <p data-i18n="feature.card.library.description">
-            LibrarySeatView 提供持续搜索、定时任务、在线抢座与历史追踪；Free/Plus 需手动确认，Pro 可无人值守。
-          </p>
-        </div>
-        <div class="card">
-          <h3 data-i18n="feature.card.room.title">空教室与自习室</h3>
-          <p data-i18n="feature.card.room.description">
-            FreeRoom 模块实时展示教学楼占用，为临时讨论或复习提供可视化参考。
-          </p>
-        </div>
-        <div class="card">
-          <h3 data-i18n="feature.card.notes.title">笔记 · 任务 · AI</h3>
-          <p data-i18n="feature.card.notes.description">
-            内置 SQLite 存储，支持任务提醒、笔记管理、聊天助理与文档总结，可选接入在线模型。
-          </p>
-        </div>
-        <div class="card">
-          <h3 data-i18n="feature.card.home.title">Home 视图</h3>
+          <h3 data-i18n="feature.card.home.title">首页看板 · Home</h3>
           <p data-i18n="feature.card.home.description">
-            Plus/Pro 可打开 Home 页面，展示提醒、状态与个性化启动模块。
+            打开 SmartDesk，先看到的是自己的学习主页：今天的课程、待办和重要提醒一目了然，不用在各个 App 之间来回切换。
           </p>
+          <img
+            data-img-key="home"
+            src="images/home-zh.png"
+            alt="Home 主页视图截图"
+          />
         </div>
+
+        <!-- 课表 & 空教室 -->
         <div class="card">
-          <h3 data-i18n="feature.card.entertainment.title">娱乐与下载</h3>
-          <p data-i18n="feature.card.entertainment.description">
-            B 站、YouTube 视频下载等轻量功能以极简卡片存在，工具仍在开发中，但不会改变整体导航结构。
+          <h3 data-i18n="feature.card.schedule.title">课表与空教室</h3>
+          <p data-i18n="feature.card.schedule.description">
+            在课表视图下快速浏览一周安排，也能顺手查看哪栋楼、哪一层现在比较空，方便临时自习或和同学约讨论。
           </p>
+          <img
+            data-img-key="schedule"
+            src="images/schedule-zh.png"
+            alt="课表与空教室视图截图"
+          />
+        </div>
+
+        <!-- 任务 -->
+        <div class="card">
+          <h3 data-i18n="feature.card.tasks.title">任务清单与提醒</h3>
+          <p data-i18n="feature.card.tasks.description">
+            把作业、实验报告、复习计划写进任务清单，到点前会提醒你，不用再翻聊天记录找 deadline，学习节奏更心里有数。
+          </p>
+          <img
+            data-img-key="tasks"
+            src="images/tasks-zh.png"
+            alt="任务清单视图截图"
+          />
+        </div>
+
+        <!-- 图书馆预约 -->
+        <div class="card">
+          <h3 data-i18n="feature.card.library.title">图书馆预约助手</h3>
+          <p data-i18n="feature.card.library.description">
+            支持图书馆座位持续搜索、定时抢座和在线预约，帮你提前规划自习时间。抢到座就能安心看书，而不是一直盯着网页刷新。
+          </p>
+          <img
+            data-img-key="library"
+            src="images/library-zh.png"
+            alt="图书馆预约视图截图"
+          />
+        </div>
+
+        <!-- AI 聊天 -->
+        <div class="card">
+          <h3 data-i18n="feature.card.chat.title">AI 聊天与答疑</h3>
+          <p data-i18n="feature.card.chat.description">
+            内置学习向的聊天助手，可以帮你整理笔记、改写答案、解释公式；也可以接入你自己申请的 DeepSeek、OpenAI 账号，做更复杂的问答和写作。
+          </p>
+          <img
+            data-img-key="chat"
+            src="images/chat-zh.png"
+            alt="AI 聊天视图截图"
+          />
+        </div>
+
+        <!-- 视频下载 -->
+        <div class="card">
+          <h3 data-i18n="feature.card.video.title">B 站 / YouTube 视频下载</h3>
+          <p data-i18n="feature.card.video.description">
+            支持常见课程视频与公开课下载。Free 每月 3 次、标清画质，Plus/Pro 不限次数、支持高清。使用时请遵守各平台的版权和使用规定。
+          </p>
+          <img
+            data-img-key="video"
+            src="images/video-zh.png"
+            alt="视频下载视图截图"
+          />
+        </div>
+
+        <!-- 设置 -->
+        <div class="card">
+          <h3 data-i18n="feature.card.settings.title">设置与个性化</h3>
+          <p data-i18n="feature.card.settings.description">
+            在设置里可以选择启动页、隐藏不用的模块、调整卡片顺序，也能查看授权信息和当前设备绑定情况，按自己的节奏把 SmartDesk 调整成顺手的样子。
+          </p>
+          <img
+            data-img-key="settings"
+            src="images/settings-zh.png"
+            alt="设置页面截图"
+          />
         </div>
       </div>
     </section>
@@ -616,26 +232,30 @@
         <span data-i18n="section.automation.span">automation engine</span>
         <h2 data-i18n="section.automation.title">会员驱动的自动化与配额系统</h2>
         <p data-i18n="section.automation.description">
-          PremiumQuotaTracker、OnlineSeatUsageTracker 与 LicenseValidator 协同工作：记录配额、验证授权、限制在线抢座提交次数，确保公平与透明。
+          自动化引擎用“授权 + 配额”的方式来管理在线抢座，让系统对所有人都流畅可用，同时又不限制正常学习使用。
         </p>
       </div>
       <div class="cards">
         <div class="card">
           <h3 data-i18n="automation.card.binding.title">设备与学号绑定</h3>
           <p data-i18n="automation.card.binding.description">
-            license.json 绑定 deviceId + 统一身份认证学号。RSA-SHA256 签名防篡改，时间源防回拨。设置页可随时导入、禁用或切换模式。
+            每份授权对应一个学号和一台设备，用来防止账号被大量外借。你可以在设置页查看当前绑定设备，需要换电脑时也可以把授权迁移过去。
           </p>
         </div>
         <div class="card">
           <h3 data-i18n="automation.card.quota.title">配额守护</h3>
           <p data-i18n="automation.card.quota.description">
-            Free/Plus/Pro 每月 5/150/500 次持续搜索与定时配额。Pro 在线抢座：10 次/日 + 授权天数总额度。所有记录保存在 <code>premium-usage.json</code> 与 <code>online-seat-usage.json</code>。
+            Free / Plus / Pro 每月分别提供 5 / 150 / 500 次自动搜索和定时抢座配额，Pro 还支持每天最多 10 次在线抢座。
+            这些上限只是为了防止恶意刷请求，一般同学正常使用基本用不完。
           </p>
         </div>
         <div class="card">
           <h3 data-i18n="automation.card.transparency.title">数据透明</h3>
           <p data-i18n-html="automation.card.transparency.description">
-            用户数据、授权状态、日志全部在本地 <code>~/.smartdesk</code>。无云端收集，手动分享日志可定位问题。详见 <a href="trust-center.html" data-lang-link-target="trust-center.html">信任中心</a> 与 <a href="compliance.html" data-lang-link-target="compliance.html">公平说明</a>。
+            你的数据和授权信息都保存在本地电脑上的 SmartDesk 目录，不会上传到云端，也没有任何后台收集。
+            如果遇到问题，你可以选择把日志发给开发者帮你排查。详情可在
+            <a href="trust-center.html" data-lang-link-target="trust-center.html">信任中心</a>
+            和 <a href="compliance.html" data-lang-link-target="compliance.html">公平说明</a> 中查看。
           </p>
         </div>
       </div>
@@ -646,7 +266,7 @@
         <span data-i18n="section.membership.span">membership</span>
         <h2 data-i18n="section.membership.title">会员等级速览</h2>
         <p data-i18n="section.membership.description">
-          Free 默认启用；导入授权文件即可激活 Plus / Pro。授权保留在本地，可以随时禁用或迁移。
+          安装后默认是 Free 模式；导入授权文件即可激活 Plus / Pro。授权文件只保留在本地，可以随时禁用或迁移到新设备。
         </p>
       </div>
       <div class="table-wrapper">
@@ -679,6 +299,12 @@
               <td data-i18n="table.row.timed.pro">500 次 · 后台线程</td>
             </tr>
             <tr>
+              <td data-i18n="table.row.video.title">视频下载（B 站 & YouTube）</td>
+              <td data-i18n="table.row.video.free">每月 3 次 · 标清画质</td>
+              <td data-i18n="table.row.video.plus">不限次数 · 高清（需遵守版权规定）</td>
+              <td data-i18n="table.row.video.pro">不限次数 · 高清（需遵守版权规定）</td>
+            </tr>
+            <tr>
               <td data-i18n="table.row.online.title">在线抢座</td>
               <td data-i18n="table.row.online.free">未开放</td>
               <td data-i18n="table.row.online.plus">未开放</td>
@@ -686,22 +312,22 @@
             </tr>
             <tr>
               <td data-i18n="table.row.data.title">数据存储</td>
-              <td colspan="3" data-i18n-html="table.row.data.value">所有数据均存储在 <code>~/.smartdesk</code>，卸载不会删除</td>
+              <td colspan="3" data-i18n-html="table.row.data.value">所有数据均存储在本地 SmartDesk 目录中，卸载不会删除</td>
             </tr>
           </tbody>
         </table>
       </div>
       <div class="trust" data-i18n-html="section.trust">
-        有授权或隐私问题？请查看 <a href="membership.html" data-lang-link-target="membership.html">会员方案详情</a>、<a href="compliance.html" data-lang-link-target="compliance.html">公平说明</a> 或 <a href="trust-center.html" data-lang-link-target="trust-center.html">信任中心</a>，了解授权流程、设备绑定、数据备份方法。
+        有授权或隐私问题？请查看
+        <a href="membership.html" data-lang-link-target="membership.html">会员方案详情</a>、
+        <a href="compliance.html" data-lang-link-target="compliance.html">公平说明</a> 或
+        <a href="trust-center.html" data-lang-link-target="trust-center.html">信任中心</a>，
+        了解授权流程、设备绑定、数据备份方法。
       </div>
     </section>
 
     <footer>
       <p data-i18n="footer.text">© 2025 SmartDesk</p>
-      <div class="footer-links">
-        <a data-lang-link-target="membership.html" data-i18n="footer.link.membership">会员方案</a>
-        <a data-lang-link-target="trust-center.html" data-i18n="footer.link.trust">信任中心</a>
-      </div>
     </footer>
   </div>
 
@@ -716,89 +342,125 @@
         zh: {
           htmlLang: 'zh-CN',
           title: 'SmartDesk · 北理工智能座位与学习助理',
-          descriptionMeta: 'SmartDesk 提供图书馆抢座、空教室、任务、笔记、AI 助手与会员自动化能力。',
+          descriptionMeta: 'SmartDesk 帮你在北理工更轻松地抢座、自习和管理学习任务：图书馆预约、空教室查看、任务与笔记、AI 助手，以及 B 站 / YouTube 视频下载等功能，全部集中在一个本地桌面应用中。',
           'nav.features': '特性',
           'nav.automation': '自动助手',
           'nav.membership': '会员',
           'nav.trust': '信任中心',
           'nav.compliance': '公平合规',
           'cta.download': '下载体验',
+
           'hero.pill': '北理工图书馆与学习空间助手',
-          'hero.title': '更快找到座位，更沉浸地学习。',
-          'hero.description': 'SmartDesk 将图书馆抢座、空教室、任务、笔记与 AI 助手整合在一个本地桌面应用中，并用授权驱动的自动化引擎提供持续搜索、定时抢座与在线预约能力。',
+          'hero.title': '更快坐下来，更专心学进去。',
+          'hero.description': 'SmartDesk 把图书馆预约、空教室、课表任务、笔记和 AI 助手装进一个简单的桌面应用里，帮你少刷网页、多专心学习。会员模式支持持续搜索、定时抢座和在线预约。',
           'hero.membership': '查看会员方案',
           'hero.guide': '查看用户指南',
           'hero.readme': '阅读项目说明 →',
+
           'section.spaces.span': 'spaces',
-          'section.spaces.title': '“学 / 工 / 乐”空间入口，保持卡片与导航的一致性',
-          'section.spaces.description': 'SmartDesk 在保持界面简洁的导航与卡片式布局基础上，仅用“学（Learn）”、“工（Work）”、“乐（Fun）”标签区分场景，切换时只替换当前空间的卡片组合，不更改导航结构或引入新层级。',
+          'section.spaces.title': '“学 / 工 / 乐” 三个空间，一键切换学习状态',
+          'section.spaces.description': 'SmartDesk 用“学（Learn）”、“工（Work）”、“乐（Fun）”三个标签，把常用功能按场景分组。你看到的还是同一套界面和卡片布局，只是换一批卡片，不会再多出一堆复杂菜单。',
+
           'space.card.learn.title': '学习空间 · Learn',
-          'space.card.learn.description': 'Home、笔记、任务与课表、空教室、图书馆座位与聊天等模块按学习场景排列，按需展现。',
-          'space.card.learn.item.home': 'Home 启动页（Free 不可用，Plus/Pro 可打开）',
-          'space.card.learn.item.notes': '笔记、任务与课表联动提醒，聊天助手随时记录',
-          'space.card.learn.item.rooms': '空教室与图书馆座位数据实时可视',
-          'space.card.learn.item.chat': '聊天区与 AI 助手保持学习语境',
-          'space.card.work.title': '工作空间 · Work',
-          'space.card.work.description': '图片、幻灯片与文件工具以卡片形式加入，按照工作场景呈现，卡片仅在对应空间出现。',
-          'space.card.work.item.image': '图片格式转换（正在开发）',
-          'space.card.work.item.ppt': 'PPT 备注与文字提取工具（待完成）',
-          'space.card.work.item.file': '文件工具（压缩、查看与轻量共享入口）',
+          'space.card.learn.description': '把主页、课表任务、笔记、空教室、图书馆座位和聊天助手放在一起，打开电脑就是学习主场。',
+          'space.card.learn.item.home': 'Home 启动页可以集中展示近期任务、课表和预约情况',
+          'space.card.learn.item.notes': '任务与笔记统一管理，方便自己安排学习节奏',
+          'space.card.learn.item.rooms': '在 Home 页面可以快速查看空教室与图书馆座位概况',
+          'space.card.learn.item.chat': '聊天区内置 AI 助手，保持学习语境',
+
+          'space.card.work.title': '工作空间 · Work（开发中）',
+          'space.card.work.description': '工作空间正在开发中，未来会集中处理文档、PPT 和小工具，让写报告、做课设更顺手。',
+          'space.card.work.item.image': '计划提供：图片格式转换与简单编辑',
+          'space.card.work.item.ppt': '计划提供：PPT 备注与文字一键提取',
+          'space.card.work.item.file': '计划提供：文件压缩、预览与轻量分享入口',
+
           'space.card.fun.title': '娱乐空间 · Fun',
-          'space.card.fun.description': '视频下载等轻量功能在娱乐空间以卡片或入口方式存在，保持主界面清爽。',
-          'space.card.fun.item.video': 'B 站与 YouTube 视频下载（尚未完成）',
-          'space.customization.description': '设置页支持任意空间任意功能做启动页、隐藏不想要的模块、同空间左右排序，甚至跨空间共享卡片（如听歌同时出现在学习与娱乐模块）。',
+          'space.card.fun.description': '学累了可以换到娱乐空间，轻松管理 B 站、YouTube 视频下载，主界面依然保持干净简洁。',
+          'space.card.fun.item.video': '支持 B 站与 YouTube 视频下载',
+
+          'space.customization.description': '设置页支持把任意空间的任意功能设为启动页，隐藏不想用的卡片，在设置中调整卡片顺序，也可以让同一张卡片出现在多个空间（例如视频下载卡片同时出现在学习与娱乐）。',
           'space.customization.item.startpage': '自定义启动页：任意空间 + 任意功能',
           'space.customization.item.hide': '隐藏不需要的功能卡片',
-          'space.customization.item.sort': '同一空间内左右排序功能卡片',
-          'space.customization.item.cross': '跨空间复用模块（听歌可呈现在学习与娱乐）',
+          'space.customization.item.sort': '在设置中调整同一空间内卡片顺序',
+          'space.customization.item.cross': '跨空间复用模块（例如视频下载卡片出现在学 / 乐两个空间）',
+
           'section.capabilities.span': 'capabilities',
-          'section.capabilities.title': '覆盖“预约 + 学习”全链路的桌面体验',
-          'section.capabilities.description': '图书馆助手与学习工具共享统一界面和数据存储，全部功能默认离线可用，联网仅发生在必要的学校接口或你授权的 AI API。',
-          'feature.card.library.title': '图书馆自动助手',
-          'feature.card.library.description': 'LibrarySeatView 提供持续搜索、定时任务、在线抢座与历史追踪；Free/Plus 需手动确认，Pro 可无人值守。',
-          'feature.card.room.title': '空教室与自习室',
-          'feature.card.room.description': 'FreeRoom 模块实时展示教学楼占用，为临时讨论或复习提供可视化参考。',
-          'feature.card.notes.title': '笔记 · 任务 · AI',
-          'feature.card.notes.description': '内置 SQLite 存储，支持任务提醒、笔记管理、聊天助理与文档总结，可选接入在线模型。',
-          'feature.card.home.title': 'Home 视图',
-          'feature.card.home.description': 'Plus/Pro 可打开 Home 页面，展示提醒、状态与个性化启动模块。',
-          'feature.card.entertainment.title': '娱乐与下载',
-          'feature.card.entertainment.description': 'B 站、YouTube 视频下载等轻量功能以极简卡片存在，工具仍在开发中，但不会改变整体导航结构。',
+          'section.capabilities.title': '从“抢到座”到“学得好”的一整套体验',
+          'section.capabilities.description': '图书馆助手和学习工具共用同一套界面和本地数据存储。默认离线可用，只有在访问学校接口或你授权的 AI 服务时才联网，学习节奏不被打扰。',
+
+          'feature.card.home.title': '首页看板 · Home',
+          'feature.card.home.description': '打开 SmartDesk，先看到的是自己的学习主页：今天的课程、待办和重要提醒一目了然，不用在各个 App 之间来回切换。',
+
+          'feature.card.schedule.title': '课表与空教室',
+          'feature.card.schedule.description': '在课表视图下快速浏览一周安排，也能顺手查看哪栋楼、哪一层现在比较空，方便临时自习或和同学约讨论。',
+
+          'feature.card.tasks.title': '任务清单与提醒',
+          'feature.card.tasks.description': '把作业、实验报告、复习计划写进任务清单，到点前会提醒你，不用再翻聊天记录找 deadline，学习节奏更心里有数。',
+
+          'feature.card.library.title': '图书馆预约助手',
+          'feature.card.library.description': '支持图书馆座位持续搜索、定时抢座和在线预约，帮你提前规划自习时间。抢到座就能安心看书，而不是一直盯着网页刷新。',
+
+          'feature.card.chat.title': 'AI 聊天与答疑',
+          'feature.card.chat.description': '内置学习向的聊天助手，可以帮你整理笔记、改写答案、解释公式；也可以接入你自己申请的 DeepSeek、OpenAI 账号，做更复杂的问答和写作。',
+
+          'feature.card.video.title': 'B 站 / YouTube 视频下载',
+          'feature.card.video.description': '支持常见课程视频与公开课下载。Free 每月 3 次、标清画质，Plus/Pro 不限次数、支持高清。使用时请遵守各平台的版权和使用规定。',
+
+          'feature.card.settings.title': '设置与个性化',
+          'feature.card.settings.description': '在设置里可以选择启动页、隐藏不用的模块、调整卡片顺序，也能查看授权信息和当前设备绑定情况，按自己的节奏把 SmartDesk 调整成顺手的样子。',
+
           'section.automation.span': 'automation engine',
           'section.automation.title': '会员驱动的自动化与配额系统',
-          'section.automation.description': 'PremiumQuotaTracker、OnlineSeatUsageTracker 与 LicenseValidator 协同工作：记录配额、验证授权、限制在线抢座提交次数，确保公平与透明。',
+          'section.automation.description': '自动化引擎用“授权 + 配额”的方式来管理在线抢座，让系统对所有人都流畅可用，同时又不限制正常学习使用。',
+
           'automation.card.binding.title': '设备与学号绑定',
-          'automation.card.binding.description': 'license.json 绑定 deviceId + 统一身份认证学号。RSA-SHA256 签名防篡改，时间源防回拨。设置页可随时导入、禁用或切换模式。',
+          'automation.card.binding.description': '每份授权对应一个学号和一台设备，用来防止账号被大量外借。你可以在设置页查看当前绑定设备，需要换电脑时也可以把授权迁移过去。',
+
           'automation.card.quota.title': '配额守护',
-          'automation.card.quota.description': 'Free/Plus/Pro 每月 5/150/500 次持续搜索与定时配额。Pro 在线抢座：10 次/日 + 授权天数总额度。所有记录保存在 <code>premium-usage.json</code> 与 <code>online-seat-usage.json</code>。',
+          'automation.card.quota.description': 'Free / Plus / Pro 每月分别提供 5 / 150 / 500 次自动搜索和定时抢座配额，Pro 还支持每天最多 10 次在线抢座。这些上限只是为了防止恶意刷请求，一般同学正常使用基本用不完。',
+
           'automation.card.transparency.title': '数据透明',
-          'automation.card.transparency.description': '用户数据、授权状态、日志全部在本地 <code>~/.smartdesk</code>。无云端收集，手动分享日志可定位问题。详见 <a href="trust-center.html" data-lang-link-target="trust-center.html">信任中心</a> 与 <a href="compliance.html" data-lang-link-target="compliance.html">公平说明</a>。',
+          'automation.card.transparency.description': '你的数据和授权信息都保存在本地电脑上的 SmartDesk 目录，不会上传到云端，也没有任何后台收集。如果遇到问题，你可以选择把日志发给开发者帮你排查。详情可在 <a href="trust-center.html" data-lang-link-target="trust-center.html">信任中心</a> 和 <a href="compliance.html" data-lang-link-target="compliance.html">公平说明</a> 中查看。',
+
           'section.membership.span': 'membership',
           'section.membership.title': '会员等级速览',
-          'section.membership.description': 'Free 默认启用；导入授权文件即可激活 Plus / Pro。授权保留在本地，可以随时禁用或迁移。',
+          'section.membership.description': '安装后默认是 Free 模式；导入授权文件即可激活 Plus / Pro。授权文件只保留在本地，可以随时禁用或迁移到新设备。',
+
           'table.header.capability': '能力',
           'table.header.free': 'Free',
           'table.header.plus': 'Plus',
           'table.header.pro': 'Pro',
+
           'table.row.home.title': 'Home & 启动页',
           'table.row.home.free': '不可用',
           'table.row.home.plus': '开启 Home',
           'table.row.home.pro': 'Home + 模块自定义',
+
           'table.row.search.title': '持续搜索配额 / 月',
           'table.row.search.free': '5 次 · 手动确认',
           'table.row.search.plus': '150 次 · 手动确认',
           'table.row.search.pro': '500 次 · 无人值守',
+
           'table.row.timed.title': '定时抢座配额 / 月',
           'table.row.timed.free': '5 次 · 需在线守候',
           'table.row.timed.plus': '150 次 · 需在线守候',
           'table.row.timed.pro': '500 次 · 后台线程',
+
+          'table.row.video.title': '视频下载（B 站 & YouTube）',
+          'table.row.video.free': '每月 3 次 · 标清画质',
+          'table.row.video.plus': '不限次数 · 高清（需遵守版权规定）',
+          'table.row.video.pro': '不限次数 · 高清（需遵守版权规定）',
+
           'table.row.online.title': '在线抢座',
           'table.row.online.free': '未开放',
           'table.row.online.plus': '未开放',
           'table.row.online.pro': '开放 · 10 次/日 + 授权天数总额',
+
           'table.row.data.title': '数据存储',
-          'table.row.data.value': '所有数据均存储在 <code>~/.smartdesk</code>，卸载不会删除',
+          'table.row.data.value': '所有数据均存储在本地 SmartDesk 目录中，卸载不会删除',
+
           'section.trust': '有授权或隐私问题？请查看 <a href="membership.html" data-lang-link-target="membership.html">会员方案详情</a>、<a href="compliance.html" data-lang-link-target="compliance.html">公平说明</a> 或 <a href="trust-center.html" data-lang-link-target="trust-center.html">信任中心</a>，了解授权流程、设备绑定、数据备份方法。',
+
           'footer.text': '© 2025 SmartDesk',
           'footer.link.membership': '会员方案',
           'footer.link.trust': '信任中心'
@@ -806,89 +468,125 @@
         en: {
           htmlLang: 'en',
           title: 'SmartDesk · BIT Intelligent Seat & Study Assistant',
-          descriptionMeta: 'SmartDesk bundles library seat grabs, vacant classroom data, tasks, notes and AI assistant into a local desktop automaton.',
+          descriptionMeta: 'SmartDesk helps BIT students grab seats, find study rooms and manage study tasks more easily: library bookings, vacant classrooms, tasks & notes, AI assistant and Bilibili / YouTube downloads, all in one local desktop app.',
           'nav.features': 'Features',
           'nav.automation': 'Automation',
           'nav.membership': 'Membership',
           'nav.trust': 'Trust Center',
           'nav.compliance': 'Compliance',
           'cta.download': 'Download',
+
           'hero.pill': 'BIT Library & Study Space Copilot',
-          'hero.title': 'Find seats faster, study more deeply.',
-          'hero.description': 'SmartDesk combines library seat grabs, classroom finder, tasks, notes and an AI assistant inside a local desktop app and powers continuous search, scheduled grabs and online reservations with an authorized automation engine.',
+          'hero.title': 'Sit down faster, focus deeper.',
+          'hero.description': 'SmartDesk puts library bookings, vacant classrooms, schedule & tasks, notes and an AI assistant into a single desktop app so you spend less time refreshing pages and more time actually studying. Membership tiers unlock continuous search, scheduled grabs and online reservations.',
           'hero.membership': 'View membership tiers',
           'hero.guide': 'User guide',
           'hero.readme': 'Read the project README →',
+
           'section.spaces.span': 'spaces',
-          'section.spaces.title': 'Space launcher keeps the Learn / Work / Fun tabs while reusing the card & navigation layers',
-          'section.spaces.description': 'SmartDesk keeps the lean navigation and card layout, adding minimal “Learn / Work / Fun” tags so each scene only swaps cards without introducing new levels.',
+          'section.spaces.title': 'Three spaces — Learn / Work / Fun — one tap to change your mode',
+          'section.spaces.description': 'SmartDesk groups tools into “Learn”, “Work” and “Fun” tags. You still use the same clean navigation and card layout; each scene just swaps cards instead of adding more menus.',
+
           'space.card.learn.title': 'Learning space · Learn',
-          'space.card.learn.description': 'Home, notes, tasks & schedule, vacant classrooms, library seats and chat stack inside the learning scene.',
-          'space.card.learn.item.home': 'Home launch (Free disabled, Plus/Pro unlock it)',
-          'space.card.learn.item.notes': 'Notes, tasks and schedule stay linked with reminders and AI chat',
-          'space.card.learn.item.rooms': 'Vacant classrooms and library seats stay visible with contextual alerts',
-          'space.card.learn.item.chat': 'Chat assistant keeps the study tone',
-          'space.card.work.title': 'Work space · Work',
-          'space.card.work.description': 'Image, slide and file tools appear as cards to support work scenarios, only shown inside their space.',
-          'space.card.work.item.image': 'Image format conversion (coming soon)',
-          'space.card.work.item.ppt': 'PPT note/text extraction tools (pending)',
-          'space.card.work.item.file': 'File utilities: compress, preview and lightweight sharing',
+          'space.card.learn.description': 'Home, schedule & tasks, notes, vacant classrooms, library seats and chat live together so your laptop opens directly into a study hub.',
+          'space.card.learn.item.home': 'The Home view can surface upcoming tasks, schedule and booking status in one place',
+          'space.card.learn.item.notes': 'Tasks and notes are managed together so you can plan your own pace',
+          'space.card.learn.item.rooms': 'The Home page gives a quick overview of vacant classrooms and library seats',
+          'space.card.learn.item.chat': 'The chat area embeds an AI assistant that stays in study mode',
+
+          'space.card.work.title': 'Work space · Work (in development)',
+          'space.card.work.description': 'The Work space is under active development and will gather document, slide and utility tools to make reports and projects easier.',
+          'space.card.work.item.image': 'Planned: image format conversion and simple editing',
+          'space.card.work.item.ppt': 'Planned: one-click PPT note and text extraction',
+          'space.card.work.item.file': 'Planned: file compression, preview and lightweight sharing',
+
           'space.card.fun.title': 'Fun space · Fun',
-          'space.card.fun.description': 'Video download and other light utilities live in the entertainment scene as cards or entry points, keeping the main UI tidy.',
-          'space.card.fun.item.video': 'Bilibili & YouTube downloads (coming soon)',
-          'space.customization.description': 'Settings let you pick any space and feature as the launch view, hide cards, reorder within a space and even surface the same card across spaces (e.g. music in both Learn and Fun).',
+          'space.card.fun.description': 'When you need a break, switch to Fun to manage Bilibili and YouTube downloads while keeping the main UI tidy.',
+          'space.card.fun.item.video': 'Built-in support for Bilibili & YouTube downloads',
+
+          'space.customization.description': 'Settings let you pick any space and feature as the launch view, hide cards you do not need, adjust their order, and even surface the same card in multiple spaces (for example, show the download card in both Learn and Fun).',
           'space.customization.item.startpage': 'Custom launch page: any space + any feature',
           'space.customization.item.hide': 'Hide cards you do not need',
-          'space.customization.item.sort': 'Reorder cards left/right within the same space',
-          'space.customization.item.cross': 'Share modules across spaces (music can appear in Learn and Fun)',
+          'space.customization.item.sort': 'Adjust card order per space in Settings',
+          'space.customization.item.cross': 'Share modules across spaces (e.g. show the download card in both Learn and Fun)',
+
           'section.capabilities.span': 'capabilities',
-          'section.capabilities.title': 'A desktop experience covering reservations + study workflows',
-          'section.capabilities.description': 'Library assistant and learning tools share a unified UI and storage; everything works offline by default and only goes online for the campus APIs or AI services you authorize.',
-          'feature.card.library.title': 'Library automation',
-          'feature.card.library.description': 'LibrarySeatView delivers continuous search, scheduled tasks, online grabs and history tracking. Free/Plus need manual confirmation; Pro runs unattended.',
-          'feature.card.room.title': 'Vacant classrooms & study halls',
-          'feature.card.room.description': 'The FreeRoom module shows building occupancy in real time, helping you spot spaces for quick discussions or study pods.',
-          'feature.card.notes.title': 'Notes, tasks & AI',
-          'feature.card.notes.description': 'Built-in SQLite storage powers task reminders, notes, chats and document summaries, with optional online models.',
-          'feature.card.home.title': 'Home view',
-          'feature.card.home.description': 'Plus/Pro unlock the Home dashboard to surface reminders, status and personalized launch modules.',
-          'feature.card.entertainment.title': 'Entertainment & downloads',
-          'feature.card.entertainment.description': 'Bilibili and YouTube download utilities remain lightweight cards under construction without altering the overall navigation.',
+          'section.capabilities.title': 'One flow from “got a seat” to “studied well”',
+          'section.capabilities.description': 'The library assistant and learning tools share a unified UI and local storage. Everything works offline by default; we only go online for campus APIs or AI services that you explicitly enable.',
+
+          'feature.card.home.title': 'Home dashboard · Home',
+          'feature.card.home.description': 'When you open SmartDesk, you land on your study home: today’s classes, to-dos and key reminders in one place, without juggling multiple apps.',
+
+          'feature.card.schedule.title': 'Schedule & Free rooms',
+          'feature.card.schedule.description': 'The schedule view shows your week at a glance and lets you quickly check which buildings and floors are relatively free for impromptu study or group discussion.',
+
+          'feature.card.tasks.title': 'Task list & reminders',
+          'feature.card.tasks.description': 'Put assignments, lab reports and revision plans into the task list so reminders arrive before the deadline, instead of digging through chat history to find dates.',
+
+          'feature.card.library.title': 'Library booking assistant',
+          'feature.card.library.description': 'Supports continuous searches, scheduled grabs and online reservations for library seats so you can plan study time in advance instead of camping a web page.',
+
+          'feature.card.chat.title': 'AI chat & Q&A',
+          'feature.card.chat.description': 'The built-in study-oriented assistant helps tidy notes, rewrite answers and explain formulas. You can also hook up your own DeepSeek or OpenAI account for heavier Q&A and writing tasks.',
+
+          'feature.card.video.title': 'Bilibili / YouTube downloads',
+          'feature.card.video.description': 'Download common course videos and open classes. Free offers 3 downloads per month in SD; Plus/Pro are unlimited with HD available. Please respect copyright and platform terms.',
+
+          'feature.card.settings.title': 'Settings & personalization',
+          'feature.card.settings.description': 'In Settings you can pick the launch page, hide modules you do not use, reorder cards and review your license and device binding so SmartDesk fits your own workflow.',
+
           'section.automation.span': 'automation engine',
           'section.automation.title': 'Quota-aware automation driven by membership',
-          'section.automation.description': 'PremiumQuotaTracker, OnlineSeatUsageTracker and LicenseValidator work together to track quotas, validate authorization and limit online bookings so everything stays fair and transparent.',
+          'section.automation.description': 'The automation engine uses licenses and clear quotas to manage online bookings so the system stays smooth for everyone without limiting normal study usage.',
+
           'automation.card.binding.title': 'Device & ID binding',
-          'automation.card.binding.description': 'license.json links your deviceId with the campus account. RSA-SHA256 signatures prevent tampering and time checks block rollbacks. Settings lets you import, disable or switch modes anytime.',
+          'automation.card.binding.description': 'Each license is linked to one campus ID and one device to avoid massive account sharing. You can see the current device in Settings and move your license when you change machines.',
+
           'automation.card.quota.title': 'Quota guard',
-          'automation.card.quota.description': 'Free/Plus/Pro get 5/150/500 monthly slots for continuous search and scheduled grabs. Pro online bookings allow 10 tries/day with remaining days counting toward total quota. Records live in premium-usage.json and online-seat-usage.json.',
+          'automation.card.quota.description': 'Free / Plus / Pro offer 5 / 150 / 500 monthly slots for automatic search and scheduled bookings, with Pro also allowing up to 10 online grabs per day. These limits mainly prevent abuse; normal usage is very unlikely to hit them.',
+
           'automation.card.transparency.title': 'Data transparency',
-          'automation.card.transparency.description': 'User data, auth state and logs stay under <code>~/.smartdesk</code>. No cloud collection; share logs manually when troubleshooting. See the <a href="trust-center.html" data-lang-link-target="trust-center.html">Trust Center</a> and <a href="compliance.html" data-lang-link-target="compliance.html">Compliance</a> pages for all the details.',
+          'automation.card.transparency.description': 'Your data and license info stay on your own computer in the SmartDesk folder. Nothing is uploaded silently and there is no hidden collection. If you run into issues, you can choose to share logs with the developer for troubleshooting. See the <a href="trust-center.html" data-lang-link-target="trust-center.html">Trust Center</a> and <a href="compliance.html" data-lang-link-target="compliance.html">Compliance</a> pages for details.',
+
           'section.membership.span': 'membership',
           'section.membership.title': 'Membership tiers at a glance',
-          'section.membership.description': 'Free is enabled by default; importing an authorization file activates Plus/Pro. Licenses stay local and can be disabled or moved anytime.',
+          'section.membership.description': 'By default you start in Free mode; importing a license file activates Plus or Pro. Licenses stay on your machine and can be disabled or moved to a new device at any time.',
+
           'table.header.capability': 'Capability',
           'table.header.free': 'Free',
           'table.header.plus': 'Plus',
           'table.header.pro': 'Pro',
+
           'table.row.home.title': 'Home & launch view',
           'table.row.home.free': 'Unavailable',
           'table.row.home.plus': 'Home enabled',
           'table.row.home.pro': 'Home + customizable modules',
+
           'table.row.search.title': 'Continuous search quota / month',
           'table.row.search.free': '5 attempts · manual confirm',
           'table.row.search.plus': '150 attempts · manual confirm',
           'table.row.search.pro': '500 attempts · unattended',
+
           'table.row.timed.title': 'Scheduled grab quota / month',
           'table.row.timed.free': '5 schedules · must stay online',
           'table.row.timed.plus': '150 schedules · must stay online',
           'table.row.timed.pro': '500 schedules · background thread',
+
+          'table.row.video.title': 'Video downloads (Bilibili & YouTube)',
+          'table.row.video.free': '3 downloads / month · SD only',
+          'table.row.video.plus': 'Unlimited · HD available (respect copyright)',
+          'table.row.video.pro': 'Unlimited · HD available (respect copyright)',
+
           'table.row.online.title': 'Online grabs',
           'table.row.online.free': 'Not available',
           'table.row.online.plus': 'Not available',
           'table.row.online.pro': 'Available · 10/day + remaining days total',
+
           'table.row.data.title': 'Data storage',
-          'table.row.data.value': 'All data stays under <code>~/.smartdesk</code>; uninstalling keeps it intact.',
-          'section.trust': 'Questions about authorization or privacy? Visit the <a href="membership.html" data-lang-link-target="membership.html">membership details</a>, <a href="compliance.html" data-lang-link-target="compliance.html">compliance statement</a> or <a href="trust-center.html" data-lang-link-target="trust-center.html">Trust Center</a> for workflow, device and backup guidance.',
+          'table.row.data.value': 'All data stays in the local SmartDesk folder; uninstalling does not delete it.',
+
+          'section.trust': 'Questions about authorization or privacy? Visit the <a href="membership.html" data-lang-link-target="membership.html">membership details</a>, <a href="compliance.html" data-lang-link-target="compliance.html">compliance statement</a> or <a href="trust-center.html" data-lang-link-target="trust-center.html">Trust Center</a> for license workflow, device binding and backup tips.',
+
           'footer.text': '© 2025 SmartDesk',
           'footer.link.membership': 'Membership',
           'footer.link.trust': 'Trust Center'
@@ -915,27 +613,32 @@
         if (!dictionary) {
           return;
         }
+
         document.documentElement.lang = dictionary.htmlLang || (lang === 'en' ? 'en' : 'zh-CN');
         document.title = dictionary.title;
         const descriptionMeta = document.querySelector('meta[name="description"]');
         if (descriptionMeta && dictionary.descriptionMeta) {
           descriptionMeta.setAttribute('content', dictionary.descriptionMeta);
         }
+
         document.querySelectorAll('[data-i18n]').forEach((node) => {
           const key = node.getAttribute('data-i18n');
           if (key && dictionary[key]) {
             node.textContent = dictionary[key];
           }
         });
+
         document.querySelectorAll('[data-i18n-html]').forEach((node) => {
           const key = node.getAttribute('data-i18n-html');
           if (key && dictionary[key]) {
             node.innerHTML = dictionary[key];
           }
         });
+
         document.querySelectorAll('[data-lang-toggle]').forEach((button) => {
           button.classList.toggle('is-active', button.getAttribute('data-lang-toggle') === lang);
         });
+
         document.querySelectorAll('[data-lang-link-target]').forEach((link) => {
           const target = link.getAttribute('data-lang-link-target');
           if (!target) return;
@@ -945,11 +648,20 @@
           }
           link.setAttribute('href', cleanTarget + '?lang=' + lang);
         });
+
+        // 切换截图：images/{key}-{lang}.png
+        document.querySelectorAll('[data-img-key]').forEach((img) => {
+          const key = img.getAttribute('data-img-key');
+          if (!key) return;
+          img.setAttribute('src', 'images/' + key + '-' + lang + '.png');
+        });
+
         const url = new URL(window.location.href);
         if (url.searchParams.get(LANG_PARAM) !== lang) {
           url.searchParams.set(LANG_PARAM, lang);
           window.history.replaceState(null, '', url.toString());
         }
+
         localStorage.setItem(STORAGE_KEY, lang);
       }
 
