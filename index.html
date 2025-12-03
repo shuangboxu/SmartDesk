@@ -196,6 +196,140 @@
       margin-top: 48px;
     }
 
+    .space-entry {
+      margin-top: 24px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 28px;
+      box-shadow: var(--shadow);
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    .space-preview {
+      display: block;
+    }
+
+    .space-meta {
+      min-width: auto;
+    }
+
+    .space-date-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 12px;
+    }
+
+    .space-date-row .space-tags {
+      order: 1;
+    }
+
+    .space-date {
+      order: 2;
+      font-size: 20px;
+      color: var(--text-strong);
+      margin-bottom: 0;
+    }
+
+    .space-tags {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 12px;
+      flex-wrap: wrap;
+    }
+
+    .space-tag {
+      font-size: 12px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      border-radius: 999px;
+      padding: 5px 14px;
+      border: 1px solid rgba(14, 165, 233, 0.4);
+      background: rgba(14, 165, 233, 0.08);
+      color: var(--text-strong);
+      font-weight: 600;
+    }
+
+    .space-preview p {
+      font-size: 13px;
+      color: var(--text-soft);
+      line-height: 1.7;
+    }
+
+    .space-cards-grid {
+      flex: 2;
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    @media (max-width: 900px) {
+      .space-cards-grid {
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      }
+    }
+
+    .space-card {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 18px;
+      min-height: 170px;
+    }
+
+    .space-card h3 {
+      font-size: 16px;
+      margin-bottom: 10px;
+      color: var(--text-strong);
+    }
+
+    .space-card p {
+      font-size: 13px;
+      color: var(--text-soft);
+      margin-bottom: 10px;
+    }
+
+    .space-card ul {
+      list-style: none;
+      padding-left: 0;
+      color: var(--text);
+      font-size: 13px;
+    }
+
+    .space-card ul li + li {
+      margin-top: 6px;
+    }
+
+    .space-customization {
+      border-top: 1px dashed var(--border);
+      padding-top: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .space-customization ul {
+      list-style: none;
+      padding-left: 0;
+      margin: 0;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .space-customization li {
+      background: rgba(147, 51, 234, 0.08);
+      color: var(--text);
+      padding: 6px 10px;
+      border-radius: 999px;
+      font-size: 12px;
+    }
+
     .section-header {
       margin-bottom: 20px;
     }
@@ -366,6 +500,75 @@
       </div>
     </section>
 
+    <section id="spaces" class="section">
+      <div class="section-header">
+        <span data-i18n="section.spaces.span">spaces</span>
+        <h2 data-i18n="section.spaces.title">“学 / 工 / 乐”空间入口，保持卡片与导航的一致性</h2>
+        <p data-i18n="section.spaces.description">
+          SmartDesk 在保持界面简洁的导航与卡片式布局基础上，在日期左侧新增 “学（Learn）”、“工（Work）”、“乐（Fun）” 的极简标签，
+          切换时仅替换当前场景的卡片组合，不更改导航结构或引入新层级。
+        </p>
+      </div>
+      <div class="space-entry">
+        <div class="space-preview">
+        <div class="space-meta">
+          <div class="space-date-row">
+            <div class="space-tags">
+              <span class="space-tag">学 · Learn</span>
+              <span class="space-tag">工 · Work</span>
+              <span class="space-tag">乐 · Fun</span>
+            </div>
+          </div>
+        </div>
+          <div class="space-cards-grid">
+            <div class="space-card">
+              <h3 data-i18n="space.card.learn.title">学习空间 · Learn</h3>
+              <p data-i18n="space.card.learn.description">
+                将主页、笔记、任务与课表、空教室、图书馆座位与聊天等模块按学习场景排列，按需展现。
+              </p>
+              <ul>
+                <li data-i18n="space.card.learn.item.home">Home 启动页（Free 不可用，Plus/Pro 可打开）</li>
+                <li data-i18n="space.card.learn.item.notes">笔记、任务与课表联动提醒，聊天助手随时记录</li>
+                <li data-i18n="space.card.learn.item.rooms">空教室与图书馆座位数据实时可视</li>
+                <li data-i18n="space.card.learn.item.chat">聊天区与 AI 助手保持学习语境</li>
+              </ul>
+            </div>
+            <div class="space-card">
+              <h3 data-i18n="space.card.work.title">工作空间 · Work</h3>
+              <p data-i18n="space.card.work.description">
+                图片、幻灯片与文件工具以卡片形式加入，提高学习计划外的文档效率，卡片仅在对应空间出现。
+              </p>
+              <ul>
+                <li data-i18n="space.card.work.item.image">图片格式转换（正在开发）</li>
+                <li data-i18n="space.card.work.item.ppt">PPT 备注与文字提取工具（待完成）</li>
+                <li data-i18n="space.card.work.item.file">文件工具：压缩、查看与轻量共享入口</li>
+              </ul>
+            </div>
+            <div class="space-card">
+              <h3 data-i18n="space.card.fun.title">娱乐空间 · Fun</h3>
+              <p data-i18n="space.card.fun.description">
+                听歌与视频下载等轻量功能在娱乐空间以卡片或入口方式存在，保持主界面清爽。
+              </p>
+              <ul>
+                <li data-i18n="space.card.fun.item.video">B 站与 YouTube 视频下载（尚未完成）</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <div class="space-customization">
+          <p data-i18n="space.customization.description">
+            设置页支持任意空间任意功能做启动页、隐藏不想要的模块、同空间左右排序，甚至跨空间共享卡片（如听歌同时出现在学习与娱乐模块）。
+          </p>
+          <ul>
+            <li data-i18n="space.customization.item.startpage">自定义启动页：任意空间 + 任意功能</li>
+            <li data-i18n="space.customization.item.hide">隐藏不需要的功能卡片</li>
+            <li data-i18n="space.customization.item.sort">同一空间内左右排序功能卡片</li>
+            <li data-i18n="space.customization.item.cross">跨空间复用模块（听歌可呈现在学习与娱乐）</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
     <section id="features" class="section">
       <div class="section-header">
         <span data-i18n="section.capabilities.span">capabilities</span>
@@ -397,6 +600,12 @@
           <h3 data-i18n="feature.card.home.title">Home 视图</h3>
           <p data-i18n="feature.card.home.description">
             Plus/Pro 可打开 Home 页面，展示提醒、状态与个性化启动模块。
+          </p>
+        </div>
+        <div class="card">
+          <h3 data-i18n="feature.card.entertainment.title">娱乐与下载</h3>
+          <p data-i18n="feature.card.entertainment.description">
+            B 站、YouTube 视频下载等轻量功能以极简卡片存在，工具仍在开发中，但不会改变整体导航结构。
           </p>
         </div>
       </div>
@@ -520,6 +729,28 @@
           'hero.membership': '查看会员方案',
           'hero.guide': '查看用户指南',
           'hero.readme': '阅读项目说明 →',
+          'section.spaces.span': 'spaces',
+          'section.spaces.title': '“学 / 工 / 乐”空间入口，保持卡片与导航的一致性',
+          'section.spaces.description': 'SmartDesk 在保持界面简洁的导航与卡片式布局基础上，仅用“学（Learn）”、“工（Work）”、“乐（Fun）”标签区分场景，切换时只替换当前空间的卡片组合，不更改导航结构或引入新层级。',
+          'space.card.learn.title': '学习空间 · Learn',
+          'space.card.learn.description': 'Home、笔记、任务与课表、空教室、图书馆座位与聊天等模块按学习场景排列，按需展现。',
+          'space.card.learn.item.home': 'Home 启动页（Free 不可用，Plus/Pro 可打开）',
+          'space.card.learn.item.notes': '笔记、任务与课表联动提醒，聊天助手随时记录',
+          'space.card.learn.item.rooms': '空教室与图书馆座位数据实时可视',
+          'space.card.learn.item.chat': '聊天区与 AI 助手保持学习语境',
+          'space.card.work.title': '工作空间 · Work',
+          'space.card.work.description': '图片、幻灯片与文件工具以卡片形式加入，按照工作场景呈现，卡片仅在对应空间出现。',
+          'space.card.work.item.image': '图片格式转换（正在开发）',
+          'space.card.work.item.ppt': 'PPT 备注与文字提取工具（待完成）',
+          'space.card.work.item.file': '文件工具（压缩、查看与轻量共享入口）',
+          'space.card.fun.title': '娱乐空间 · Fun',
+          'space.card.fun.description': '视频下载等轻量功能在娱乐空间以卡片或入口方式存在，保持主界面清爽。',
+          'space.card.fun.item.video': 'B 站与 YouTube 视频下载（尚未完成）',
+          'space.customization.description': '设置页支持任意空间任意功能做启动页、隐藏不想要的模块、同空间左右排序，甚至跨空间共享卡片（如听歌同时出现在学习与娱乐模块）。',
+          'space.customization.item.startpage': '自定义启动页：任意空间 + 任意功能',
+          'space.customization.item.hide': '隐藏不需要的功能卡片',
+          'space.customization.item.sort': '同一空间内左右排序功能卡片',
+          'space.customization.item.cross': '跨空间复用模块（听歌可呈现在学习与娱乐）',
           'section.capabilities.span': 'capabilities',
           'section.capabilities.title': '覆盖“预约 + 学习”全链路的桌面体验',
           'section.capabilities.description': '图书馆助手与学习工具共享统一界面和数据存储，全部功能默认离线可用，联网仅发生在必要的学校接口或你授权的 AI API。',
@@ -531,6 +762,8 @@
           'feature.card.notes.description': '内置 SQLite 存储，支持任务提醒、笔记管理、聊天助理与文档总结，可选接入在线模型。',
           'feature.card.home.title': 'Home 视图',
           'feature.card.home.description': 'Plus/Pro 可打开 Home 页面，展示提醒、状态与个性化启动模块。',
+          'feature.card.entertainment.title': '娱乐与下载',
+          'feature.card.entertainment.description': 'B 站、YouTube 视频下载等轻量功能以极简卡片存在，工具仍在开发中，但不会改变整体导航结构。',
           'section.automation.span': 'automation engine',
           'section.automation.title': '会员驱动的自动化与配额系统',
           'section.automation.description': 'PremiumQuotaTracker、OnlineSeatUsageTracker 与 LicenseValidator 协同工作：记录配额、验证授权、限制在线抢座提交次数，确保公平与透明。',
@@ -586,6 +819,28 @@
           'hero.membership': 'View membership tiers',
           'hero.guide': 'User guide',
           'hero.readme': 'Read the project README →',
+          'section.spaces.span': 'spaces',
+          'section.spaces.title': 'Space launcher keeps the Learn / Work / Fun tabs while reusing the card & navigation layers',
+          'section.spaces.description': 'SmartDesk keeps the lean navigation and card layout, adding minimal “Learn / Work / Fun” tags so each scene only swaps cards without introducing new levels.',
+          'space.card.learn.title': 'Learning space · Learn',
+          'space.card.learn.description': 'Home, notes, tasks & schedule, vacant classrooms, library seats and chat stack inside the learning scene.',
+          'space.card.learn.item.home': 'Home launch (Free disabled, Plus/Pro unlock it)',
+          'space.card.learn.item.notes': 'Notes, tasks and schedule stay linked with reminders and AI chat',
+          'space.card.learn.item.rooms': 'Vacant classrooms and library seats stay visible with contextual alerts',
+          'space.card.learn.item.chat': 'Chat assistant keeps the study tone',
+          'space.card.work.title': 'Work space · Work',
+          'space.card.work.description': 'Image, slide and file tools appear as cards to support work scenarios, only shown inside their space.',
+          'space.card.work.item.image': 'Image format conversion (coming soon)',
+          'space.card.work.item.ppt': 'PPT note/text extraction tools (pending)',
+          'space.card.work.item.file': 'File utilities: compress, preview and lightweight sharing',
+          'space.card.fun.title': 'Fun space · Fun',
+          'space.card.fun.description': 'Video download and other light utilities live in the entertainment scene as cards or entry points, keeping the main UI tidy.',
+          'space.card.fun.item.video': 'Bilibili & YouTube downloads (coming soon)',
+          'space.customization.description': 'Settings let you pick any space and feature as the launch view, hide cards, reorder within a space and even surface the same card across spaces (e.g. music in both Learn and Fun).',
+          'space.customization.item.startpage': 'Custom launch page: any space + any feature',
+          'space.customization.item.hide': 'Hide cards you do not need',
+          'space.customization.item.sort': 'Reorder cards left/right within the same space',
+          'space.customization.item.cross': 'Share modules across spaces (music can appear in Learn and Fun)',
           'section.capabilities.span': 'capabilities',
           'section.capabilities.title': 'A desktop experience covering reservations + study workflows',
           'section.capabilities.description': 'Library assistant and learning tools share a unified UI and storage; everything works offline by default and only goes online for the campus APIs or AI services you authorize.',
@@ -597,6 +852,8 @@
           'feature.card.notes.description': 'Built-in SQLite storage powers task reminders, notes, chats and document summaries, with optional online models.',
           'feature.card.home.title': 'Home view',
           'feature.card.home.description': 'Plus/Pro unlock the Home dashboard to surface reminders, status and personalized launch modules.',
+          'feature.card.entertainment.title': 'Entertainment & downloads',
+          'feature.card.entertainment.description': 'Bilibili and YouTube download utilities remain lightweight cards under construction without altering the overall navigation.',
           'section.automation.span': 'automation engine',
           'section.automation.title': 'Quota-aware automation driven by membership',
           'section.automation.description': 'PremiumQuotaTracker, OnlineSeatUsageTracker and LicenseValidator work together to track quotas, validate authorization and limit online bookings so everything stays fair and transparent.',

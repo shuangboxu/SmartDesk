@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <title>YouTube Cookie 导出指引 | SmartDesk</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="一步步导出 YouTube Cookies 并粘贴到 SmartDesk 娱乐空间设置的图文指引，可在中文或英文界面间切换。" />
+  <style>
+    :root {
+      --bg: #f7f8fb;
+      --surface: #ffffff;
+      --text: #1f2937;
+      --text-soft: #475569;
+      --border: #e2e8f0;
+      --primary: #0ea5e9;
+      --primary-dark: #0284c7;
+      --radius-lg: 24px;
+      --shadow: 0 20px 60px rgba(15, 23, 42, 0.12);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: "Inter", "Segoe UI", -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    a { color: var(--primary-dark); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    .page { max-width: 1120px; margin: 0 auto; padding: 24px 16px 64px; }
+
+    .nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 0 20px;
+    }
+
+    .brand { display: flex; align-items: center; gap: 10px; }
+
+    .logo {
+      width: 40px;
+      height: 40px;
+      border-radius: 14px;
+      overflow: hidden;
+      box-shadow: 0 10px 30px rgba(14, 165, 233, 0.35);
+    }
+
+    .logo img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+    .brand-text { display: flex; flex-direction: column; gap: 2px; }
+    .brand-text strong { font-size: 16px; color: var(--text); }
+    .brand-text span { font-size: 12px; color: var(--text-soft); }
+
+    .return-link {
+      padding: 8px 16px;
+      border-radius: 999px;
+      border: 1px solid rgba(14,165,233,0.4);
+      color: var(--primary-dark);
+      font-size: 13px;
+      font-weight: 600;
+      background: #fff;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+      transition: background 0.16s ease, box-shadow 0.16s ease, transform 0.1s ease;
+    }
+
+    .return-link:hover {
+      background: rgba(14,165,233,0.08);
+      text-decoration: none;
+      box-shadow: 0 8px 24px rgba(15,23,42,0.08);
+      transform: translateY(-0.5px);
+    }
+
+    .hero {
+      margin-top: 8px;
+      background: var(--surface);
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border);
+      padding: 28px 24px 24px;
+      box-shadow: var(--shadow);
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      padding: 4px 10px;
+      border-radius: 999px;
+      font-size: 11px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      background: rgba(14,165,233,0.08);
+      color: var(--primary-dark);
+      border: 1px solid rgba(14,165,233,0.25);
+      margin-bottom: 12px;
+    }
+
+    .hero-title { font-size: clamp(26px, 4vw, 32px); font-weight: 700; margin-bottom: 10px; }
+    .hero-desc { color: var(--text-soft); line-height: 1.8; font-size: 15px; max-width: 760px; }
+
+    .lang-switch {
+      margin: 18px 0 10px;
+      display: inline-flex;
+      gap: 8px;
+      background: var(--surface);
+      padding: 6px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow);
+    }
+
+    .lang-switch button {
+      border: none;
+      background: transparent;
+      padding: 8px 18px;
+      border-radius: 999px;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-soft);
+      cursor: pointer;
+      transition: background 0.2s ease, color 0.2s ease;
+    }
+
+    .lang-switch button.active {
+      background: rgba(14,165,233,0.15);
+      color: var(--primary-dark);
+    }
+
+    .steps-grid {
+      margin-top: 28px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 18px;
+    }
+
+    .step-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 20px;
+      box-shadow: var(--shadow);
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .step-number {
+      width: 40px;
+      height: 40px;
+      border-radius: 14px;
+      background: rgba(14,165,233,0.12);
+      color: var(--primary-dark);
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+    }
+
+    .step-title { font-size: 18px; font-weight: 600; }
+    .step-desc { font-size: 14px; line-height: 1.7; color: var(--text-soft); }
+
+    .step-figure {
+      border: 1px dashed var(--border);
+      border-radius: 16px;
+      padding: 12px;
+      background: rgba(248,250,252,0.7);
+      text-align: center;
+      font-size: 12px;
+      color: var(--text-soft);
+    }
+
+    .step-figure img {
+      max-width: 100%;
+      border-radius: 12px;
+      margin-bottom: 8px;
+    }
+
+    .tips {
+      margin-top: 32px;
+      background: #0f172a;
+      color: #e2e8f0;
+      border-radius: 24px;
+      padding: 28px;
+      box-shadow: var(--shadow);
+    }
+
+    .tips h3 { font-size: 20px; margin-bottom: 12px; }
+    .tips p { font-size: 14px; line-height: 1.8; color: #cbd5f5; }
+    .tips ul { margin-top: 12px; padding-left: 18px; }
+    .tips li { font-size: 14px; line-height: 1.7; margin-bottom: 4px; }
+
+    @media (max-width: 640px) {
+      .step-card { gap: 10px; }
+      .step-title { font-size: 16px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <header class="nav">
+      <div class="brand">
+        <div class="logo"><img src="logo.png" alt="SmartDesk Logo" /></div>
+        <div class="brand-text">
+          <strong>SmartDesk Guide</strong>
+          <span>Better study workflows</span>
+        </div>
+      </div>
+      <a class="return-link" href="index.html" data-lang-link-target="index.html">
+        <span data-lang="zh">← 返回官网</span>
+        <span data-lang="en" hidden>← Back to site</span>
+      </a>
+    </header>
+
+    <section class="hero">
+      <span class="pill">Video Download</span>
+      <h1 class="hero-title">
+        <span data-lang="zh">YouTube Cookie 导出指引</span>
+        <span data-lang="en" hidden>YouTube Cookie Export Guide</span>
+      </h1>
+      <p class="hero-desc">
+        <span data-lang="zh">
+          下载受限视频前，请按顺序完成以下步骤，将浏览器中的 YouTube Cookies 复制至 SmartDesk「娱乐空间设置」。
+        </span>
+        <span data-lang="en" hidden>
+          Follow these steps to export browser cookies from YouTube and paste them into SmartDesk &gt; Entertainment settings before downloading restricted videos.
+        </span>
+      </p>
+    </section>
+
+    <div class="lang-switch" role="group" aria-label="Language switcher">
+      <button type="button" data-lang-option="zh" class="active">中文</button>
+      <button type="button" data-lang-option="en">English</button>
+    </div>
+
+    <section class="steps-grid">
+      <article class="step-card">
+        <div class="step-number">1</div>
+        <div class="step-title">
+          <span data-lang="zh">打开 YouTube</span>
+          <span data-lang="en" hidden>Open YouTube</span>
+        </div>
+        <div class="step-desc">
+          <p data-lang="zh">访问 <a href="https://youtube.com" target="_blank" rel="noopener">youtube.com</a>，确认右上角出现你的头像，表示已登录。</p>
+          <p data-lang="en" hidden>Visit <a href="https://youtube.com" target="_blank" rel="noopener">youtube.com</a> and make sure your profile avatar appears in the top-right corner.</p>
+        </div>
+        <figure class="step-figure">
+          <img src="images/youtube_guide1.png" alt="Step 1 screenshot placeholder" />
+          <figcaption>
+            <span data-lang="zh">示意图：确认账户已登录。</span>
+            <span data-lang="en" hidden>Illustration: verify you are signed in.</span>
+          </figcaption>
+        </figure>
+      </article>
+
+      <article class="step-card">
+        <div class="step-number">2</div>
+        <div class="step-title">
+          <span data-lang="zh">按 F12 打开开发者工具</span>
+          <span data-lang="en" hidden>Press F12 to open DevTools</span>
+        </div>
+        <div class="step-desc">
+          <p data-lang="zh">按 F12（部分设备需 Fn+F12），或右键页面选择「检查」，即可弹出开发者工具窗格。</p>
+          <p data-lang="en" hidden>Press F12 (Fn+F12 on some laptops) or right-click and choose “Inspect” to launch DevTools.</p>
+        </div>
+        <figure class="step-figure">
+          <img src="images/youtube_guide2.png" alt="Step 2 screenshot placeholder" />
+          <figcaption>
+            <span data-lang="zh">示意图：浏览器右侧出现开发者工具。</span>
+            <span data-lang="en" hidden>Illustration: DevTools panel on the right.</span>
+          </figcaption>
+        </figure>
+      </article>
+
+      <article class="step-card">
+        <div class="step-number">3</div>
+        <div class="step-title">
+          <span data-lang="zh">切换到 Application / Storage</span>
+          <span data-lang="en" hidden>Switch to Application / Storage</span>
+        </div>
+        <div class="step-desc">
+          <p data-lang="zh">在 DevTools 顶部找到「Application / Storage / 应用程序」标签并点击，通常会有一个小房子图标。</p>
+          <p data-lang="en" hidden>Locate the “Application” or “Storage” tab (house icon) and click it.</p>
+        </div>
+        <figure class="step-figure">
+          <img src="images/youtube_guide3.png" alt="Step 3 screenshot placeholder" />
+          <figcaption>
+            <span data-lang="zh">示意图：Application 标签位置。</span>
+            <span data-lang="en" hidden>Illustration: where the Application tab sits.</span>
+          </figcaption>
+        </figure>
+      </article>
+
+      <article class="step-card">
+        <div class="step-number">4</div>
+        <div class="step-title">
+          <span data-lang="zh">展开 Cookies → https://youtube.com</span>
+          <span data-lang="en" hidden>Expand Cookies → https://youtube.com</span>
+        </div>
+        <div class="step-desc">
+          <p data-lang="zh">在左侧目录展开「Cookies」，然后选择 <code>https://youtube.com</code>。</p>
+          <p data-lang="en" hidden>In the left tree, expand “Cookies” and click <code>https://youtube.com</code>.</p>
+        </div>
+        <figure class="step-figure">
+          <img src="images/youtube_guide4.png" alt="Step 4 screenshot placeholder" />
+          <figcaption>
+            <span data-lang="zh">示意图：定位 Cookies 节点。</span>
+            <span data-lang="en" hidden>Illustration: selecting the YouTube cookie node.</span>
+          </figcaption>
+        </figure>
+      </article>
+
+      <article class="step-card">
+        <div class="step-number">5</div>
+        <div class="step-title">
+          <span data-lang="zh">查看 Cookie 表格</span>
+          <span data-lang="en" hidden>Review the cookie table</span>
+        </div>
+        <div class="step-desc">
+          <p data-lang="zh">右侧会出现包含 <code>name</code>、<code>value</code>、<code>domain</code> 等字段的表格。</p>
+          <p data-lang="en" hidden>The right panel now lists cookie rows with name, value, domain, etc.</p>
+        </div>
+        <figure class="step-figure">
+          <img src="images/youtube_guide5.png" alt="Step 5 screenshot placeholder" />
+          <figcaption>
+            <span data-lang="zh">示意图：Cookies 表格视图。</span>
+            <span data-lang="en" hidden>Illustration: cookie table view.</span>
+          </figcaption>
+        </figure>
+      </article>
+
+      <article class="step-card">
+        <div class="step-number">6</div>
+        <div class="step-title">
+          <span data-lang="zh">复制全部 Cookies</span>
+          <span data-lang="en" hidden>Copy all cookies</span>
+        </div>
+        <div class="step-desc">
+          <p data-lang="zh">在表格区域按 Ctrl+A 全选，再按 Ctrl+C 复制全部行。</p>
+          <p data-lang="en" hidden>Press Ctrl+A then Ctrl+C inside the table to copy every row.</p>
+        </div>
+        <figure class="step-figure">
+          <img src="images/youtube_guide6.png" alt="Step 6 screenshot placeholder" />
+          <figcaption>
+            <span data-lang="zh">示意图：选中并复制表格内容。</span>
+            <span data-lang="en" hidden>Illustration: select and copy all rows.</span>
+          </figcaption>
+        </figure>
+      </article>
+
+      <article class="step-card">
+        <div class="step-number">7</div>
+        <div class="step-title">
+          <span data-lang="zh">粘贴到 SmartDesk</span>
+          <span data-lang="en" hidden>Paste into SmartDesk</span>
+        </div>
+        <div class="step-desc">
+          <p data-lang="zh">打开 SmartDesk → 设置 → 娱乐空间设置 → YouTube Cookies 文本框，粘贴内容并点击「格式化输入」。</p>
+          <p data-lang="en" hidden>Open SmartDesk → Settings → Entertainment Space → YouTube Cookies, paste the text and tap “Format input”.</p>
+        </div>
+        <figure class="step-figure">
+          <img src="images/youtube_guide7.png" alt="Step 7 screenshot placeholder" />
+          <figcaption>
+            <span data-lang="zh">示意图：在 SmartDesk 中粘贴并保存 Cookies。</span>
+            <span data-lang="en" hidden>Illustration: paste and save cookies inside SmartDesk.</span>
+          </figcaption>
+        </figure>
+      </article>
+    </section>
+
+    <section class="tips">
+      <h3>
+        <span data-lang="zh">小提示</span>
+        <span data-lang="en" hidden>Extra tips</span>
+      </h3>
+      <p>
+        <span data-lang="zh">复制的 Cookies 仅保存在你的设备上，用于下载地区受限或需登录的视频。如登录状态变化，请重新导出。</span>
+        <span data-lang="en" hidden>The copied cookies stay on your device and let SmartDesk download region-locked / login-required videos. Re-export them whenever your login changes.</span>
+      </p>
+      <ul>
+        <li>
+          <span data-lang="zh">Cookies 仅供个人使用，请勿分享。</span>
+          <span data-lang="en" hidden>Keep cookies to yourself—never share them.</span>
+        </li>
+        <li>
+          <span data-lang="zh">若格式化失败，请确认粘贴的是多列文本再试。</span>
+          <span data-lang="en" hidden>If formatting fails, ensure the pasted text still contains multiple columns.</span>
+        </li>
+        <li>
+          <span data-lang="zh">Chrome / Edge / Brave / Arc 等 Chromium 浏览器操作相同。</span>
+          <span data-lang="en" hidden>The steps are identical on Chromium browsers such as Chrome, Edge, Brave, or Arc.</span>
+        </li>
+      </ul>
+    </section>
+  </div>
+
+  <script>
+    (function() {
+      const SUPPORTED = ["zh", "en"];
+      const STORAGE_KEY = "smartdesk-youtube-guide-lang";
+      const PARAM = "lang";
+      const buttons = document.querySelectorAll('[data-lang-option]');
+
+      function detectInitialLang() {
+        const url = new URL(window.location.href);
+        const queryLang = url.searchParams.get(PARAM);
+        if (SUPPORTED.includes(queryLang)) {
+          return queryLang;
+        }
+        const stored = localStorage.getItem(STORAGE_KEY);
+        if (SUPPORTED.includes(stored)) {
+          return stored;
+        }
+        return document.documentElement.lang || "zh";
+      }
+
+      function applyLang(lang) {
+        if (!SUPPORTED.includes(lang)) {
+          lang = "zh";
+        }
+        document.documentElement.lang = lang === "en" ? "en" : "zh-CN";
+        document.querySelectorAll('[data-lang]').forEach((node) => {
+          const nodeLang = node.getAttribute('data-lang');
+          node.hidden = nodeLang !== lang;
+        });
+        document.querySelectorAll('[data-lang-link-target]').forEach((link) => {
+          const target = link.getAttribute('data-lang-link-target');
+          if (!target) {
+            return;
+          }
+          const cleanTarget = target.replace(/\?lang=(zh|en)/, '');
+          link.setAttribute('href', cleanTarget + '?lang=' + lang);
+        });
+        buttons.forEach((btn) => {
+          btn.classList.toggle('active', btn.getAttribute('data-lang-option') === lang);
+        });
+        const url = new URL(window.location.href);
+        url.searchParams.set(PARAM, lang);
+        window.history.replaceState({}, '', url.toString());
+        localStorage.setItem(STORAGE_KEY, lang);
+      }
+
+      const initial = detectInitialLang();
+      applyLang(initial);
+      buttons.forEach((btn) => {
+        btn.addEventListener('click', () => {
+          const lang = btn.getAttribute('data-lang-option');
+          applyLang(lang);
+        });
+      });
+    })();
+  </script>
+</body>
+</html>
