@@ -231,10 +231,35 @@
       font-size: 14px;
     }
 
-    th, td {
+    th,
+    td {
       padding: 14px 16px;
       border-bottom: 1px solid var(--border);
+    }
+
+    th:nth-child(n + 2),
+    td:nth-child(n + 2) {
+      text-align: center;
+    }
+
+    th:first-child,
+    td:first-child {
       text-align: left;
+      padding-left: 22px;
+    }
+
+    .status {
+      font-weight: 700;
+      font-size: 1.1em;
+      text-align: center;
+    }
+
+    .status.unavailable {
+      color: #ef4444;
+    }
+
+    .status.available {
+      color: #22c55e;
     }
 
     th {
@@ -304,14 +329,14 @@
       <div>
         <div class="badge" data-i18n="badge.text">deviceId × 学号 × RSA 签名三重校验</div>
         <h1 data-i18n="page.title">SmartDesk 会员体系</h1>
-        <p class="subtitle" data-i18n="page.subtitle">Free 默认启用；导入 license.json 即可激活 Plus 或 Pro。你可以在 SmartDesk 设置页随时启用、禁用或切换模式，下述权益均基于 PremiumQuotaTracker、OnlineSeatUsageTracker 与 LicenseValidator 的最新实现。</p>
+        <p class="subtitle" data-i18n="page.subtitle">安装后默认是 Free 模式；导入授权文件即可激活 Plus / Pro。授权文件只保留在本地，可以随时禁用或迁移到新设备。Plus/Pro 还可以自定义主题色，让界面更贴合你的喜好。</p>
       </div>
     </header>
 
     <section class="plans">
       <article class="plan-card">
         <h2 data-i18n="plan.free.title">Free</h2>
-        <p data-i18n="plan.free.description">基础等级，适合体验与离线演示。</p>
+        <p data-i18n="plan.free.description">基础等级，适合体验。</p>
         <ul>
           <li data-i18n="plan.free.list1">支持笔记、任务、聊天、文档总结等学习工具。</li>
           <li data-i18n="plan.free.list2">图书馆自动助手需手动确认，每月持续搜索/定时各 5 次。</li>
@@ -325,7 +350,7 @@
         <ul>
           <li data-i18n="plan.plus.list1">Home + 启动页自定义、主题切换。</li>
           <li data-i18n="plan.plus.list2">持续搜索/定时任务每月 150 次。</li>
-          <li data-i18n="plan.plus.list3">可预配置自动助手参数，方便升级到 Pro。</li>
+          <li data-i18n="plan.plus.list3">视频下载与主题色调整可用。</li>
         </ul>
         <div class="highlight" data-i18n="plan.plus.badge">适合保持在线看板</div>
       </article>
@@ -333,9 +358,9 @@
         <h2 data-i18n="plan.pro.title">Pro</h2>
         <p data-i18n="plan.pro.description">解锁无人值守自动化与在线抢座，面向重度用户。</p>
         <ul>
-          <li data-i18n="plan.pro.list1">持续搜索/定时任务每月 500 次，可后台守护线程。</li>
-          <li data-i18n="plan.pro.list2">在线抢座：授权剩余天数 = 总额度，上限 10 次/日。</li>
-          <li data-i18n="plan.pro.list3">自动通知、预约历史追踪、在线抢座配额记录。</li>
+          <li data-i18n="plan.pro.list0">包含 Plus 所有功能。</li>
+          <li data-i18n="plan.pro.list1">持续搜索/定时任务每月 500 次。</li>
+          <li data-i18n="plan.pro.list2">在线抢座：每月 30 次，上限 10 次/日。</li>
         </ul>
         <div class="highlight" data-i18n="plan.pro.badge">自动化全开</div>
       </article>
@@ -357,31 +382,37 @@
           <tbody>
             <tr>
               <td data-i18n="table.row.home.title">Home / 启动页</td>
-              <td data-i18n="table.row.home.free">不可用</td>
-              <td data-i18n="table.row.home.plus">可开启</td>
-              <td data-i18n="table.row.home.pro">可定制模块</td>
+              <td class="status unavailable" aria-label="Free 不可用">❌</td>
+              <td class="status available" aria-label="Plus 可开启">√</td>
+              <td class="status available" aria-label="Pro 可开启">√</td>
             </tr>
             <tr>
               <td data-i18n="table.row.search.title">持续搜索配额 / 月</td>
-              <td data-i18n="table.row.search.free">5 次（手动确认）</td>
-              <td data-i18n="table.row.search.plus">150 次（手动确认）</td>
-              <td data-i18n="table.row.search.pro">500 次（全自动）</td>
+              <td data-i18n="table.row.search.free">5 次· 手动确认</td>
+              <td data-i18n="table.row.search.plus">150 次· 手动确认</td>
+              <td data-i18n="table.row.search.pro">500 次· 无需手动确认</td>
             </tr>
             <tr>
               <td data-i18n="table.row.timed.title">定时抢座配额 / 月</td>
-              <td data-i18n="table.row.timed.free">5 次（需在线守候）</td>
-              <td data-i18n="table.row.timed.plus">150 次（需在线守候）</td>
-              <td data-i18n="table.row.timed.pro">500 次（后台线程）</td>
+              <td data-i18n="table.row.timed.free">5 次 · 手动确认</td>
+              <td data-i18n="table.row.timed.plus">150 次 · 手动确认</td>
+              <td data-i18n="table.row.timed.pro">500 次 · 无需手动确认</td>
+            </tr>
+            <tr>
+              <td data-i18n="table.row.video.title">视频下载（B 站 & YouTube）</td>
+              <td data-i18n="table.row.video.free">每月 3 次 · 标清画质</td>
+              <td data-i18n="table.row.video.plus">不限次数 · 高清（需遵守版权规定）</td>
+              <td data-i18n="table.row.video.pro">不限次数 · 高清（需遵守版权规定）</td>
             </tr>
             <tr>
               <td data-i18n="table.row.online.title">在线抢座</td>
-              <td data-i18n="table.row.online.free">未开放</td>
-              <td data-i18n="table.row.online.plus">未开放</td>
+              <td class="status unavailable" aria-label="Free 未开放">❌</td>
+              <td class="status unavailable" aria-label="Plus 未开放">❌</td>
               <td data-i18n="table.row.online.pro">开放，10 次/日 + 授权天数总额度</td>
             </tr>
             <tr>
               <td data-i18n="table.row.data.title">数据存储</td>
-              <td colspan="3" data-i18n-html="table.row.data.value">所有数据写入 <code>~/.smartdesk</code>，可手动备份</td>
+              <td colspan="3" data-i18n-html="table.row.data.value">所有数据均存储在C:\\Users\\你的用户名\\.smartdesk中，可手动备份</td>
             </tr>
           </tbody>
         </table>
@@ -395,13 +426,6 @@
         <p data-i18n="info.getting.step2">2. 确认“统一身份认证学号”填写正确。</p>
         <p data-i18n="info.getting.step3">3. 将 deviceId + 学号发给作者，说明天数/等级需求。</p>
         <p data-i18n-html="info.getting.step4">4. 导入收到的 <code>license.json</code>，即可激活对应等级。</p>
-      </div>
-      <div class="info-card">
-        <strong data-i18n="info.privacyTitle">隐私与公平</strong><br />
-        <p data-i18n="info.privacy.step1">- 授权文件使用 RSA-SHA256 签名，无法伪造。</p>
-        <p data-i18n="info.privacy.step2">- PremiumQuotaTracker、OnlineSeatUsageTracker 仅在本地记录配额，不上传。</p>
-        <p data-i18n-html="info.privacy.step3">- 需要停用时可删除 <code>license.json</code> 或在设置页禁用会员。</p>
-        <p data-i18n-html="info.privacy.detail">更多细节见 <a href="trust-center.html" data-lang-link-target="trust-center.html">信任中心</a> 与 <a href="compliance.html" data-lang-link-target="compliance.html">公平说明</a>。</p>
       </div>
       <div class="info-card">
         <strong data-i18n="info.wechat.title">加入微信群咨询</strong><br />
@@ -429,10 +453,10 @@
           descriptionMeta: '了解 SmartDesk Free / Plus / Pro 授权权益、配额与隐私保障。',
           'badge.text': 'deviceId × 学号 × RSA 签名三重校验',
           'page.title': 'SmartDesk 会员体系',
-          'page.subtitle': 'Free 默认启用；导入 license.json 即可激活 Plus 或 Pro。你可以在 SmartDesk 设置页随时启用、禁用或切换模式，下述权益均基于 PremiumQuotaTracker、OnlineSeatUsageTracker 与 LicenseValidator 的最新实现。',
+          'page.subtitle': '安装后默认是 Free 模式；导入授权文件即可激活 Plus / Pro。授权文件只保留在本地，可以随时禁用或迁移到新设备。Plus/Pro 还可以自定义主题色，让界面更贴合你的喜好。',
           'return.home': '回到首页',
           'plan.free.title': 'Free',
-          'plan.free.description': '基础等级，适合体验与离线演示。',
+          'plan.free.description': '基础等级，适合体验。',
           'plan.free.list1': '支持笔记、任务、聊天、文档总结等学习工具。',
           'plan.free.list2': '图书馆自动助手需手动确认，每月持续搜索/定时各 5 次。',
           'plan.free.list3': '无法打开 Home 视图，无法使用在线抢座。',
@@ -441,13 +465,13 @@
           'plan.plus.description': '在 Free 基础上打开 Home 与更高配额，仍需人工确认。',
           'plan.plus.list1': 'Home + 启动页自定义、主题切换。',
           'plan.plus.list2': '持续搜索/定时任务每月 150 次。',
-          'plan.plus.list3': '可预配置自动助手参数，方便升级到 Pro。',
+          'plan.plus.list3': '视频下载与主题色调整可用。',
           'plan.plus.badge': '适合保持在线看板',
           'plan.pro.title': 'Pro',
           'plan.pro.description': '解锁无人值守自动化与在线抢座，面向重度用户。',
-          'plan.pro.list1': '持续搜索/定时任务每月 500 次，可后台守护线程。',
-          'plan.pro.list2': '在线抢座：授权剩余天数 = 总额度，上限 10 次/日。',
-          'plan.pro.list3': '自动通知、预约历史追踪、在线抢座配额记录。',
+          'plan.pro.list0': '包含 Plus 所有功能。',
+          'plan.pro.list1': '持续搜索/定时任务每月 500 次。',
+          'plan.pro.list2': '在线抢座：每月 30 次，上限 10 次/日。',
           'plan.pro.badge': '自动化全开',
           'matrix.title': '能力矩阵',
           'matrix.description': '所有授权数据与配额文件保存在本机 <code>~/.smartdesk</code>，卸载不会删除，可随时备份或清理。',
@@ -456,33 +480,32 @@
           'table.header.plus': 'Plus',
           'table.header.pro': 'Pro',
           'table.row.home.title': 'Home / 启动页',
-          'table.row.home.free': '不可用',
-          'table.row.home.plus': '可开启',
-          'table.row.home.pro': '可定制模块',
+          'table.row.home.free': '❌',
+          'table.row.home.plus': '√',
+          'table.row.home.pro': '可开启',
           'table.row.search.title': '持续搜索配额 / 月',
-          'table.row.search.free': '5 次（手动确认）',
-          'table.row.search.plus': '150 次（手动确认）',
-          'table.row.search.pro': '500 次（全自动）',
+          'table.row.search.free': '5 次 · 手动确认',
+          'table.row.search.plus': '150 次 · 手动确认',
+          'table.row.search.pro': '500 次 · 无需手动确认',
           'table.row.timed.title': '定时抢座配额 / 月',
-          'table.row.timed.free': '5 次（需在线守候）',
-          'table.row.timed.plus': '150 次（需在线守候）',
-          'table.row.timed.pro': '500 次（后台线程）',
+          'table.row.timed.free': '5 次 · 手动确认',
+          'table.row.timed.plus': '150 次 · 手动确认',
+          'table.row.timed.pro': '500 次 · 无需手动确认',
+          'table.row.video.title': '视频下载（B 站 & YouTube）',
+          'table.row.video.free': '每月 3 次 · 标清画质',
+          'table.row.video.plus': '不限次数 · 高清（需遵守版权规定）',
+          'table.row.video.pro': '不限次数 · 高清（需遵守版权规定）',
           'table.row.online.title': '在线抢座',
-          'table.row.online.free': '未开放',
-          'table.row.online.plus': '未开放',
+          'table.row.online.free': '❌',
+          'table.row.online.plus': '❌',
           'table.row.online.pro': '开放，10 次/日 + 授权天数总额度',
           'table.row.data.title': '数据存储',
-          'table.row.data.value': '所有数据写入 <code>~/.smartdesk</code>，可手动备份',
+          'table.row.data.value': '所有数据均存储在C:\\Users\\你的用户名\\.smartdesk中，可手动备份',
           'info.gettingTitle': '如何获取授权？',
           'info.getting.step1': '1. 打开 SmartDesk 设置 → 会员 → 展开设备信息，复制 deviceId。',
           'info.getting.step2': '2. 确认“统一身份认证学号”填写正确。',
           'info.getting.step3': '3. 将 deviceId + 学号发给作者，说明天数/等级需求。',
           'info.getting.step4': '4. 导入收到的 <code>license.json</code>，即可激活对应等级。',
-          'info.privacyTitle': '隐私与公平',
-          'info.privacy.step1': '- 授权文件使用 RSA-SHA256 签名，无法伪造。',
-          'info.privacy.step2': '- PremiumQuotaTracker、OnlineSeatUsageTracker 仅在本地记录配额，不上传。',
-          'info.privacy.step3': '- 需要停用时可删除 <code>license.json</code> 或在设置页禁用会员。',
-          'info.privacy.detail': '更多细节见 <a href="trust-center.html" data-lang-link-target="trust-center.html">信任中心</a> 与 <a href="compliance.html" data-lang-link-target="compliance.html">公平说明</a>。',
           'info.wechat.title': '加入微信群咨询',
           'info.wechat.detail': '保存下方二维码后用微信扫一扫即可加入微信群，群内可直接问作者关于会员权益、配额与授权的任何问题。',
           'info.wechat.alt': '扫码加入 SmartDesk 会员咨询微信群',
@@ -494,7 +517,7 @@
           descriptionMeta: 'Discover SmartDesk Free / Plus / Pro entitlements, quotas and privacy guarantees.',
           'badge.text': 'deviceId × Student ID × RSA signature checks',
           'page.title': 'SmartDesk Membership System',
-          'page.subtitle': 'Free starts enabled; importing license.json unlocks Plus or Pro. You can toggle, disable or move licenses from settings, and every right is backed by PremiumQuotaTracker, OnlineSeatUsageTracker and LicenseValidator.',
+          'page.subtitle': 'By default you start in Free mode; importing a license file activates Plus or Pro. Licenses stay on your machine and can be disabled or moved to a new device at any time. Plus/Pro can customize theme colors so the UI fits your workflow.',
           'return.home': 'Return to homepage',
           'plan.free.title': 'Free',
           'plan.free.description': 'Base tier ideal for exploration and offline demos.',
@@ -506,13 +529,13 @@
           'plan.plus.description': 'Adds Home view and higher quota while keeping manual confirmations.',
           'plan.plus.list1': 'Home + customizable launch modules.',
           'plan.plus.list2': '150 monthly continuous search and scheduled tries.',
-          'plan.plus.list3': 'Preset automation knobs make upgrading to Pro easy.',
+          'plan.plus.list3': 'Video downloads and theme-color tweaks are available.',
           'plan.plus.badge': 'Keeps your dashboard online',
           'plan.pro.title': 'Pro',
           'plan.pro.description': 'Unlock unattended automation and online bookings.',
-          'plan.pro.list1': '500 monthly continuous search and schedule slots with background threads.',
-          'plan.pro.list2': 'Online grabs: 10/day plus remaining days added to total quota.',
-          'plan.pro.list3': 'Automated alerts, booking history and quota logging.',
+          'plan.pro.list0': 'Includes all Plus features.',
+          'plan.pro.list1': '500 monthly continuous search and schedule slots.',
+          'plan.pro.list2': 'Online grabs: 30 per month with a 10/day cap.',
           'plan.pro.badge': 'Full automation',
           'matrix.title': 'Capability matrix',
           'matrix.description': 'All authorization data and quota files stay under <code>~/.smartdesk</code>; uninstalling keeps them intact and ready for backups.',
@@ -521,8 +544,8 @@
           'table.header.plus': 'Plus',
           'table.header.pro': 'Pro',
           'table.row.home.title': 'Home / Launch view',
-          'table.row.home.free': 'Unavailable',
-          'table.row.home.plus': 'Home enabled',
+          'table.row.home.free': '❌',
+          'table.row.home.plus': '√',
           'table.row.home.pro': 'Customizable modules',
           'table.row.search.title': 'Continuous search quota / month',
           'table.row.search.free': '5 attempts (manual confirm)',
@@ -532,9 +555,13 @@
           'table.row.timed.free': '5 schedules (must stay online)',
           'table.row.timed.plus': '150 schedules (must stay online)',
           'table.row.timed.pro': '500 schedules (background thread)',
+          'table.row.video.title': 'Video downloads (Bilibili & YouTube)',
+          'table.row.video.free': '3 downloads / month · SD only',
+          'table.row.video.plus': 'Unlimited · HD available (respect copyright)',
+          'table.row.video.pro': 'Unlimited · HD available (respect copyright)',
           'table.row.online.title': 'Online grabs',
-          'table.row.online.free': 'Not available',
-          'table.row.online.plus': 'Not available',
+          'table.row.online.free': '❌',
+          'table.row.online.plus': '❌',
           'table.row.online.pro': 'Available · 10/day + remaining days total',
           'table.row.data.title': 'Data storage',
           'table.row.data.value': 'All data is stored under <code>~/.smartdesk</code> and can be manually backed up.',
@@ -543,11 +570,6 @@
           'info.getting.step2': '2. Confirm your unified authentication student ID is correct.',
           'info.getting.step3': '3. Send the deviceId + student ID to the author with desired days/level.',
           'info.getting.step4': '4. Import the returned <code>license.json</code> to activate the target tier.',
-          'info.privacyTitle': 'Privacy & fairness',
-          'info.privacy.step1': '- license.json is signed with RSA-SHA256 and cannot be forged.',
-          'info.privacy.step2': '- PremiumQuotaTracker and OnlineSeatUsageTracker only keep local quota logs; nothing uploads.',
-          'info.privacy.step3': '- Disable membership anytime or delete the <code>license.json</code> file.',
-          'info.privacy.detail': 'See the <a href="trust-center.html" data-lang-link-target="trust-center.html">Trust Center</a> and <a href="compliance.html" data-lang-link-target="compliance.html">Compliance</a> for more details.',
           'info.wechat.title': 'Join the WeChat group',
           'info.wechat.detail': 'Save the QR code below and scan it through WeChat to join the group; you can ask the author about memberships, quotas, or authorization anytime.',
           'info.wechat.alt': 'Scan to join SmartDesk membership WeChat group',
