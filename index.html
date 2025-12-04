@@ -118,7 +118,7 @@
             <li data-i18n="space.customization.item.startpage">自定义启动页：任意空间 + 任意功能</li>
             <li data-i18n="space.customization.item.hide">隐藏不需要的功能卡片</li>
             <li data-i18n="space.customization.item.sort">在设置中调整同一空间内卡片顺序</li>
-            <li data-i18n="space.customization.item.cross">跨空间复用模块（例如视频下载卡片出现在学 / 乐两个空间）</li>
+            <li data-i18n="space.customization.item.cross">跨空间复用模块（例如视频下载卡片出现在乐 / 学两个空间）</li>
           </ul>
         </div>
       </div>
@@ -190,7 +190,7 @@
         <div class="card">
           <h3 data-i18n="feature.card.chat.title">AI 聊天与答疑</h3>
           <p data-i18n="feature.card.chat.description">
-            内置学习向的聊天助手，可以帮你整理笔记、改写答案、解释公式；也可以接入你自己申请的 DeepSeek、OpenAI 账号，做更复杂的问答和写作。
+            内置学习向的聊天助手，可以帮你整理笔记、改写答案、解释公式；也可以接入你自己申请的 DeepSeek、OpenAI API key，做更复杂的问答和写作。
           </p>
           <img
             data-img-key="chat"
@@ -252,7 +252,7 @@
         <div class="card">
           <h3 data-i18n="automation.card.transparency.title">数据透明</h3>
           <p data-i18n-html="automation.card.transparency.description">
-            你的数据和授权信息都保存在本地电脑上的 SmartDesk 目录，不会上传到云端，也没有任何后台收集。
+            你的数据和授权信息都保存在本地电脑上的 SmartDesk 目录，除pro用户在线抢座功能加密上传任务以外，不会上传到云端，也没有任何后台收集。
             如果遇到问题，你可以选择把日志发给开发者帮你排查。详情可在
             <a href="trust-center.html" data-lang-link-target="trust-center.html">信任中心</a>
             和 <a href="compliance.html" data-lang-link-target="compliance.html">公平说明</a> 中查看。
@@ -382,7 +382,7 @@
           'space.customization.item.startpage': '自定义启动页：任意空间 + 任意功能',
           'space.customization.item.hide': '隐藏不需要的功能卡片',
           'space.customization.item.sort': '在设置中调整同一空间内卡片顺序',
-          'space.customization.item.cross': '跨空间复用模块（例如视频下载卡片出现在学 / 乐两个空间）',
+          'space.customization.item.cross': '跨空间复用模块（例如视频下载卡片出现在乐 / 学两个空间）',
 
           'section.capabilities.span': 'capabilities',
           'section.capabilities.title': '从“抢到座”到“学得好”的一整套体验',
@@ -401,26 +401,26 @@
           'feature.card.library.description': '支持图书馆座位持续搜索、定时抢座和在线预约，帮你提前规划自习时间。抢到座就能安心看书，而不是一直盯着网页刷新。',
 
           'feature.card.chat.title': 'AI 聊天与答疑',
-          'feature.card.chat.description': '内置学习向的聊天助手，可以帮你整理笔记、改写答案、解释公式；也可以接入你自己申请的 DeepSeek、OpenAI 账号，做更复杂的问答和写作。',
+          'feature.card.chat.description': '内置学习向的聊天助手，可以帮你整理笔记、改写答案、解释公式；也可以接入你自己申请的 DeepSeek、OpenAI API key，做更复杂的问答和写作。',
 
           'feature.card.video.title': 'B 站 / YouTube 视频下载',
           'feature.card.video.description': '支持常见课程视频与公开课下载。Free 每月 3 次、标清画质，Plus/Pro 不限次数、支持高清。使用时请遵守各平台的版权和使用规定。',
 
           'feature.card.settings.title': '设置与个性化',
-          'feature.card.settings.description': '在设置里可以选择启动页、隐藏不用的模块、调整卡片顺序，也能查看授权信息和当前设备绑定情况，按自己的节奏把 SmartDesk 调整成顺手的样子。',
+          'feature.card.settings.description': '在设置里可以选择启动页、隐藏不用的模块、调整卡片顺序，会员可自定义主题颜色，按自己的节奏把 SmartDesk 调整成顺手的样子。',
 
           'section.automation.span': 'automation engine',
           'section.automation.title': '会员驱动的自动化与配额系统',
           'section.automation.description': '自动化引擎用“授权 + 配额”的方式来管理在线抢座，让系统对所有人都流畅可用，同时又不限制正常学习使用。',
 
           'automation.card.binding.title': '设备与学号绑定',
-          'automation.card.binding.description': '每份授权对应一个学号和一台设备，用来防止账号被大量外借。你可以在设置页查看当前绑定设备，需要换电脑时也可以把授权迁移过去。',
+          'automation.card.binding.description': '每份授权对应一个学号和一台设备，用来防止账号被大量外借。你可以在设置页查看当前绑定设备，换电脑时无法迁移授权。',
 
           'automation.card.quota.title': '配额守护',
           'automation.card.quota.description': 'Free / Plus / Pro 每月分别提供 5 / 150 / 500 次自动搜索和定时抢座配额，Pro 还支持每天最多 10 次在线抢座。这些上限只是为了防止恶意刷请求，一般同学正常使用基本用不完。',
 
           'automation.card.transparency.title': '数据透明',
-          'automation.card.transparency.description': '你的数据和授权信息都保存在本地电脑上的 SmartDesk 目录，不会上传到云端，也没有任何后台收集。如果遇到问题，你可以选择把日志发给开发者帮你排查。详情可在 <a href="trust-center.html" data-lang-link-target="trust-center.html">信任中心</a> 和 <a href="compliance.html" data-lang-link-target="compliance.html">公平说明</a> 中查看。',
+          'automation.card.transparency.description': '你的数据和授权信息都保存在本地电脑上的 SmartDesk 目录，除pro用户在线抢座功能加密上传任务以外，不会上传到云端，也没有任何后台收集。详情可在 <a href="trust-center.html" data-lang-link-target="trust-center.html">信任中心</a> 和 <a href="compliance.html" data-lang-link-target="compliance.html">公平说明</a> 中查看。',
 
           'section.membership.span': 'membership',
           'section.membership.title': '会员等级速览',
@@ -439,25 +439,25 @@
           'table.row.search.title': '持续搜索配额 / 月',
           'table.row.search.free': '5 次 · 手动确认',
           'table.row.search.plus': '150 次 · 手动确认',
-          'table.row.search.pro': '500 次 · 无人值守',
+          'table.row.search.pro': '500 次 · 无需手动确认',
 
           'table.row.timed.title': '定时抢座配额 / 月',
-          'table.row.timed.free': '5 次 · 需在线守候',
-          'table.row.timed.plus': '150 次 · 需在线守候',
-          'table.row.timed.pro': '500 次 · 后台线程',
+          'table.row.timed.free': '5 次 · 手动确认',
+          'table.row.timed.plus': '150 次 · 手动确认',
+          'table.row.timed.pro': '500 次 · 无需手动确认',
 
           'table.row.video.title': '视频下载（B 站 & YouTube）',
           'table.row.video.free': '每月 3 次 · 标清画质',
           'table.row.video.plus': '不限次数 · 高清（需遵守版权规定）',
           'table.row.video.pro': '不限次数 · 高清（需遵守版权规定）',
 
-          'table.row.online.title': '在线抢座',
+          'table.row.online.title': '服务器在线抢座',
           'table.row.online.free': '未开放',
           'table.row.online.plus': '未开放',
-          'table.row.online.pro': '开放 · 10 次/日 + 授权天数总额',
+          'table.row.online.pro': '开放 · 每月30次',
 
           'table.row.data.title': '数据存储',
-          'table.row.data.value': '所有数据均存储在本地 SmartDesk 目录中，卸载不会删除',
+          'table.row.data.value': '所有数据均存储在C:\\Users\\你的用户名\\.smartdesk中，卸载不会删除',
 
           'section.trust': '有授权或隐私问题？请查看 <a href="membership.html" data-lang-link-target="membership.html">会员方案详情</a>、<a href="compliance.html" data-lang-link-target="compliance.html">公平说明</a> 或 <a href="trust-center.html" data-lang-link-target="trust-center.html">信任中心</a>，了解授权流程、设备绑定、数据备份方法。',
 
