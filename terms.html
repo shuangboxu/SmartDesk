@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <title>SmartDesk 使用协议及免责声明</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="SmartDesk 使用协议及免责声明，包含软件性质、授权与配额、数据与隐私、自动化限制、责任范围及条款更新说明。" />
+  <link rel="stylesheet" href="styles.css" />
+  <style>
+    .terms-card {
+      padding: 28px;
+      line-height: 1.7;
+    }
+
+    .terms-card[data-lang-block='en'] {
+      display: none;
+    }
+
+    .terms-card h2 {
+      font-size: 22px;
+      margin-bottom: 6px;
+      color: var(--text-strong);
+    }
+
+    .lang-note {
+      font-size: 13px;
+      color: var(--text-soft);
+      margin-bottom: 14px;
+    }
+
+    .terms-list {
+      list-style: none;
+      padding-left: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+
+    .terms-list h3 {
+      font-size: 18px;
+      margin-bottom: 6px;
+      color: var(--text-strong);
+    }
+
+    .terms-list p {
+      margin: 6px 0;
+      color: var(--text);
+    }
+
+    .related-links {
+      margin-top: 18px;
+      padding: 12px 14px;
+      border-radius: 12px;
+      background: rgba(14, 165, 233, 0.06);
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    .related-links a {
+      color: var(--primary-dark);
+      text-decoration: none;
+      font-weight: 600;
+    }
+
+    .related-links a:hover {
+      text-decoration: underline;
+    }
+
+    .nav .nav-links .nav-link.is-current {
+      color: var(--primary-dark);
+      font-weight: 700;
+    }
+
+    .nav {
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .return-link {
+      padding: 10px 18px;
+      border-radius: 999px;
+      border: 1px solid rgba(14, 165, 233, 0.4);
+      background: #fff;
+      color: var(--primary-dark);
+      font-size: 13px;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      text-decoration: none;
+      transition: background 0.16s ease, box-shadow 0.16s ease, transform 0.1s ease;
+    }
+
+    .return-link:hover {
+      background: rgba(14, 165, 233, 0.08);
+      text-decoration: none;
+      box-shadow: 0 8px 24px rgba(15, 23, 42, 0.08);
+      transform: translateY(-0.5px);
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <nav class="nav">
+      <div class="brand">
+        <div class="logo"><img src="images/logo.png" alt="SmartDesk logo" /></div>
+        <div class="brand-text">
+          <strong>SmartDesk</strong>
+          <span>Learning Copilot</span>
+        </div>
+      </div>
+      <div class="nav-actions">
+        <a class="return-link" href="index.html" data-lang-link-target="index.html" data-i18n="nav.home">返回首页</a>
+      </div>
+    </nav>
+
+    <section class="hero terms-hero">
+      <h1 data-i18n="hero.title">SmartDesk 使用协议及免责声明</h1>
+    </section>
+
+    <section class="section">
+      <div class="cards">
+        <div class="card terms-card" data-lang-block="zh">
+          <h2 data-i18n="section.cn.title">SmartDesk 使用协议及免责声明（中文版）</h2>
+          <ol class="terms-list">
+            <li>
+              <h3>一、软件性质与适用对象</h3>
+              <p>SmartDesk 是由北京理工大学在读学生以个人身份开发的桌面工具软件，主要面向北京理工大学在校同学，用于辅助查看课表、管理任务、查询空教室、预约图书馆座位，以及使用学习相关的 AI 工具等。</p>
+              <p>SmartDesk 当前仅支持 Windows 系统，软件功能随版本更新可能有所调整，以首页与最新发布版本为准。</p>
+              <p>用户在安装和使用 SmartDesk 之前，应当仔细阅读并充分理解本协议的全部内容。一旦安装或使用本软件，即视为你已阅读、理解并同意本协议。</p>
+            </li>
+            <li>
+              <h3>二、非官方声明</h3>
+              <p>SmartDesk 为个人开发的非官方工具，与北京理工大学、图书馆、信息化部门、教学部门等任何机构不存在隶属、合作或授权关系，仅在现有校园系统开放的范围内，提供界面整合与自动化辅助。</p>
+              <p>本软件对学校官网、统一身份认证系统、图书馆预约系统、教室资源系统等的所有权不享有任何权利，相关权利归原系统所有方所有。</p>
+              <p>若学校对相关系统的接口、规则或使用政策做出调整，可能导致 SmartDesk 某些功能不可用或表现异常，开发者不对由此产生的后果承担责任。</p>
+            </li>
+            <li>
+              <h3>三、授权、会员与配额</h3>
+              <p>SmartDesk 默认以 Free 免费模式运行；用户可通过导入本地授权文件（license.json）激活 Plus / Pro 会员等级。授权文件仅保存在本地设备，用于解锁自动化和配额等高级功能。</p>
+              <p>授权文件通常会包含设备标识（deviceId）、学号、到期时间和会员等级等信息，并通过 RSA-SHA256 签名进行校验，用于防止篡改和大规模账号外借。会员等级对应的自动化配额（如持续搜索、定时任务、在线抢座次数等）仅用于限制滥用与保护校园资源，并不构成开发者对“必然抢到座位”的承诺或保证。</p>
+              <p>授权到期、配额用尽、设备更换、系统升级等情况，均可能导致部分功能受限或无法使用，属正常技术行为，不视为违约或侵权。用户不得通过逆向工程、伪造授权文件、批量共享授权等方式规避授权与配额限制，一经发现，开发者有权拒绝继续提供更新和支持。会员权益详情见 <a href="membership.html" data-lang-link-target="membership.html">会员页面</a>。</p>
+            </li>
+            <li>
+              <h3>四、数据与隐私</h3>
+              <p>除少数在线抢座与授权校验场景外，SmartDesk 的业务数据、授权状态、配额与日志等，均存放在本地目录（如 ~/.smartdesk）中，由用户自行备份或删除。SmartDesk 不内置统一登录账号系统，不主动收集除“学号 + 授权信息 + 设备标识”以外的敏感个人信息，设备标识仅用于本地授权校验。</p>
+              <p>Pro 会员的在线抢座/定时任务，可能需要在任务执行时临时上传加密后的学号、预约参数等信息，用于由服务器代为访问学校系统。该数据仅用于完成本次任务，不用于其他用途。</p>
+              <p>用户可通过删除授权文件、删除 ~/.smartdesk 目录等方式，随时重置本地数据；若误删数据导致记录丢失，由用户自行承担后果。</p>
+              <p>若用户主动在 SmartDesk 中填写第三方 AI 平台的 API Key（如 DeepSeek、OpenAI），则在发送请求时相应对话内容会传输至该第三方服务提供商；相关数据处理将遵守第三方平台的隐私政策，与 SmartDesk 无直接控制关系。更多隐私与安全信息可参考 <a href="trust-center.html" data-lang-link-target="trust-center.html">信任中心</a> 与 <a href="compliance.html" data-lang-link-target="compliance.html">公平合规说明</a>。</p>
+            </li>
+            <li>
+              <h3>五、自动化功能与使用限制</h3>
+              <p>SmartDesk 的图书馆自动化相关功能（包括但不限于持续搜索、定时抢座、在线抢座）仅在学校既有系统提供的开放接口与使用规则下运行，并不绕过排队机制、并发限制或黑名单规则。</p>
+              <p>由于网络环境、学校系统状态、系统更新、账号状态、配额限制等原因，SmartDesk 不保证任何一次预约、搜索或抢座请求一定成功，也不对未抢到座位、排队失败、服务器错误等结果承担任何责任。用户应合理设置任务频率与时间，不得利用 SmartDesk 进行恶意刷请求、大规模占用资源、干扰其他同学正常使用的行为。</p>
+              <p>对于自动化操作产生的日志、错误记录等，SmartDesk 不会在未经用户主动操作的情况下自动上传。若用户选择将日志发送给开发者以便排错，视为用户自愿提供。</p>
+            </li>
+            <li>
+              <h3>六、第三方服务与内容</h3>
+              <p>SmartDesk 可能会调用或展示来自第三方的服务或内容，包括但不限于：北京理工大学图书馆预约系统、课程与教室系统；B 站 / YouTube 等视频平台（用于下载公开课程、学习资料等）；第三方大模型或 AI API（由用户自行配置）。</p>
+              <p>第三方服务的稳定性、可用性、合法性及其内容版权等，由第三方服务提供者自行负责。用户在使用 SmartDesk 访问相关服务时，仍需遵守各平台自己的使用条款及法律法规。使用视频下载等功能时，用户应只在合法授权、学习研究或个人合理使用的范围内下载和保存内容，不得将其用于任何侵犯版权或其他违法用途。</p>
+            </li>
+            <li>
+              <h3>七、用户义务与禁止行为</h3>
+              <p>用户承诺在使用 SmartDesk 时遵守国家法律法规、学校有关规定及本协议约定，不利用 SmartDesk 从事任何违法违规活动。用户不得利用 SmartDesk：扫描、探测或攻击学校或任何第三方的服务器与网络；冒用他人学号或账号，批量预约或恶意占用资源；传播违法信息、侵犯他人隐私或知识产权；进行任何可能损害学校系统稳定性、公平性的行为。</p>
+              <p>若用户违反上述约定，产生的一切不利后果（包括但不限于账号封禁、纪律处分、法律责任等）均由用户自行承担，与 SmartDesk 开发者无关。</p>
+            </li>
+            <li>
+              <h3>八、免责声明</h3>
+              <p>SmartDesk 以“现状”提供，不对其稳定性、适用性、不间断性、无错误性作出任何形式的明示或暗示担保。本软件为个人业余项目，开发者将尽力维护软件的基本可用性，但不承诺提供 7×24 小时运维或即时技术支持服务，也不承诺所有功能长期可用。</p>
+              <p>因下列任一原因导致的任何损失，开发者均不承担责任，包括但不限于：</p>
+              <p>校园系统或第三方服务本身的变更、中断、故障或限制；</p>
+              <p>用户设备硬件故障、系统故障、网络中断、病毒或恶意软件；</p>
+              <p>用户错误配置任务、误删数据、共享授权、泄露个人信息，或因未按学校要求及时签到或到馆而产生违约或其他处罚；</p>
+              <p>不可抗力（如自然灾害）、政策调整、监管要求等。</p>
+            </li>
+            <li>
+              <h3>九、责任限制</h3>
+              <p>在适用法律允许的最大范围内，即使开发者已被告知可能发生此类损害，SmartDesk 及其开发者对任何间接、附带、特别或惩罚性损害不承担责任，包括但不限于学习计划延误、考试成绩影响、座位未预约成功等。</p>
+              <p>若因 SmartDesk 可明确归责的原因导致用户直接损失，在任何情况下，开发者承担的总赔偿责任以用户为获取相应授权实际支付的费用为上限；若用户未支付任何费用，则开发者无任何赔偿责任。对 Free 用户，SmartDesk 为免费提供的软件工具，不对其使用结果承担任何形式的赔偿责任。</p>
+            </li>
+            <li>
+              <h3>十、协议更新与适用</h3>
+              <p>随着 SmartDesk 功能调整、学校政策或法律法规变化，开发者有权适时修改本协议条款，更新版本将发布于官网或软件中适当位置。更新后的协议一经公布，即替代原有版本；用户继续使用 SmartDesk 的行为，视为接受最新版本协议。</p>
+              <p>本协议未尽事宜，可参照相关法律法规以及北京理工大学的相关管理规定处理。若条款与强制性法律规定相抵触，则以法律规定为准，其余条款继续有效。如对本协议的内容存在疑问或异议，用户可通过官网提供的联系方式与开发者沟通；如需正式法律意见，请咨询专业律师。</p>
+            </li>
+          </ol>
+          <div class="related-links" data-i18n-html="section.related.cn">
+            更多帮助：<a href="user-guide.html" data-lang-link-target="user-guide.html">用户指南</a> ·
+            <a href="membership.html" data-lang-link-target="membership.html">会员说明</a> ·
+            <a href="trust-center.html" data-lang-link-target="trust-center.html">信任中心</a> ·
+            <a href="compliance.html" data-lang-link-target="compliance.html">公平合规</a>
+          </div>
+        </div>
+
+        <div class="card terms-card" data-lang-block="en">
+          <h2 data-i18n="section.en.title">SmartDesk Terms of Use and Disclaimer (English Version)</h2>
+          <ol class="terms-list">
+            <li>
+              <h3>1. Nature of the Software and Intended Audience</h3>
+              <p>SmartDesk is a personally developed desktop tool created by a current student of Beijing Institute of Technology (BIT). It is mainly intended for BIT students to help with viewing schedules, managing tasks, checking free classrooms, booking library seats and using study-oriented AI tools.</p>
+              <p>SmartDesk currently supports only Windows. Features may change over time; the website and the latest release shall prevail.</p>
+              <p>By installing or using SmartDesk, you confirm that you have read, understood and agreed to be bound by this Agreement.</p>
+            </li>
+            <li>
+              <h3>2. Non-Affiliation Statement</h3>
+              <p>SmartDesk is an unofficial personal project, and is not affiliated with, endorsed by or officially supported by BIT, its library, IT department, teaching units or any other university entity. It merely provides a unified interface and automation helper on top of existing campus systems.</p>
+              <p>All rights in and to the official university websites, unified authentication systems, library booking systems and classroom resource systems belong to their respective owners.</p>
+              <p>If BIT changes its system interfaces, rules or policies, some SmartDesk features may stop working or behave unexpectedly. The developer shall not be liable for any consequences arising from such changes.</p>
+            </li>
+            <li>
+              <h3>3. License, Membership and Quotas</h3>
+              <p>SmartDesk runs in Free mode by default. Users may activate Plus / Pro tiers by importing a local license file (license.json), which is stored on the local machine and used only to unlock additional automation and quota features.</p>
+              <p>A license file typically includes deviceId, student ID, expiry date and tier, and is signed with RSA-SHA256, allowing verification and discouraging tampering or large-scale account sharing. Automation quotas (e.g., continuous search, scheduled jobs, online grabs) are designed solely to prevent abuse and protect campus resources and shall not be interpreted as any guarantee that a seat will be successfully booked.</p>
+              <p>License expiry, quota depletion, device migration or software updates may restrict or disable certain features. This is a normal technical behavior and shall not be deemed a breach of contract. You must not bypass license or quota limits by reverse engineering, forging license files, mass sharing licenses or similar means; if abuse is detected, the developer may refuse further updates and support. See the <a href="membership.html" data-lang-link-target="membership.html">membership page</a> for details.</p>
+            </li>
+            <li>
+              <h3>4. Data and Privacy</h3>
+              <p>Except for limited scenarios such as online booking and license/time validation, all business data, license states, quota files and logs are stored locally under a directory such as ~/.smartdesk, which you can back up or delete at any time. SmartDesk does not include a built-in cloud account system and does not actively collect sensitive personal information beyond student ID, license data and device identifiers, which are used only for license checks.</p>
+              <p>For Pro users, online seat booking and scheduled tasks may temporarily transmit encrypted student ID and booking parameters to a server solely for accessing the official university system on your behalf. Such data is used only for that specific task.</p>
+              <p>You may always reset local data by deleting the license file or removing the entire ~/.smartdesk directory. If data is lost due to such deletion, you bear the full responsibility.</p>
+              <p>If you voluntarily enter third-party AI API keys (e.g., DeepSeek, OpenAI) into SmartDesk, the corresponding requests and content will be transmitted to those providers. Your data in that context is governed by the respective providers’ privacy policies, not by SmartDesk. For more on privacy and safety, see the <a href="trust-center.html" data-lang-link-target="trust-center.html">Trust Center</a> and <a href="compliance.html" data-lang-link-target="compliance.html">Compliance statement</a>.</p>
+            </li>
+            <li>
+              <h3>5. Automation Features and Usage Constraints</h3>
+              <p>SmartDesk’s automation around library seats (including but not limited to continuous search, scheduled grabs and online grabs) operates only within the official university system’s open interfaces and rules. It does not circumvent queueing mechanisms, rate limits or blacklists.</p>
+              <p>Due to network environment, university system status, system updates, account conditions and quota limits, SmartDesk does not guarantee the success of any booking, search or grab request and is not responsible for failures, timeouts or errors. You should configure reasonable frequencies and schedules and must not use SmartDesk for malicious flooding, large-scale resource occupation or any behavior that harms other students’ normal access.</p>
+              <p>Logs and error records generated by automation are not uploaded automatically. If you choose to send logs to the developer for debugging, it is deemed a voluntary act.</p>
+            </li>
+            <li>
+              <h3>6. Third-Party Services and Content</h3>
+              <p>SmartDesk may call or display third-party services or content, including but not limited to: BIT library booking and classroom/schedule systems; video platforms such as Bilibili and YouTube (for downloading open courses and study material); and third-party AI models or APIs configured by you.</p>
+              <p>The stability, availability, legality and copyright compliance of such services are the sole responsibility of the respective providers. When using SmartDesk to access these resources, you must still comply with each provider’s own terms and applicable laws. For video downloads, only download and store content that you are legally allowed to use, for study, research or other fair and lawful purposes.</p>
+            </li>
+            <li>
+              <h3>7. User Obligations and Prohibited Conduct</h3>
+              <p>You agree to use SmartDesk in compliance with applicable laws, university regulations and this Agreement, and not to use SmartDesk for any unlawful purposes. In particular, you shall not: scan, probe or attack BIT or any third-party servers or networks; impersonate other students’ accounts, perform mass bookings or occupy resources abusively; distribute illegal content or violate others’ privacy or intellectual property rights; perform any action that may harm the stability or fairness of university systems.</p>
+              <p>If you violate the above rules, all resulting consequences (including account bans, disciplinary actions or legal liability) are solely yours and not attributable to the developer.</p>
+            </li>
+            <li>
+              <h3>8. Disclaimer of Warranties</h3>
+              <p>SmartDesk is provided on an “as-is” basis, without any express or implied warranties regarding stability, fitness for a particular purpose, uninterrupted operation or error-free performance. As a personal side project, SmartDesk is maintained on a best-effort basis. The developer does not promise 24/7 operations, real-time support or long-term availability of any particular feature.</p>
+              <p>The developer shall not be liable for any loss arising from any of the following causes, including but not limited to:</p>
+              <p>Changes, disruption, failure or restrictions in university systems or third-party services;</p>
+              <p>Hardware/OS failures, network interruptions, viruses or malware on the user’s device;</p>
+              <p>User misconfiguration of tasks, accidental data deletion, license sharing or leakage of personal information, or failure to check in/arrive on time as required by the university system resulting in violations or penalties;</p>
+              <p>Force-majeure events such as natural disasters, policy changes or regulatory requirements.</p>
+            </li>
+            <li>
+              <h3>9. Limitation of Liability</h3>
+              <p>To the maximum extent permitted by law, even if the developer has been advised of the possibility of such damages, SmartDesk and its developer shall not be liable for any indirect, incidental, special or punitive damages, including but not limited to delays in study plans, exam performance or failure to secure a seat.</p>
+              <p>For any direct loss clearly attributable to SmartDesk, the total aggregate liability of the developer, if any, shall not exceed the actual amount you paid for the relevant license; if you paid nothing, the developer shall have no compensation obligation. For Free users, SmartDesk is provided at no charge, and the developer assumes no compensatory liability of any kind.</p>
+            </li>
+            <li>
+              <h3>10. Changes and Governing Context</h3>
+              <p>As SmartDesk evolves and as university policies and laws change, the developer may update this Agreement from time to time. The latest version will be published on the official website or in the app. Once published, the updated Agreement supersedes previous versions. Your continued use of SmartDesk shall be deemed acceptance of the updated terms.</p>
+              <p>Any matters not covered here shall be handled in accordance with applicable laws and relevant BIT regulations. If any clause conflicts with mandatory legal provisions, those provisions shall prevail while the remaining clauses remain in effect. If you have questions or concerns regarding this Agreement, you may contact the developer via the contact information listed on the website. For formal legal opinions, please consult a qualified lawyer.</p>
+            </li>
+          </ol>
+          <div class="related-links" data-i18n-html="section.related.en">
+            Helpful links: <a href="user-guide.html" data-lang-link-target="user-guide.html">User guide</a> ·
+            <a href="membership.html" data-lang-link-target="membership.html">Membership</a> ·
+            <a href="trust-center.html" data-lang-link-target="trust-center.html">Trust Center</a> ·
+            <a href="compliance.html" data-lang-link-target="compliance.html">Compliance</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <footer>
+      <p data-i18n="footer.text">© 2025 SmartDesk</p>
+    </footer>
+  </div>
+
+  <script>
+    (function() {
+      const DEFAULT_LANG = 'zh';
+      const LANG_PARAM = 'lang';
+      const STORAGE_KEY = 'smartdesk-site-lang';
+      const SUPPORTED_LANGS = ['zh', 'en'];
+
+      const translations = {
+        zh: {
+          htmlLang: 'zh-CN',
+          title: 'SmartDesk 使用协议及免责声明',
+          descriptionMeta: 'SmartDesk 使用协议及免责声明，包含软件性质、授权与配额、数据与隐私、自动化限制、责任范围及条款更新说明。',
+          'nav.home': '返回首页',
+          'nav.membership': '会员',
+          'nav.trust': '信任中心',
+          'nav.compliance': '公平合规',
+          'nav.terms': '使用协议',
+          'cta.download': '下载体验',
+          'hero.title': 'SmartDesk 使用协议及免责声明',
+          'hero.cta.guide': '查看用户指南',
+          'hero.cta.membership': '了解会员权益',
+          'section.cn.title': 'SmartDesk 使用协议及免责声明（中文版）',
+          'section.cn.note': '从首页或中文页面进入时默认显示中文内容，如需英文请右上角切换 EN。',
+          'section.en.title': 'SmartDesk Terms of Use and Disclaimer (English Version)',
+          'section.en.note': 'If you arrived from an English page, you will see English by default. Switch to 中文 in the top right for the Chinese version.',
+          'section.related.cn': '更多帮助：<a href="user-guide.html" data-lang-link-target="user-guide.html">用户指南</a> · <a href="membership.html" data-lang-link-target="membership.html">会员说明</a> · <a href="trust-center.html" data-lang-link-target="trust-center.html">信任中心</a> · <a href="compliance.html" data-lang-link-target="compliance.html">公平合规</a>',
+          'section.related.en': 'Helpful links: <a href="user-guide.html" data-lang-link-target="user-guide.html">User guide</a> · <a href="membership.html" data-lang-link-target="membership.html">Membership</a> · <a href="trust-center.html" data-lang-link-target="trust-center.html">Trust Center</a> · <a href="compliance.html" data-lang-link-target="compliance.html">Compliance</a>',
+          'footer.text': '© 2025 SmartDesk'
+        },
+        en: {
+          htmlLang: 'en',
+          title: 'SmartDesk Terms of Use and Disclaimer',
+          descriptionMeta: 'SmartDesk terms of use, license and quota notes, privacy and automation limits, liability scope and update policy.',
+          'nav.home': 'Back to Home',
+          'nav.membership': 'Membership',
+          'nav.trust': 'Trust Center',
+          'nav.compliance': 'Compliance',
+          'nav.terms': 'Terms',
+          'cta.download': 'Download',
+          'hero.title': 'SmartDesk Terms of Use and Disclaimer',
+          'hero.cta.guide': 'Read user guide',
+          'hero.cta.membership': 'See membership tiers',
+          'section.cn.title': 'SmartDesk 使用协议及免责声明（中文版）',
+          'section.cn.note': '从首页或中文页面进入时默认显示中文内容，如需英文请右上角切换 EN。',
+          'section.en.title': 'SmartDesk Terms of Use and Disclaimer (English Version)',
+          'section.en.note': 'If you arrived from an English page, you will see English by default. Switch to 中文 in the top right for the Chinese version.',
+          'section.related.cn': '更多帮助：<a href="user-guide.html" data-lang-link-target="user-guide.html">用户指南</a> · <a href="membership.html" data-lang-link-target="membership.html">会员说明</a> · <a href="trust-center.html" data-lang-link-target="trust-center.html">信任中心</a> · <a href="compliance.html" data-lang-link-target="compliance.html">公平合规</a>',
+          'section.related.en': 'Helpful links: <a href="user-guide.html" data-lang-link-target="user-guide.html">User guide</a> · <a href="membership.html" data-lang-link-target="membership.html">Membership</a> · <a href="trust-center.html" data-lang-link-target="trust-center.html">Trust Center</a> · <a href="compliance.html" data-lang-link-target="compliance.html">Compliance</a>',
+          'footer.text': '© 2025 SmartDesk'
+        }
+      };
+
+      function resolveLanguage() {
+        const param = new URLSearchParams(window.location.search).get(LANG_PARAM);
+        if (param && SUPPORTED_LANGS.includes(param.toLowerCase())) {
+          return param.toLowerCase();
+        }
+        const stored = localStorage.getItem(STORAGE_KEY);
+        if (stored && SUPPORTED_LANGS.includes(stored)) {
+          return stored;
+        }
+        return DEFAULT_LANG;
+      }
+
+      function setLanguage(lang) {
+        if (!SUPPORTED_LANGS.includes(lang)) {
+          lang = DEFAULT_LANG;
+        }
+        const dictionary = translations[lang];
+        if (!dictionary) {
+          return;
+        }
+
+        document.documentElement.lang = dictionary.htmlLang || (lang === 'en' ? 'en' : 'zh-CN');
+        document.title = dictionary.title;
+        const descriptionMeta = document.querySelector('meta[name="description"]');
+        if (descriptionMeta && dictionary.descriptionMeta) {
+          descriptionMeta.setAttribute('content', dictionary.descriptionMeta);
+        }
+
+        document.querySelectorAll('[data-i18n]').forEach((node) => {
+          const key = node.getAttribute('data-i18n');
+          if (key && dictionary[key]) {
+            node.textContent = dictionary[key];
+          }
+        });
+
+        document.querySelectorAll('[data-i18n-html]').forEach((node) => {
+          const key = node.getAttribute('data-i18n-html');
+          if (key && dictionary[key]) {
+            node.innerHTML = dictionary[key];
+          }
+        });
+
+        document.querySelectorAll('[data-lang-toggle]').forEach((button) => {
+          button.classList.toggle('is-active', button.getAttribute('data-lang-toggle') === lang);
+        });
+
+        document.querySelectorAll('[data-lang-link-target]').forEach((link) => {
+          const target = link.getAttribute('data-lang-link-target');
+          if (!target) return;
+          let cleanTarget = target;
+          if (cleanTarget.includes('?')) {
+            cleanTarget = cleanTarget.split('?')[0];
+          }
+          link.setAttribute('href', cleanTarget + '?lang=' + lang);
+        });
+
+        document.querySelectorAll('[data-lang-block]').forEach((block) => {
+          const blockLang = block.getAttribute('data-lang-block');
+          block.style.display = blockLang === lang ? 'block' : 'none';
+        });
+
+        const url = new URL(window.location.href);
+        if (url.searchParams.get(LANG_PARAM) !== lang) {
+          url.searchParams.set(LANG_PARAM, lang);
+          window.history.replaceState(null, '', url.toString());
+        }
+
+        localStorage.setItem(STORAGE_KEY, lang);
+      }
+
+      document.querySelectorAll('[data-lang-toggle]').forEach((button) => {
+        button.addEventListener('click', () => {
+          const chosen = button.getAttribute('data-lang-toggle');
+          if (!chosen) return;
+          setLanguage(chosen);
+        });
+      });
+
+      setLanguage(resolveLanguage());
+    })();
+  </script>
+</body>
+</html>
