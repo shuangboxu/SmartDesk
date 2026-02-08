@@ -51,7 +51,7 @@ https://youtu.be/52HdgqrmA2s/
 ## 项目结构
 
 项目采用多模块结构，包含桌面客户端、网页端与服务器端组件，整体使用 Maven 进行管理。
-
+```
 SmartDesk
 ├── src/main/java/com.smartdesk
 │ ├── ui # JavaFX 界面层
@@ -62,7 +62,7 @@ SmartDesk
 ├── smartdesk-seat-tasks # 服务器端模块（在线预约座位）
 ├── tools # 工具集合（授权生成、安装器等）
 └── proguard-smartdesk.pro # 混淆配置
-
+```
 
 ---
 
