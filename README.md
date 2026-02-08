@@ -4,6 +4,7 @@ SmartDesk 是一个面向 **北京理工大学学生** 的 Windows 桌面学习�
 
 **项目主页**：  
 https://shuangboxu.github.io/SmartDesk/
+
 **项目演示视频**： 
 https://youtu.be/52HdgqrmA2s
 
