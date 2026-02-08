@@ -1,0 +1,86 @@
+# SmartDesk
+
+SmartDesk 是一个面向 **北京理工大学学生** 的 Windows 桌面学习助理应用，由个人独立开发，开发周期约两个月。项目围绕校园高频学习场景，对课表、自习空间、图书馆座位、任务管理等功能进行深度整合，并引入 AI 能力以提升学习与规划效率。:contentReference[oaicite:0]{index=0}
+
+🌐 **项目主页**：  
+https://shuangboxu.github.io/SmartDesk/
+
+> 说明：本项目在实现过程中涉及部分校内系统接口调用，出于安全与合规考虑，相关核心逻辑未对外公开。:contentReference[oaicite:1]{index=1}
+
+---
+
+## 项目特点
+
+- **面向北理工学习场景深度定制**  
+  聚焦课表、自习教室、图书馆座位与任务管理等真实校园需求，功能之间相互联动，减少重复操作与信息割裂。:contentReference[oaicite:2]{index=2}
+
+- **智能推荐机制**  
+  基于用户偏好，对空闲教室与图书馆座位进行优先级排序与推荐，支持多种预约策略。:contentReference[oaicite:3]{index=3}
+
+- **课表与任务融合展示**  
+  课程与自定义任务在统一视图中展示，支持日 / 周 / 月多种视角，并通过颜色区分不同类型内容。:contentReference[oaicite:4]{index=4}
+
+- **选课前课表模拟**  
+  支持导入全校课表数据，用于提前查看选课后的时间分布与冲突情况，辅助选课决策。:contentReference[oaicite:5]{index=5}
+
+- **AI 对话集成**  
+  支持调用 DeepSeek、OpenAI 等模型接口，并可将任务、笔记等内容作为上下文交由 AI 辅助规划。:contentReference[oaicite:6]{index=6}
+
+- **视频下载能力**  
+  集成 yt-dlp 与 ffmpeg，支持常见视频平台内容下载与转码，方便学习与展示使用。:contentReference[oaicite:7]{index=7}
+
+- **安全与防滥用设计**  
+  引入会员授权、配额限制与防篡改机制，并使用 ProGuard 对关键逻辑进行混淆，降低被滥用风险。:contentReference[oaicite:8]{index=8}
+
+---
+
+## 功能概览
+
+- **主页聚合视图**：课程提醒、自习教室推荐、任务提醒、图书馆座位推荐等信息集中展示。:contentReference[oaicite:9]{index=9}  
+- **课表与任务管理**：支持从校内平台拉取课表与学习任务，并进行统一管理与可视化。:contentReference[oaicite:10]{index=10}  
+- **图书馆座位预约**：支持状态管理、快速预约、持续搜索、定时预约与服务器在线预约等模式。:contentReference[oaicite:11]{index=11}  
+- **AI 聊天模块**：支持多模型接口调用与结构化输出。:contentReference[oaicite:12]{index=12}  
+- **视频下载模块**：用于学习资料收集与个人展示准备。:contentReference[oaicite:13]{index=13}  
+- **笔记与空闲教室查询**：提供轻量化记录与查询功能。:contentReference[oaicite:14]{index=14}  
+
+---
+
+## 项目结构
+
+项目采用多模块结构，包含桌面客户端、网页端与服务器端组件，整体使用 Maven 进行管理。:contentReference[oaicite:15]{index=15}
+
+SmartDesk
+├── src/main/java/com.smartdesk
+│ ├── ui # JavaFX 界面层
+│ ├── core # 核心业务逻辑
+│ ├── storage # 本地数据库与持久化
+│ └── utils # 通用工具
+├── smartdesk-client # 网页端
+├── smartdesk-seat-tasks # 服务器端模块（在线预约座位）
+├── tools # 工具集合（授权生成、安装器等）
+└── proguard-smartdesk.pro # 混淆配置
+
+
+---
+
+## 技术栈
+
+- **语言 / 框架**：Java、JavaFX  
+- **构建工具**：Maven  
+- **数据存储**：SQLite  
+- **核心依赖**：SQLite JDBC、Gson、jsoup、Apache POI  
+- **工程与安全**：jlink / jpackage、ProGuard、离线 License 授权、防篡改校验机制:contentReference[oaicite:16]{index=16}  
+
+---
+
+## 安全与合规说明
+
+SmartDesk 涉及校园系统接口调用。为避免低成本修改后造成高频请求或滥用行为，项目采用授权与配额控制、防篡改机制，并对关键逻辑进行混淆处理。仓库中不包含相关核心实现代码。:contentReference[oaicite:17]{index=17}
+
+---
+
+## 作者
+
+许双博  
+北京理工大学 计算机学院  
+《Java 程序设计》课程设计项目:contentReference[oaicite:18]{index=18}
